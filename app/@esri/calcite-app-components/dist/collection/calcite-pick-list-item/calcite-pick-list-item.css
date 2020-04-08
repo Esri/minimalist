@@ -1,0 +1,143 @@
+:host {
+  /* Base ":host" styles for the component */
+  box-sizing: border-box;
+  color: var(--calcite-app-foreground);
+  font-family: var(--calcite-app-font-family);
+  font-size: var(--calcite-app-font-size-0);
+  line-height: var(--calcite-app-line-height);
+  background-color: var(--calcite-app-background);
+}
+:host * {
+  box-sizing: border-box;
+}
+
+:host {
+  align-items: center;
+  background-color: var(--calcite-app-background-clear);
+  display: flex;
+  margin: 0;
+  color: var(--calcite-app-foreground);
+  transition: background-color var(--calcite-app-animation-time-fast) var(--calcite-app-easing-function);
+  animation: calcite-app-fade-in var(--calcite-app-animation-time) var(--calcite-app-easing-function);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+:host([theme=dark]) {
+  /* Component "dark" theme variables */
+  --calcite-app-background: #404040;
+  --calcite-app-foreground: #dfdfdf;
+  --calcite-app-background-hover: #2b2b2b;
+  --calcite-app-foreground-hover: #f3f3f3;
+  --calcite-app-background-active: #151515;
+  --calcite-app-foreground-active: #59d6ff;
+  --calcite-app-foreground-subtle: #eaeaea;
+  --calcite-app-background-content: #2b2b2b;
+  --calcite-app-border: #2b2b2b;
+  --calcite-app-border-hover: #2b2b2b;
+  --calcite-app-border-subtle: #2b2b2b;
+  --calcite-app-scrim: rgba(64, 64, 64, 0.8);
+}
+
+:host([theme=light]) {
+  /* Component "light" theme variables */
+  --calcite-app-background: #ffffff;
+  --calcite-app-foreground: #404040;
+  --calcite-app-background-hover: #eaeaea;
+  --calcite-app-foreground-hover: #2b2b2b;
+  --calcite-app-background-active: #c7eaff;
+  --calcite-app-foreground-active: #00619b;
+  --calcite-app-foreground-subtle: #757575;
+  --calcite-app-foreground-link: #007ac2;
+  --calcite-app-background-content: #f3f3f3;
+  --calcite-app-background-clear: transparent;
+  --calcite-app-border: #eaeaea;
+  --calcite-app-border-hover: #dfdfdf;
+  --calcite-app-border-subtle: #f3f3f3;
+  --calcite-app-border-active: #007ac2;
+  --calcite-app-disabled-opacity: 0.25;
+  --calcite-app-scrim: rgba(255, 255, 255, 0.8);
+}
+
+:host(:hover),
+:host(:focus) {
+  background-color: var(--calcite-app-background-hover);
+}
+
+.icon {
+  color: var(--calcite-app-foreground-link);
+  flex: 0 0 0%;
+  line-height: 0;
+  width: var(--calcite-app-icon-size);
+  margin: 0 var(--calcite-app-side-spacing-quarter);
+  opacity: 0;
+}
+
+:host([selected]) .icon {
+  transition: opacity var(--calcite-app-animation-time-fast) var(--calcite-app-easing-function);
+  opacity: 1;
+}
+
+.label {
+  display: flex;
+  flex: 1 1 auto;
+  padding: var(--calcite-app-cap-spacing-half) var(--calcite-app-side-spacing-half);
+  align-items: center;
+  cursor: pointer;
+}
+.label:focus {
+  outline-offset: var(--calcite-app-outline-inset);
+}
+
+.text-container {
+  display: flex;
+  flex-flow: column nowrap;
+  overflow: hidden;
+  pointer-events: none;
+  padding: 0 var(--calcite-app-side-spacing-quarter);
+}
+
+.title {
+  font-size: var(--calcite-app-font-size-0);
+  /* line-clamp
+  * https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-line-clamp
+  *
+  * Interim solution until a more standard solution arrives e.g.
+  * https://www.w3.org/TR/css-overflow-3/#propdef--webkit-line-clamp
+  */
+  display: -webkit-box;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-all;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.description {
+  color: var(--calcite-app-foreground-subtle);
+  font-family: var(--calcite-app-font-family-monospace);
+  font-size: var(--calcite-app-font-size--1);
+  margin-top: var(--calcite-app-cap-spacing-quarter);
+  /* line-clamp
+  * https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-line-clamp
+  *
+  * Interim solution until a more standard solution arrives e.g.
+  * https://www.w3.org/TR/css-overflow-3/#propdef--webkit-line-clamp
+  */
+  display: -webkit-box;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-all;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.action {
+  align-items: center;
+  display: flex;
+  flex: 0 0 auto;
+  justify-self: flex-end;
+  margin: var(--calcite-app-cap-spacing-quarter) var(--calcite-app-side-spacing-half);
+}

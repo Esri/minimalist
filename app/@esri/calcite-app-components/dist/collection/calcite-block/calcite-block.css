@@ -1,0 +1,184 @@
+:host {
+  /* Base ":host" styles for the component */
+  box-sizing: border-box;
+  color: var(--calcite-app-foreground);
+  font-family: var(--calcite-app-font-family);
+  font-size: var(--calcite-app-font-size-0);
+  line-height: var(--calcite-app-line-height);
+  background-color: var(--calcite-app-background);
+}
+:host * {
+  box-sizing: border-box;
+}
+
+:host {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  border-radius: var(--calcite-app-border-radius);
+  margin: var(--calcite-app-cap-spacing-quarter) var(--calcite-app-side-spacing-quarter) 0;
+  box-shadow: 0 -1px 0 var(--calcite-app-border) inset;
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+:host([theme=dark]) {
+  /* Component "dark" theme variables */
+  --calcite-app-background: #404040;
+  --calcite-app-foreground: #dfdfdf;
+  --calcite-app-background-hover: #2b2b2b;
+  --calcite-app-foreground-hover: #f3f3f3;
+  --calcite-app-background-active: #151515;
+  --calcite-app-foreground-active: #59d6ff;
+  --calcite-app-foreground-subtle: #eaeaea;
+  --calcite-app-background-content: #2b2b2b;
+  --calcite-app-border: #2b2b2b;
+  --calcite-app-border-hover: #2b2b2b;
+  --calcite-app-border-subtle: #2b2b2b;
+  --calcite-app-scrim: rgba(64, 64, 64, 0.8);
+}
+
+:host([theme=light]) {
+  /* Component "light" theme variables */
+  --calcite-app-background: #ffffff;
+  --calcite-app-foreground: #404040;
+  --calcite-app-background-hover: #eaeaea;
+  --calcite-app-foreground-hover: #2b2b2b;
+  --calcite-app-background-active: #c7eaff;
+  --calcite-app-foreground-active: #00619b;
+  --calcite-app-foreground-subtle: #757575;
+  --calcite-app-foreground-link: #007ac2;
+  --calcite-app-background-content: #f3f3f3;
+  --calcite-app-background-clear: transparent;
+  --calcite-app-border: #eaeaea;
+  --calcite-app-border-hover: #dfdfdf;
+  --calcite-app-border-subtle: #f3f3f3;
+  --calcite-app-border-active: #007ac2;
+  --calcite-app-disabled-opacity: 0.25;
+  --calcite-app-scrim: rgba(255, 255, 255, 0.8);
+}
+
+.header {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--calcite-app-foreground);
+  fill: var(--calcite-app-foreground);
+}
+
+.heading {
+  padding: 0;
+  margin: 0;
+  font-weight: var(--calcite-app-font-weight-demi);
+}
+
+.header .heading {
+  flex: 1 0 auto;
+  padding: var(--calcite-app-cap-spacing-half) var(--calcite-app-side-spacing-half);
+}
+
+h1.heading {
+  font-size: var(--calcite-app-font-size-3);
+}
+
+h2.heading {
+  font-size: var(--calcite-app-font-size-2);
+}
+
+h3.heading {
+  font-size: var(--calcite-app-font-size-1);
+}
+
+h4.heading,
+h5.heading {
+  font-size: var(--calcite-app-font-size-0);
+}
+
+.header {
+  flex-grow: 1;
+  justify-content: flex-start;
+}
+
+.header-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.header-container > .header {
+  padding: var(--calcite-app-cap-spacing-half) var(--calcite-app-side-spacing-three-quarters);
+}
+
+:host([disabled]) {
+  pointer-events: none;
+  -webkit-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+:host([disabled]) .header-container {
+  opacity: var(--calcite-app-disabled-opacity);
+}
+
+calcite-loader[inline] {
+  color: var(--calcite-app-foreground-subtle);
+}
+
+.title {
+  margin: 0;
+}
+
+.header .title .heading {
+  padding: 0 0 var(--calcite-app-cap-spacing-quarter);
+}
+
+.summary {
+  font-size: var(--calcite-app-font-size--1);
+  padding: 0 0 var(--calcite-app-cap-spacing-quarter);
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+  flex-grow: 1;
+  margin: 0;
+  padding: var(--calcite-app-cap-spacing-half) var(--calcite-app-side-spacing-three-quarters);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: var(--calcite-app-font-family);
+  text-align: unset;
+  color: var(--calcite-app-foreground);
+}
+.toggle:focus {
+  outline-offset: var(--calcite-app-outline-inset);
+}
+
+.icon {
+  margin-right: var(--calcite-app-side-spacing-third);
+}
+
+.toggle-icon {
+  fill: currentColor;
+  flex: 0 0 var(--calcite-app-icon-size);
+  margin: 0 var(--calcite-app-side-spacing-half);
+}
+
+.content {
+  padding: 0 var(--calcite-app-side-spacing-three-quarters) var(--calcite-app-cap-spacing-half);
+  position: relative;
+}
+
+::slotted([slot=control]) {
+  position: absolute;
+  margin: auto;
+  right: var(--calcite-app-side-spacing-three-quarters);
+}
+
+.calcite--rtl ::slotted([slot=control]) {
+  left: var(--calcite-app-side-spacing-three-quarters);
+  right: unset;
+}

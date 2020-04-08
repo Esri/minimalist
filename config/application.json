@@ -1,0 +1,54 @@
+{
+  "appid": "",
+  "group": "",
+  "title": "",
+  "header": true,
+  "logo": null,
+  "logoLink": null,
+  "applySharedTheme": true,
+  "theme": "light",
+  "webmap": "default",
+  "minScale": null,
+  "maxScale": null,
+  "activePanel": null,
+  "details": true,
+  "detailsTitle": null,
+  "detailsContent": null,
+  "legend": true,
+  "popupPanel": false,
+  "layoutType": "default",
+  "mapZoom": true,
+  "mapZoomPosition": "top-left",
+  "basemapToggle": false,
+  "basemapTogglePosition": "bottom-left",
+  "nextBasemap": "streets",
+  "scalebar": false,
+  "scalebarPosition": "bottom-right",
+  "search": false,
+  "searchOpenAtStart": false,
+  "searchConfiguration": null,
+  "searchPosition": "top-right",
+  "share": true,
+  "shareIncludeSocial": true,
+  "home": false,
+  "homePosition": "top-left",
+  "disableScroll": false,
+  "portalUrl": "https://www.arcgis.com",
+  "oauthappid": "",
+  "proxyUrl": "",
+  "units": "",
+  "helperServices": {
+    "geometry": {
+      "url": null
+    },
+    "printTask": {
+      "url": null
+    },
+    "elevationSync": {
+      "url": null
+    },
+    "geocode": [{
+      "url": null
+    }]
+  }
+}

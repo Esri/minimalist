@@ -1,0 +1,189 @@
+:host {
+  /* Base ":host" styles for the component */
+  box-sizing: border-box;
+  color: var(--calcite-app-foreground);
+  font-family: var(--calcite-app-font-family);
+  font-size: var(--calcite-app-font-size-0);
+  line-height: var(--calcite-app-line-height);
+  background-color: var(--calcite-app-background);
+}
+:host * {
+  box-sizing: border-box;
+}
+
+:host {
+  display: flex;
+  position: relative;
+  --calcite-app-panel-max-height-small: 40vh;
+  --calcite-app-panel-max-height-medium: 60vh;
+  --calcite-app-panel-max-height-large: 80vh;
+  --calcite-app-panel-min-header-height: calc(var(--calcite-app-icon-size) * 3);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+:host([theme=dark]) {
+  /* Component "dark" theme variables */
+  --calcite-app-background: #404040;
+  --calcite-app-foreground: #dfdfdf;
+  --calcite-app-background-hover: #2b2b2b;
+  --calcite-app-foreground-hover: #f3f3f3;
+  --calcite-app-background-active: #151515;
+  --calcite-app-foreground-active: #59d6ff;
+  --calcite-app-foreground-subtle: #eaeaea;
+  --calcite-app-background-content: #2b2b2b;
+  --calcite-app-border: #2b2b2b;
+  --calcite-app-border-hover: #2b2b2b;
+  --calcite-app-border-subtle: #2b2b2b;
+  --calcite-app-scrim: rgba(64, 64, 64, 0.8);
+}
+
+:host([theme=light]) {
+  /* Component "light" theme variables */
+  --calcite-app-background: #ffffff;
+  --calcite-app-foreground: #404040;
+  --calcite-app-background-hover: #eaeaea;
+  --calcite-app-foreground-hover: #2b2b2b;
+  --calcite-app-background-active: #c7eaff;
+  --calcite-app-foreground-active: #00619b;
+  --calcite-app-foreground-subtle: #757575;
+  --calcite-app-foreground-link: #007ac2;
+  --calcite-app-background-content: #f3f3f3;
+  --calcite-app-background-clear: transparent;
+  --calcite-app-border: #eaeaea;
+  --calcite-app-border-hover: #dfdfdf;
+  --calcite-app-border-subtle: #f3f3f3;
+  --calcite-app-border-active: #007ac2;
+  --calcite-app-disabled-opacity: 0.25;
+  --calcite-app-scrim: rgba(255, 255, 255, 0.8);
+}
+
+.header {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--calcite-app-foreground);
+  fill: var(--calcite-app-foreground);
+}
+
+.heading {
+  padding: 0;
+  margin: 0;
+  font-weight: var(--calcite-app-font-weight-demi);
+}
+
+.header .heading {
+  flex: 1 0 auto;
+  padding: var(--calcite-app-cap-spacing-half) var(--calcite-app-side-spacing-half);
+}
+
+h1.heading {
+  font-size: var(--calcite-app-font-size-3);
+}
+
+h2.heading {
+  font-size: var(--calcite-app-font-size-2);
+}
+
+h3.heading {
+  font-size: var(--calcite-app-font-size-1);
+}
+
+h4.heading,
+h5.heading {
+  font-size: var(--calcite-app-font-size-0);
+}
+
+.container {
+  align-items: stretch;
+  transition: max-height var(--calcite-app-animation-time) var(--calcite-app-easing-function);
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-flow: column;
+}
+
+:host([height-scale=s]) .container {
+  max-height: var(--calcite-app-panel-max-height-small);
+}
+
+:host([height-scale=m]) .container {
+  max-height: var(--calcite-app-panel-max-height-medium);
+}
+
+:host([height-scale=l]) .container {
+  max-height: var(--calcite-app-panel-max-height-large);
+}
+
+.container[hidden] {
+  display: none;
+}
+
+:host([loading]) .container,
+:host([disabled]) .container {
+  position: relative;
+  z-index: 1;
+}
+
+.header {
+  align-items: stretch;
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: flex-start;
+  min-height: var(--calcite-app-header-min-height);
+  position: relative;
+  z-index: 2;
+  border-bottom: 1px solid var(--calcite-app-border);
+  width: 100%;
+}
+
+.header-content {
+  overflow: hidden;
+  padding: var(--calcite-app-cap-spacing) var(--calcite-app-side-spacing);
+}
+
+.header-leading-content,
+.header-trailing-content {
+  align-items: stretch;
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.header-trailing-content {
+  margin-left: auto;
+}
+
+.header-leading-content + .header-content {
+  padding-left: var(--calcite-app-side-spacing-half);
+}
+
+.content-container {
+  align-items: stretch;
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 1 1 auto;
+  background-color: var(--calcite-app-background-content);
+  overflow: auto;
+}
+
+.footer {
+  border-top: 1px solid var(--calcite-app-border);
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: space-evenly;
+  min-height: var(--calcite-app-footer-min-height);
+  padding: var(--calcite-app-cap-spacing-half) var(--calcite-app-side-spacing-half);
+}
+
+.calcite--rtl .header-leading-content + .header-content {
+  padding-right: var(--calcite-app-side-spacing-half);
+}
+.calcite--rtl .header-trailing-content {
+  margin-left: 0;
+  margin-right: auto;
+}
