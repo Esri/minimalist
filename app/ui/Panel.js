@@ -20,7 +20,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/core/tsSupport/decorateHelper", "esri/core/accessorSupport/decorators", "esri/core/watchUtils", "esri/widgets/support/widget", "./Panel/PanelViewModel", "../polyfills/ResizeObserver", "esri/widgets/Widget", "esri/core/promiseUtils", "./icons/icons"], function (require, exports, __extends, __decorate, decorators_1, watchUtils_1, widget_1, PanelViewModel_1, ResizeObserver_1, Widget_1, promiseUtils_1, icons_1) {
+define(["require", "exports", "esri/core/accessorSupport/decorators", "esri/core/watchUtils", "esri/widgets/support/widget", "./Panel/PanelViewModel", "../polyfills/ResizeObserver", "esri/widgets/Widget", "esri/core/promiseUtils", "./icons/icons"], function (require, exports, decorators_1, watchUtils_1, widget_1, PanelViewModel_1, ResizeObserver_1, Widget_1, promiseUtils_1, icons_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     PanelViewModel_1 = __importDefault(PanelViewModel_1);
@@ -39,7 +39,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
         Panel.prototype.postInitialize = function () {
             var _this = this;
             this.own([
-                watchUtils_1.init(this, ["applicationConfig.legend", "applicationConfig.popupPanel", "applicationConfig.activePanel", "applicationConfig.details"], function () {
+                watchUtils_1.init(this, ["applicationConfig.legendPanel", "applicationConfig.popupPanel", "applicationConfig.activePanel", "applicationConfig.details"], function () {
                     _this.viewModel.createActions();
                     _this.scheduleRender();
                 }),
@@ -54,11 +54,11 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             ]);
         };
         Panel.prototype.render = function () {
-            var _a = this.applicationConfig, legend = _a.legend, details = _a.details, popupPanel = _a.popupPanel, activePanel = _a.activePanel, layoutType = _a.layoutType;
+            var _a = this.applicationConfig, legendPanel = _a.legendPanel, details = _a.details, popupPanel = _a.popupPanel, activePanel = _a.activePanel, layoutType = _a.layoutType;
             var collapsed = (activePanel !== null) ? false : true;
             var blocks = this.renderBlocks();
             var actionBar = this.renderActionBar();
-            var hide = legend || details || popupPanel ? null : "hide";
+            var hide = legendPanel || details || popupPanel ? null : "hide";
             var resizePanel = popupPanel ? "resize" : null;
             return (widget_1.tsx("calcite-shell-panel", { collapsed: collapsed, class: this.classes(["primary-panel", layoutType, hide, resizePanel]), slot: "primary-panel", bind: this, "data-node-ref": "calcitePanel", afterCreate: widget_1.storeNode, layout: "leading" },
                 actionBar,
@@ -69,7 +69,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             return widget_1.tsx("calcite-action-bar", { slot: "action-bar", bind: this, expand: "false", onclick: this.viewModel.actionItemClicked },
                 widget_1.tsx("calcite-action-group", null, this.actions.map(function (action) {
                     var active = action.active, name = action.name, label = action.label, key = action.key, icon = action.icon;
-                    return widget_1.tsx("calcite-action", { bind: _this, active: active, key: key, "data-action-item": key, text: name, label: label },
+                    return widget_1.tsx("calcite-action", { bind: _this, active: active, key: key, title: label, "data-action-item": key, text: name, label: label },
                         widget_1.tsx("calcite-icon", { scale: "s", icon: icons_1.default[icon] }));
                 })));
         };
@@ -102,7 +102,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             decorators_1.subclass("Panel")
         ], Panel);
         return Panel;
-    }(decorators_1.declared(Widget_1.default)));
+    }((Widget_1.default)));
     exports.default = Panel;
 });
 //# sourceMappingURL=Panel.js.map

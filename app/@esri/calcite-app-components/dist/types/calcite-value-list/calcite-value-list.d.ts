@@ -1,13 +1,15 @@
 import Sortable from "sortablejs";
-import { EventEmitter } from "../stencil-public-runtime";
+import { EventEmitter, VNode } from "../stencil-public-runtime";
 import { ICON_TYPES } from "./resources";
 /**
  * @slot - A slot for adding `calcite-pick-list-item` elements or `calcite-pick-list-group` elements. Items are displayed as a vertical list.
  * @slot menu-actions - A slot for adding a button + menu combo for performing actions like sorting.
  */
-export declare class CalciteValueList {
+export declare class CalciteValueList<ItemElement extends HTMLCalciteValueListItemElement = HTMLCalciteValueListItemElement> {
     /**
      * Compact reduces the size of all items in the list.
+     *
+     * @deprecated This property will be removed in a future release.
      */
     compact: boolean;
     /**
@@ -36,15 +38,15 @@ export declare class CalciteValueList {
     /**
      * Placeholder text for the filter input field.
      */
-    textFilterPlaceholder?: string;
-    selectedValues: Map<string, HTMLCalciteValueListItemElement>;
+    textFilterPlaceholder: string;
+    selectedValues: Map<string, ItemElement>;
     dataForFilter: object[];
-    items: HTMLCalciteValueListItemElement[];
-    lastSelectedItem: HTMLCalciteValueListItemElement;
+    items: ItemElement[];
+    lastSelectedItem: ItemElement;
     guid: string;
     observer: MutationObserver;
     sortables: Sortable[];
-    el: HTMLCalciteValueListItemElement;
+    el: HTMLCalciteValueListElement;
     emitCalciteListChange: () => void;
     connectedCallback(): void;
     componentDidLoad(): void;
@@ -70,8 +72,9 @@ export declare class CalciteValueList {
     selectSiblings: any;
     handleFilter: any;
     getItemData: any;
-    keyDownHandler: (event: any) => void;
+    keyDownHandler: (event: KeyboardEvent) => void;
     getSelectedItems(): Promise<Map<string, object>>;
+    setFocus(): Promise<void>;
     getIconType(): ICON_TYPES | null;
-    render(): any;
+    render(): VNode;
 }

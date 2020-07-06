@@ -6,6 +6,7 @@ declare type FocusId = "dismiss-button";
  * @slot header-content - A slot for adding content in the center of the header.
  * @slot header-leading-content - A slot for adding a `calcite-action` on the leading side of the header.
  * @slot header-trailing-content - A slot for adding a `calcite-action` on the trailing side of the header.
+ * @slot fab - A slot for adding a `calcite-fab` (floating action button) to perform an action.
  * @slot footer - A slot for adding `calcite-button`s to the footer.
  * @slot - A slot for adding content to the panel.
  */
@@ -34,7 +35,12 @@ export declare class CalcitePanel {
     /**
      * 'Close' text string for the close button. The close button will only be shown when 'dismissible' is true.
      */
-    textClose: string;
+    intlClose?: string;
+    /**
+     * 'Close' text string for the close button. The close button will only be shown when 'dismissible' is true.
+     * @deprecated use "intlClose" instead.
+     */
+    textClose?: string;
     /**
      * Used to set the component's color scheme.
      */
@@ -46,8 +52,13 @@ export declare class CalcitePanel {
      * Emitted when the close button has been clicked.
      */
     calcitePanelDismissedChange: EventEmitter;
+    /**
+     * Emitted when the content has been scrolled.
+     */
+    calcitePanelScroll: EventEmitter;
     panelKeyUpHandler: (event: KeyboardEvent) => void;
     dismiss: () => void;
+    panelScrollHandler: () => void;
     setFocus(focusId?: FocusId): Promise<void>;
     renderHeaderLeadingContent(): VNode;
     renderHeaderContent(): VNode;
@@ -55,6 +66,7 @@ export declare class CalcitePanel {
     renderHeader(): VNode;
     renderFooter(): VNode;
     renderContent(): VNode;
-    render(): any;
+    renderFab(): VNode;
+    render(): VNode;
 }
 export {};

@@ -1,4 +1,4 @@
-import { h, Host, Build } from "@stencil/core";
+import { Component, Event, h, Prop, Element, Host, Watch, Build, State, } from "@stencil/core";
 import { getElementProp } from "../../utils/dom";
 export class CalciteRadioGroupItem {
     constructor() {
@@ -36,12 +36,20 @@ export class CalciteRadioGroupItem {
     disconnectedCallback() {
         this.mutationObserver.disconnect();
     }
+    componentDidLoad() {
+        // only use default slot content in browsers that support shadow dom
+        // or if ie11 has no label provided (#374)
+        const label = this.el.querySelector("label");
+        this.useFallback = !label || label.textContent === "";
+    }
     render() {
-        const { checked, value } = this;
+        const { checked, useFallback, value } = this;
         const scale = getElementProp(this.el, "scale", "m");
-        return (h(Host, { role: "radio", "aria-checked": checked.toString(), scale: scale },
+        const appearance = getElementProp(this.el, "appearance", "m");
+        const layout = getElementProp(this.el, "layout", "m");
+        return (h(Host, { role: "radio", "aria-checked": checked.toString(), scale: scale, appearance: appearance, layout: layout },
             h("label", null,
-                h("slot", null, value),
+                h("slot", null, useFallback ? value : ""),
                 h("slot", { name: "input" }))));
     }
     //--------------------------------------------------------------------------
@@ -64,7 +72,12 @@ export class CalciteRadioGroupItem {
             return;
         }
         this.inputProxy.value = this.value;
-        this.inputProxy.toggleAttribute("checked", this.checked);
+        if (this.checked) {
+            this.inputProxy.setAttribute("checked", "true");
+        }
+        else {
+            this.inputProxy.removeAttribute("checked");
+        }
     }
     static get is() { return "calcite-radio-group-item"; }
     static get encapsulation() { return "shadow"; }
@@ -110,6 +123,9 @@ export class CalciteRadioGroupItem {
             "attribute": "value",
             "reflect": false
         }
+    }; }
+    static get states() { return {
+        "useFallback": {}
     }; }
     static get events() { return [{
             "method": "calciteRadioGroupItemChange",

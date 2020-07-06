@@ -1,4 +1,4 @@
-import { EventEmitter } from "../../stencil.core";
+import { EventEmitter } from "../../stencil-public-runtime";
 /**
  * @slot thumbnail - A slot for adding a thumnail to the card.
  * @slot - A slot for adding subheader/description content.
@@ -9,7 +9,7 @@ import { EventEmitter } from "../../stencil.core";
  */
 /** Cards do not include a grid or bounding container
  * - cards will expand to fit the width of their container
-*/
+ */
 export declare class CalciteCard {
     el: HTMLCalciteCardElement;
     /**  When true, the cards content is waiting to be loaded. This state shows a busy indicator.*/
@@ -22,7 +22,6 @@ export declare class CalciteCard {
     theme: "light" | "dark";
     /** Fired when a selectable card is selected */
     calciteCardSelected: EventEmitter;
-    connectedCallback(): void;
     render(): any;
     private cardSelectClick;
     private cardSelectKeyDown;

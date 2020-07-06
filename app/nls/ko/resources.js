@@ -7,7 +7,8 @@ define({
     "popup": "정보"
   },
   "popupPanel": {
-    "noResultsMessage": "맵을 클릭하여 피처 정보를 볼 수 있습니다"
+    "noResultsMessage": "맵을 클릭하여 피처 정보를 볼 수 있습니다.",
+    "noResultsHoverMessage": "맵에서 위치 위에 마우스를 놓으면 피처 정보를 볼 수 있습니다."
   },
   "close": "닫기",
   "toggle": "패널 전환 높이"

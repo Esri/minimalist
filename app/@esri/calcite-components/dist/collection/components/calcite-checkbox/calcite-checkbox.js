@@ -1,5 +1,5 @@
-import { h, Host, Build } from "@stencil/core";
-import { SPACE, ENTER } from "../../utils/keys";
+import { Component, h, Prop, Event, Element, Host, Listen, Watch, Build, } from "@stencil/core";
+import { getKey } from "../../utils/key";
 export class CalciteCheckbox {
     constructor() {
         /** True if the checkbox is initially checked */
@@ -18,8 +18,6 @@ export class CalciteCheckbox {
         this.size = null;
         /** True if the checkbox is disabled */
         this.disabled = false;
-        /** Determines what theme to use */
-        this.theme = "light";
         this.toggle = () => {
             if (!this.disabled) {
                 this.checked = !this.checked;
@@ -55,7 +53,8 @@ export class CalciteCheckbox {
         }
     }
     keyDownHandler(e) {
-        if (e.keyCode === SPACE || e.keyCode === ENTER) {
+        const key = getKey(e.key);
+        if (key === " " || key === "Enter") {
             e.preventDefault();
             this.toggle();
         }
@@ -229,8 +228,7 @@ export class CalciteCheckbox {
                 "text": "Determines what theme to use"
             },
             "attribute": "theme",
-            "reflect": true,
-            "defaultValue": "\"light\""
+            "reflect": true
         }
     }; }
     static get events() { return [{

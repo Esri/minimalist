@@ -1,7 +1,7 @@
-import { Host, h } from "@stencil/core";
-import { CSS } from "./resources";
+import { Component, Element, Host, Method, Prop, State, Watch, h, } from "@stencil/core";
+import { CSS, TOOLTIP_REFERENCE, ARIA_DESCRIBED_BY } from "./resources";
 import { guid } from "../../utils/guid";
-import { defaultOffsetDistance, createPopper, updatePopper } from "../../utils/popper";
+import { defaultOffsetDistance, createPopper, updatePopper, } from "../../utils/popper";
 import { HOST_CSS } from "../../utils/dom";
 export class CalciteTooltip {
     constructor() {
@@ -26,43 +26,33 @@ export class CalciteTooltip {
          * Determines where the component will be positioned relative to the referenceElement.
          */
         this.placement = "auto";
-        /** Select theme (light or dark) */
-        this.theme = "light";
         this._referenceElement = this.getReferenceElement();
+        this.guid = `calcite-tooltip-${guid()}`;
         // --------------------------------------------------------------------------
         //
         //  Private Methods
         //
         // --------------------------------------------------------------------------
         this.getId = () => {
-            return this.el.id || `calcite-tooltip-${guid()}`;
+            return this.el.id || this.guid;
         };
-        this.addReferenceAria = () => {
-            const { _referenceElement } = this;
-            if (_referenceElement &&
-                !_referenceElement.hasAttribute("aria-describedby")) {
-                _referenceElement.setAttribute("aria-describedby", this.getId());
-            }
-        };
-        this.addReferenceListeners = () => {
+        this.addReferences = () => {
             const { _referenceElement } = this;
             if (!_referenceElement) {
                 return;
             }
-            _referenceElement.addEventListener("mouseenter", this.show);
-            _referenceElement.addEventListener("mouseleave", this.hide);
-            _referenceElement.addEventListener("focus", this.show);
-            _referenceElement.addEventListener("blur", this.hide);
+            _referenceElement.setAttribute(TOOLTIP_REFERENCE, "");
+            if (!_referenceElement.hasAttribute(ARIA_DESCRIBED_BY)) {
+                _referenceElement.setAttribute(ARIA_DESCRIBED_BY, this.getId());
+            }
         };
-        this.removeReferenceListeners = () => {
+        this.removeReferences = () => {
             const { _referenceElement } = this;
             if (!_referenceElement) {
                 return;
             }
-            _referenceElement.removeEventListener("mouseenter", this.show);
-            _referenceElement.removeEventListener("mouseleave", this.hide);
-            _referenceElement.removeEventListener("focus", this.show);
-            _referenceElement.removeEventListener("blur", this.hide);
+            _referenceElement.removeAttribute(ARIA_DESCRIBED_BY);
+            _referenceElement.removeAttribute(TOOLTIP_REFERENCE);
         };
         this.show = () => {
             this.open = true;
@@ -89,10 +79,9 @@ export class CalciteTooltip {
         this.reposition();
     }
     referenceElementHandler() {
-        this.removeReferenceListeners();
+        this.removeReferences();
         this._referenceElement = this.getReferenceElement();
-        this.addReferenceListeners();
-        this.addReferenceAria();
+        this.addReferences();
         this.createPopper();
     }
     // --------------------------------------------------------------------------
@@ -101,12 +90,11 @@ export class CalciteTooltip {
     //
     // --------------------------------------------------------------------------
     componentDidLoad() {
-        this.addReferenceListeners();
-        this.addReferenceAria();
+        this.addReferences();
         this.createPopper();
     }
     componentDidUnload() {
-        this.removeReferenceListeners();
+        this.removeReferences();
         this.destroyPopper();
     }
     // --------------------------------------------------------------------------
@@ -122,7 +110,7 @@ export class CalciteTooltip {
                 el,
                 modifiers,
                 placement,
-                popper
+                popper,
             })
             : this.createPopper();
     }
@@ -138,15 +126,15 @@ export class CalciteTooltip {
             name: "arrow",
             enabled: true,
             options: {
-                element: arrowEl
-            }
+                element: arrowEl,
+            },
         };
         const offsetModifier = {
             name: "offset",
             enabled: true,
             options: {
-                offset: [offsetSkidding, offsetDistance]
-            }
+                offset: [offsetSkidding, offsetDistance],
+            },
         };
         return [arrowModifier, offsetModifier];
     }
@@ -159,7 +147,7 @@ export class CalciteTooltip {
             modifiers,
             open,
             placement,
-            referenceEl
+            referenceEl,
         });
     }
     destroyPopper() {
@@ -178,9 +166,9 @@ export class CalciteTooltip {
         const { _referenceElement, open } = this;
         const displayed = _referenceElement && open;
         return (h(Host, { role: "tooltip", class: {
-                [HOST_CSS.hydratedInvisible]: !displayed
+                [HOST_CSS.hydratedInvisible]: !displayed,
             }, "aria-hidden": !displayed ? "true" : "false", id: this.getId() },
-            h("div", { class: CSS.arrow, ref: arrowEl => (this.arrowEl = arrowEl) }),
+            h("div", { class: CSS.arrow, ref: (arrowEl) => (this.arrowEl = arrowEl) }),
             h("div", { class: CSS.container },
                 h("slot", null))));
     }
@@ -306,8 +294,7 @@ export class CalciteTooltip {
                 "text": "Select theme (light or dark)"
             },
             "attribute": "theme",
-            "reflect": true,
-            "defaultValue": "\"light\""
+            "reflect": true
         }
     }; }
     static get states() { return {

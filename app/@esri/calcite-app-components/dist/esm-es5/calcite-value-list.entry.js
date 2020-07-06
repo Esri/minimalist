@@ -34,13 +34,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { r as registerInstance, c as createEvent, h, g as getElement } from './index-1a2740c5.js';
-import './CalciteScrim-16fe359e.js';
-import { a as guid } from './guid-715b8407.js';
-import './resources-1839192e.js';
-import './lodash-7109ef43.js';
-import { s as sharedListMethods, L as List } from './shared-list-render-78f20d8a.js';
-import { S as Sortable } from './sortable.esm-17fa73eb.js';
+import { r as registerInstance, c as createEvent, h, g as getElement } from './index-03e9a7ba.js';
+import './CalciteScrim-72de5de3.js';
+import './dom-7d75fa2b.js';
+import { a as guid } from './guid-80e40540.js';
+import './array-dbbc14b3.js';
+import './resources-3de36c7f.js';
+import './lodash-f605e937.js';
+import { m as mutationObserverCallback, d as deselectSiblingItems, s as selectSiblings, h as handleFilter, g as getItemData, k as keyDownHandler, i as initialize, a as initializeObserver, c as cleanUpObserver, b as calciteListItemChangeHandler, e as calciteListItemValueChangeHandler, f as setUpItems, j as setFocus, L as List } from './shared-list-render-615607f5.js';
+import { S as Sortable } from './sortable.esm-12e4e153.js';
 var CSS = {
     container: "container",
     handle: "handle"
@@ -52,7 +54,7 @@ var ICON_TYPES;
 var TEXT = {
     filterPlaceholder: "Filter results"
 };
-var mutationObserverCallback = sharedListMethods.mutationObserverCallback, initialize = sharedListMethods.initialize, initializeObserver = sharedListMethods.initializeObserver, cleanUpObserver = sharedListMethods.cleanUpObserver, calciteListItemChangeHandler = sharedListMethods.calciteListItemChangeHandler, calciteListItemValueChangeHandler = sharedListMethods.calciteListItemValueChangeHandler, setUpItems = sharedListMethods.setUpItems, deselectSiblingItems = sharedListMethods.deselectSiblingItems, selectSiblings = sharedListMethods.selectSiblings, handleFilter = sharedListMethods.handleFilter, getItemData = sharedListMethods.getItemData;
+var calciteValueListCss = ":host{-webkit-box-sizing:border-box;box-sizing:border-box;color:var(--calcite-app-foreground);font-family:var(--calcite-app-font-family);font-size:var(--calcite-app-font-size-0);line-height:var(--calcite-app-line-height);background-color:var(--calcite-app-background)}:host *{-webkit-box-sizing:border-box;box-sizing:border-box}:host{-ms-flex-align:stretch;align-items:stretch;background-color:var(--calcite-app-background-clear);display:-ms-flexbox;display:flex;-ms-flex:0 0 auto;flex:0 0 auto;-ms-flex-flow:column;flex-flow:column;position:relative}:host([hidden]){display:none}:host([theme=dark]){--calcite-app-background:#404040;--calcite-app-foreground:#dfdfdf;--calcite-app-background-hover:#2b2b2b;--calcite-app-foreground-hover:#f3f3f3;--calcite-app-background-active:#151515;--calcite-app-foreground-active:#59d6ff;--calcite-app-foreground-subtle:#eaeaea;--calcite-app-background-content:#2b2b2b;--calcite-app-border:#2b2b2b;--calcite-app-border-hover:#2b2b2b;--calcite-app-border-subtle:#2b2b2b;--calcite-app-scrim:rgba(64, 64, 64, 0.8)}:host([theme=light]){--calcite-app-background:#ffffff;--calcite-app-foreground:#404040;--calcite-app-background-hover:#eaeaea;--calcite-app-foreground-hover:#2b2b2b;--calcite-app-background-active:#c7eaff;--calcite-app-foreground-active:#00619b;--calcite-app-foreground-subtle:#757575;--calcite-app-foreground-link:#007ac2;--calcite-app-background-content:#f3f3f3;--calcite-app-background-clear:transparent;--calcite-app-border:#eaeaea;--calcite-app-border-hover:#dfdfdf;--calcite-app-border-subtle:#f3f3f3;--calcite-app-border-active:#007ac2;--calcite-app-disabled-opacity:0.25;--calcite-app-scrim:rgba(255, 255, 255, 0.8)}header{background-color:var(--calcite-app-background);display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end;-ms-flex-align:center;align-items:center;margin-bottom:var(--calcite-app-cap-spacing-quarter);-webkit-box-shadow:0 -1px 0 var(--calcite-app-border) inset;box-shadow:0 -1px 0 var(--calcite-app-border) inset}header.sticky{position:-webkit-sticky;position:sticky;top:0;z-index:1}calcite-filter{margin-bottom:1px}slot[name=menu-actions]::slotted(calcite-action){padding:0 var(--calcite-app-side-spacing-half)}";
 var CalciteValueList = /** @class */ (function () {
     function class_1(hostRef) {
         var _this = this;
@@ -64,6 +66,8 @@ var CalciteValueList = /** @class */ (function () {
         // --------------------------------------------------------------------------
         /**
          * Compact reduces the size of all items in the list.
+         *
+         * @deprecated This property will be removed in a future release.
          */
         this.compact = false;
         /**
@@ -109,16 +113,15 @@ var CalciteValueList = /** @class */ (function () {
         this.handleFilter = handleFilter.bind(this);
         this.getItemData = getItemData.bind(this);
         this.keyDownHandler = function (event) {
-            var handleElement = event.composedPath().find(function (item) {
-                var _a;
-                return (_a = item.dataset) === null || _a === void 0 ? void 0 : _a.jsHandle;
-            });
-            var valueListElement = event.composedPath().find(function (item) {
-                var _a;
-                return ((_a = item.tagName) === null || _a === void 0 ? void 0 : _a.toLowerCase()) === "calcite-value-list-item";
-            });
+            var handleElement = event
+                .composedPath()
+                .find(function (item) { var _a; return (_a = item.dataset) === null || _a === void 0 ? void 0 : _a.jsHandle; });
+            var valueListElement = event
+                .composedPath()
+                .find(function (item) { var _a; return ((_a = item.tagName) === null || _a === void 0 ? void 0 : _a.toLowerCase()) === "calcite-value-list-item"; });
             // Only trigger keyboard sorting when the internal drag handle is focused and activated
             if (!handleElement || !valueListElement.handleActivated) {
+                keyDownHandler.call(_this, event);
                 return;
             }
             var lastIndex = _this.items.length - 1;
@@ -172,10 +175,10 @@ var CalciteValueList = /** @class */ (function () {
     // --------------------------------------------------------------------------
     class_1.prototype.connectedCallback = function () {
         initialize.call(this);
+        initializeObserver.call(this);
     };
     class_1.prototype.componentDidLoad = function () {
         this.setUpDragAndDrop();
-        initializeObserver.call(this);
     };
     class_1.prototype.componentDidUnload = function () {
         cleanUpObserver.call(this);
@@ -241,6 +244,13 @@ var CalciteValueList = /** @class */ (function () {
             });
         });
     };
+    class_1.prototype.setFocus = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_b) {
+                return [2 /*return*/, setFocus.call(this)];
+            });
+        });
+    };
     // --------------------------------------------------------------------------
     //
     //  Render Methods
@@ -261,11 +271,7 @@ var CalciteValueList = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(class_1, "style", {
-        get: function () { return ":host{-webkit-box-sizing:border-box;box-sizing:border-box;color:var(--calcite-app-foreground);font-family:var(--calcite-app-font-family);font-size:var(--calcite-app-font-size-0);line-height:var(--calcite-app-line-height);background-color:var(--calcite-app-background)}:host *{-webkit-box-sizing:border-box;box-sizing:border-box}:host{-ms-flex-align:stretch;align-items:stretch;background-color:var(--calcite-app-background-clear);display:-ms-flexbox;display:flex;-ms-flex:0 0 auto;flex:0 0 auto;-ms-flex-flow:column;flex-flow:column;position:relative}:host([hidden]){display:none}:host([theme=dark]){--calcite-app-background:#404040;--calcite-app-foreground:#dfdfdf;--calcite-app-background-hover:#2b2b2b;--calcite-app-foreground-hover:#f3f3f3;--calcite-app-background-active:#151515;--calcite-app-foreground-active:#59d6ff;--calcite-app-foreground-subtle:#eaeaea;--calcite-app-background-content:#2b2b2b;--calcite-app-border:#2b2b2b;--calcite-app-border-hover:#2b2b2b;--calcite-app-border-subtle:#2b2b2b;--calcite-app-scrim:rgba(64, 64, 64, 0.8)}:host([theme=light]){--calcite-app-background:#ffffff;--calcite-app-foreground:#404040;--calcite-app-background-hover:#eaeaea;--calcite-app-foreground-hover:#2b2b2b;--calcite-app-background-active:#c7eaff;--calcite-app-foreground-active:#00619b;--calcite-app-foreground-subtle:#757575;--calcite-app-foreground-link:#007ac2;--calcite-app-background-content:#f3f3f3;--calcite-app-background-clear:transparent;--calcite-app-border:#eaeaea;--calcite-app-border-hover:#dfdfdf;--calcite-app-border-subtle:#f3f3f3;--calcite-app-border-active:#007ac2;--calcite-app-disabled-opacity:0.25;--calcite-app-scrim:rgba(255, 255, 255, 0.8)}header{background-color:var(--calcite-app-background);display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end;-ms-flex-align:center;align-items:center;margin-bottom:var(--calcite-app-cap-spacing-quarter);-webkit-box-shadow:0 -1px 0 var(--calcite-app-border) inset;box-shadow:0 -1px 0 var(--calcite-app-border) inset}header.sticky{position:-webkit-sticky;position:sticky;top:0;z-index:1}calcite-filter{margin-bottom:1px}slot[name=menu-actions]::slotted(calcite-action){padding:0 var(--calcite-app-side-spacing-half)}"; },
-        enumerable: true,
-        configurable: true
-    });
     return class_1;
 }());
+CalciteValueList.style = calciteValueListCss;
 export { CalciteValueList as calcite_value_list };

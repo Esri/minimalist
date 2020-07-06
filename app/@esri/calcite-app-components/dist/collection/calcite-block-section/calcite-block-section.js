@@ -1,4 +1,4 @@
-import { h } from "@stencil/core";
+import { Component, Element, Event, Prop, h } from "@stencil/core";
 import { getElementDir } from "../utils/dom";
 import { CSS, ICONS, TEXT } from "./resources";
 import { guid } from "../utils/guid";
@@ -8,23 +8,10 @@ import classnames from "classnames";
  */
 export class CalciteBlockSection {
     constructor() {
-        // --------------------------------------------------------------------------
-        //
-        //  Properties
-        //
-        // --------------------------------------------------------------------------
         /**
          * When true, the block's section content will be displayed.
          */
         this.open = false;
-        /**
-         * Tooltip used for the toggle when collapsed.
-         */
-        this.textExpand = TEXT.expand;
-        /**
-         * Tooltip used for the toggle when expanded.
-         */
-        this.textCollapse = TEXT.collapse;
         /**
          * This property determines the look of the section toggle.
          * If the value is "switch", a toggle-switch will be displayed.
@@ -57,19 +44,20 @@ export class CalciteBlockSection {
     //
     // --------------------------------------------------------------------------
     render() {
-        const { el, guid: id, open, text, textCollapse, textExpand, toggleDisplay } = this;
+        const { el, guid: id, intlCollapse, intlExpand, open, text, textCollapse, textExpand, toggleDisplay } = this;
         const dir = getElementDir(el);
         const arrowIcon = open
             ? ICONS.menuOpen
             : dir === "rtl"
                 ? ICONS.menuClosedLeft
                 : ICONS.menuClosedRight;
-        const toggleLabel = open ? textCollapse : textExpand;
+        const toggleLabel = open
+            ? intlCollapse || textCollapse || TEXT.collapse
+            : intlExpand || textExpand || TEXT.expand;
         const labelId = `${id}__label`;
         const headerNode = toggleDisplay === "switch" ? (h("label", { "aria-label": toggleLabel, class: classnames(CSS.toggle, CSS.toggleSwitch), id: labelId, onKeyDown: this.handleHeaderLabelKeyDown, tabIndex: 0 },
             text,
-            h("calcite-switch", { "aria-labelledby": labelId, switched: open, onChange: this.toggleSection, scale: "s", tabIndex: -1 }))) : (h("calcite-action", { "aria-label": toggleLabel, class: CSS.toggle, onClick: this.toggleSection, text: text, textEnabled: true, compact: true },
-            h("calcite-icon", { scale: "s", icon: arrowIcon })));
+            h("calcite-switch", { "aria-labelledby": labelId, switched: open, onChange: this.toggleSection, scale: "s", tabIndex: -1 }))) : (h("calcite-action", { "aria-label": toggleLabel, class: CSS.toggle, onClick: this.toggleSection, text: text, textEnabled: true, compact: true, icon: arrowIcon }));
         return (h("section", { "aria-expanded": open.toString() },
             headerNode,
             h("div", { class: CSS.content, hidden: !open },
@@ -84,6 +72,40 @@ export class CalciteBlockSection {
         "$": ["calcite-block-section.css"]
     }; }
     static get properties() { return {
+        "intlCollapse": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": true,
+            "docs": {
+                "tags": [],
+                "text": "Tooltip used for the toggle when expanded."
+            },
+            "attribute": "intl-collapse",
+            "reflect": false
+        },
+        "intlExpand": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": true,
+            "docs": {
+                "tags": [],
+                "text": "Tooltip used for the toggle when collapsed."
+            },
+            "attribute": "intl-expand",
+            "reflect": false
+        },
         "open": {
             "type": "boolean",
             "mutable": false,
@@ -119,24 +141,6 @@ export class CalciteBlockSection {
             "attribute": "text",
             "reflect": false
         },
-        "textExpand": {
-            "type": "string",
-            "mutable": false,
-            "complexType": {
-                "original": "string",
-                "resolved": "string",
-                "references": {}
-            },
-            "required": false,
-            "optional": false,
-            "docs": {
-                "tags": [],
-                "text": "Tooltip used for the toggle when collapsed."
-            },
-            "attribute": "text-expand",
-            "reflect": false,
-            "defaultValue": "TEXT.expand"
-        },
         "textCollapse": {
             "type": "string",
             "mutable": false,
@@ -146,14 +150,36 @@ export class CalciteBlockSection {
                 "references": {}
             },
             "required": false,
-            "optional": false,
+            "optional": true,
             "docs": {
-                "tags": [],
+                "tags": [{
+                        "text": "use \"intlCollapse\" instead.",
+                        "name": "deprecated"
+                    }],
                 "text": "Tooltip used for the toggle when expanded."
             },
             "attribute": "text-collapse",
-            "reflect": false,
-            "defaultValue": "TEXT.collapse"
+            "reflect": false
+        },
+        "textExpand": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": true,
+            "docs": {
+                "tags": [{
+                        "text": "use \"intlExpand\" instead.",
+                        "name": "deprecated"
+                    }],
+                "text": "Tooltip used for the toggle when collapsed."
+            },
+            "attribute": "text-expand",
+            "reflect": false
         },
         "toggleDisplay": {
             "type": "string",

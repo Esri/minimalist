@@ -22,11 +22,30 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
 };
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -67,14 +86,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
-define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/core/tsSupport/decorateHelper", "esri/core/Accessor", "dojo/i18n!../../nls/resources", "esri/core/accessorSupport/decorators", "../FeatureList"], function (require, exports, __extends, __decorate, Accessor, i18n, decorators_1, FeatureList_1) {
+define(["require", "exports", "esri/core/Accessor", "dojo/i18n!../../nls/resources", "esri/core/accessorSupport/decorators", "../FeatureList"], function (require, exports, Accessor, i18n, decorators_1, FeatureList_1) {
     "use strict";
     FeatureList_1 = __importDefault(FeatureList_1);
     var PanelViewModel = /** @class */ (function (_super) {
@@ -136,15 +148,15 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             return featureList;
         };
         PanelViewModel.prototype.createActions = function () {
-            var _a = this.applicationConfig, legend = _a.legend, details = _a.details, activePanel = _a.activePanel, popupPanel = _a.popupPanel;
+            var _a = this.applicationConfig, legendPanel = _a.legendPanel, details = _a.details, activePanel = _a.activePanel, popupPanel = _a.popupPanel;
             var actions = [];
-            if (legend) {
+            if (legendPanel) {
                 actions.push({
-                    key: "legend",
+                    key: "legendPanel",
                     icon: "legend",
                     name: i18n.tools.legend,
                     label: i18n.tools.legend,
-                    active: activePanel === "legend" ? true : false
+                    active: activePanel === "legendPanel" ? true : false
                 });
             }
             // if legend is already active don't make details active
@@ -164,13 +176,12 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
                     icon: "popup",
                     name: i18n.tools.popup,
                     label: i18n.tools.popup,
-                    active: activePanel === "popup" ? true : false
+                    active: activePanel === "popupPanel" ? true : false
                 });
             }
             this.actions = actions;
         };
         PanelViewModel.prototype.actionItemClicked = function (e) {
-            var _this = this;
             var _a;
             // the panels are empty 
             var activeAction = e === null || e === void 0 ? void 0 : e.target;
@@ -178,21 +189,21 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             this.actions.forEach(function (action) {
                 if (name === action.key) {
                     action.active = !activeAction.active;
-                    // if the pressed action isn't active we can close the panel 
-                    if (_this.calcitePanel) {
-                        _this.calcitePanel.collapsed = action.active ? false : true;
-                    }
-                    ;
                 }
                 else { // hide others 
                     action.active = false;
                 }
             });
+            // Collapse the panel if there aren't any active tools
+            var isActive = this.actions.some(function (a) {
+                return a.active;
+            });
+            this.calcitePanel.collapsed = isActive ? false : true;
         };
         PanelViewModel.prototype.createActionClickFunction = function (action) {
             var clickFunction = null;
             switch (action.key) {
-                case "legend":
+                case "legendPanel":
                     clickFunction = this.createLegend;
                     break;
                 case "details":
@@ -243,7 +254,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             decorators_1.subclass("esri.demo.PanelViewModel")
         ], PanelViewModel);
         return PanelViewModel;
-    }(decorators_1.declared(Accessor)));
+    }((Accessor)));
     return PanelViewModel;
 });
 //# sourceMappingURL=PanelViewModel.js.map

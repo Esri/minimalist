@@ -2,14 +2,16 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-const core = require('./core-67746296.js');
-const dom = require('./dom-801460f3.js');
-const guid = require('./guid-1986fc89.js');
-const keys = require('./keys-4806e54f.js');
+const index = require('./index-8fc102d1.js');
+const dom = require('./dom-581e28c5.js');
+const guid = require('./guid-0a2e4f7f.js');
+const key = require('./key-822806f8.js');
+
+const calciteTabCss = ":host([hidden]){display:none}:host([is-active]) section{display:block}:host{display:none}:host([is-active]){display:block}section{height:100%;width:100%;display:none}";
 
 const CalciteTab = class {
     constructor(hostRef) {
-        core.registerInstance(this, hostRef);
+        index.registerInstance(this, hostRef);
         /**
          * Show this tab
          */
@@ -23,8 +25,8 @@ const CalciteTab = class {
          * @internal
          */
         this.guid = `calcite-tab-title-${guid.guid()}`;
-        this.calciteTabRegister = core.createEvent(this, "calciteTabRegister", 7);
-        this.calciteTabUnregister = core.createEvent(this, "calciteTabUnregister", 7);
+        this.calciteTabRegister = index.createEvent(this, "calciteTabRegister", 7);
+        this.calciteTabUnregister = index.createEvent(this, "calciteTabUnregister", 7);
     }
     //--------------------------------------------------------------------------
     //
@@ -33,7 +35,7 @@ const CalciteTab = class {
     //--------------------------------------------------------------------------
     render() {
         const id = this.el.id || this.guid;
-        return (core.h(core.Host, { id: id, "aria-labeledby": this.labeledBy, "aria-expanded": this.isActive.toString(), role: "tabpanel" }, core.h("section", null, core.h("slot", null))));
+        return (index.h(index.Host, { id: id, "aria-labeledby": this.labeledBy, "aria-expanded": this.isActive.toString(), role: "tabpanel" }, index.h("section", null, index.h("slot", null))));
     }
     componentDidLoad() {
         this.calciteTabRegister.emit();
@@ -86,14 +88,16 @@ const CalciteTab = class {
         this.labeledBy = titleIds[tabIds.indexOf(this.el.id)] || null;
         return Promise.resolve();
     }
-    get el() { return core.getElement(this); }
-    static get style() { return ":root{--calcite-ui-blue:#007ac2;--calcite-ui-blue-hover:#2890ce;--calcite-ui-blue-press:#00619b;--calcite-ui-green:#35ac46;--calcite-ui-green-hover:#50ba5f;--calcite-ui-green-press:#288835;--calcite-ui-yellow:#edd317;--calcite-ui-yellow-hover:#f9e54e;--calcite-ui-yellow-press:#d9bc00;--calcite-ui-red:#d83020;--calcite-ui-red-hover:#e65240;--calcite-ui-red-press:#a82b1e;--calcite-ui-background:#f8f8f8;--calcite-ui-foreground:#fff;--calcite-ui-foreground-hover:#f3f3f3;--calcite-ui-foreground-press:#eaeaea;--calcite-ui-text-1:#151515;--calcite-ui-text-2:#4a4a4a;--calcite-ui-text-3:#6a6a6a;--calcite-ui-border-1:#cacaca;--calcite-ui-border-2:#dfdfdf;--calcite-ui-border-3:#eaeaea;--calcite-ui-border-hover:#9f9f9f;--calcite-ui-border-press:#757575}:host([theme=dark]){--calcite-ui-blue:#00a0ff;--calcite-ui-blue-hover:#0087d7;--calcite-ui-blue-press:#47bbff;--calcite-ui-green:#36da43;--calcite-ui-green-hover:#11ad1d;--calcite-ui-green-press:#44ed51;--calcite-ui-yellow:#ffc900;--calcite-ui-yellow-hover:#f4b000;--calcite-ui-yellow-press:#ffe24d;--calcite-ui-red:#fe583e;--calcite-ui-red-hover:#f3381b;--calcite-ui-red-press:#ff7465;--calcite-ui-background:#202020;--calcite-ui-foreground:#2b2b2b;--calcite-ui-foreground-hover:#353535;--calcite-ui-foreground-press:#404040;--calcite-ui-text-1:#fff;--calcite-ui-text-2:#bfbfbf;--calcite-ui-text-3:#9f9f9f;--calcite-ui-border-1:#4a4a4a;--calcite-ui-border-2:#404040;--calcite-ui-border-3:#353535;--calcite-ui-border-hover:#757575;--calcite-ui-border-press:#9f9f9f}:root{--calcite-border-radius:3px}:host([hidden]){display:none}body{font-family:Avenir Next W01,Avenir Next W00,Avenir Next,Avenir,Helvetica Neue,sans-serif}.overflow-hidden{overflow:hidden}calcite-tab{display:none}calcite-tab[is-active]{display:block}a{color:#007ac2}.hydrated--invisible{visibility:hidden}:host([is-active]) section{display:block}section{display:none}"; }
+    get el() { return index.getElement(this); }
 };
+CalciteTab.style = calciteTabCss;
+
+const calciteTabNavCss = ":host([hidden]){display:none}.tab-nav{display:-ms-flexbox;display:flex;overflow:auto;-ms-flex-pack:start;justify-content:flex-start}:host([layout=center]) .tab-nav{-ms-flex-pack:center;justify-content:center}";
 
 const CalciteTabNav = class {
     constructor(hostRef) {
-        core.registerInstance(this, hostRef);
-        this.calciteTabChange = core.createEvent(this, "calciteTabChange", 7);
+        index.registerInstance(this, hostRef);
+        this.calciteTabChange = index.createEvent(this, "calciteTabChange", 7);
     }
     selectedTabChanged() {
         if (localStorage &&
@@ -120,8 +124,12 @@ const CalciteTabNav = class {
             });
         }
     }
+    componentWillRender() {
+        var _a;
+        this.layout = (_a = this.el.closest("calcite-tabs")) === null || _a === void 0 ? void 0 : _a.layout;
+    }
     render() {
-        return (core.h(core.Host, { role: "tablist" }, core.h("nav", { class: "tab-nav", ref: el => (this.tabNavEl = el) }, core.h("slot", null))));
+        return (index.h(index.Host, { role: "tablist" }, index.h("nav", { class: "tab-nav", ref: el => (this.tabNavEl = el) }, index.h("slot", null))));
     }
     componentDidRender() {
         // if every tab title is active select the first tab.
@@ -199,29 +207,29 @@ const CalciteTabNav = class {
         }
         return [];
     }
-    get el() { return core.getElement(this); }
+    get el() { return index.getElement(this); }
     static get watchers() { return {
         "selectedTab": ["selectedTabChanged"]
     }; }
-    static get style() { return ":root{--calcite-ui-blue:#007ac2;--calcite-ui-blue-hover:#2890ce;--calcite-ui-blue-press:#00619b;--calcite-ui-green:#35ac46;--calcite-ui-green-hover:#50ba5f;--calcite-ui-green-press:#288835;--calcite-ui-yellow:#edd317;--calcite-ui-yellow-hover:#f9e54e;--calcite-ui-yellow-press:#d9bc00;--calcite-ui-red:#d83020;--calcite-ui-red-hover:#e65240;--calcite-ui-red-press:#a82b1e;--calcite-ui-background:#f8f8f8;--calcite-ui-foreground:#fff;--calcite-ui-foreground-hover:#f3f3f3;--calcite-ui-foreground-press:#eaeaea;--calcite-ui-text-1:#151515;--calcite-ui-text-2:#4a4a4a;--calcite-ui-text-3:#6a6a6a;--calcite-ui-border-1:#cacaca;--calcite-ui-border-2:#dfdfdf;--calcite-ui-border-3:#eaeaea;--calcite-ui-border-hover:#9f9f9f;--calcite-ui-border-press:#757575}:host([theme=dark]){--calcite-ui-blue:#00a0ff;--calcite-ui-blue-hover:#0087d7;--calcite-ui-blue-press:#47bbff;--calcite-ui-green:#36da43;--calcite-ui-green-hover:#11ad1d;--calcite-ui-green-press:#44ed51;--calcite-ui-yellow:#ffc900;--calcite-ui-yellow-hover:#f4b000;--calcite-ui-yellow-press:#ffe24d;--calcite-ui-red:#fe583e;--calcite-ui-red-hover:#f3381b;--calcite-ui-red-press:#ff7465;--calcite-ui-background:#202020;--calcite-ui-foreground:#2b2b2b;--calcite-ui-foreground-hover:#353535;--calcite-ui-foreground-press:#404040;--calcite-ui-text-1:#fff;--calcite-ui-text-2:#bfbfbf;--calcite-ui-text-3:#9f9f9f;--calcite-ui-border-1:#4a4a4a;--calcite-ui-border-2:#404040;--calcite-ui-border-3:#353535;--calcite-ui-border-hover:#757575;--calcite-ui-border-press:#9f9f9f}:root{--calcite-border-radius:3px}:host([hidden]){display:none}body{font-family:Avenir Next W01,Avenir Next W00,Avenir Next,Avenir,Helvetica Neue,sans-serif}.overflow-hidden{overflow:hidden}calcite-tab{display:none}calcite-tab[is-active]{display:block}a{color:#007ac2}.hydrated--invisible{visibility:hidden}.tab-nav{display:-ms-flexbox;display:flex;-ms-flex-pack:var(--calcite-tabs-layout);justify-content:var(--calcite-tabs-layout);overflow:auto}::slotted(calcite-tab-title){margin-right:var(--calcite-tabs-tab-margin-start);margin-left:var(--calcite-tabs-tab-margin-end)}:host([dir=rtl]) ::slotted(calcite-tab-title){margin-right:var(--calcite-tabs-tab-margin-end);margin-left:var(--calcite-tabs-tab-margin-start)}"; }
 };
+CalciteTabNav.style = calciteTabNavCss;
+
+const calciteTabTitleCss = ":host([hidden]){display:none}:host{-ms-flex:0 1 auto;flex:0 1 auto;outline:none;margin-right:1.25rem;-webkit-margin-start:0;margin-inline-start:0;-webkit-margin-end:1.25rem;margin-inline-end:1.25rem}:host-context([dir=rtl]){margin-right:0;margin-left:1.25rem}:host-context([theme=dark]){--calcite-ui-blue-1:#00A0FF;--calcite-ui-blue-2:#0087D7;--calcite-ui-blue-3:#47BBFF;--calcite-ui-green-1:#36DA43;--calcite-ui-green-2:#11AD1D;--calcite-ui-green-3:#44ED51;--calcite-ui-yellow-1:#FFC900;--calcite-ui-yellow-2:#F4B000;--calcite-ui-yellow-3:#FFE24D;--calcite-ui-red-1:#FE583E;--calcite-ui-red-2:#F3381B;--calcite-ui-red-3:#FF7465;--calcite-ui-background:#202020;--calcite-ui-foreground-1:#2b2b2b;--calcite-ui-foreground-2:#353535;--calcite-ui-foreground-3:#404040;--calcite-ui-text-1:#ffffff;--calcite-ui-text-2:#bfbfbf;--calcite-ui-text-3:#9f9f9f;--calcite-ui-border-1:#4a4a4a;--calcite-ui-border-2:#404040;--calcite-ui-border-3:#353535;--calcite-ui-border-4:#757575;--calcite-ui-border-5:#9f9f9f}:host([layout=center]){-ms-flex-preferred-size:200px;flex-basis:200px;text-align:center;margin:0 1.25rem}:host{outline-offset:0;outline-color:transparent;-webkit-transition:outline-offset 100ms ease-in-out, outline-color 100ms ease-in-out;transition:outline-offset 100ms ease-in-out, outline-color 100ms ease-in-out}:host(:focus){outline:2px solid var(--calcite-ui-blue-1);outline-offset:-2px}:host(:active) a,:host(:focus) a,:host(:hover) a{outline:none;text-decoration:none;color:var(--calcite-ui-text-1);border-bottom-color:var(--calcite-ui-border-2)}:host([is-active]) a{color:var(--calcite-ui-text-1);border-bottom-color:var(--calcite-ui-blue-1);font-weight:500}a{-webkit-box-sizing:border-box;box-sizing:border-box;font-size:0.875rem;line-height:1.5;padding:0.75rem 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-bottom:3px solid transparent;cursor:pointer;-webkit-transition:all 0.15s ease-in-out;transition:all 0.15s ease-in-out;color:var(--calcite-ui-text-3);outline:none;width:100%;display:block}";
 
 const CalciteTabTitle = class {
     constructor(hostRef) {
-        core.registerInstance(this, hostRef);
-        /**
-         * Show this tab title as selected
-         */
+        index.registerInstance(this, hostRef);
+        /** Show this tab title as selected */
         this.isActive = false;
         /**
          * @internal
          */
         this.guid = `calcite-tab-title-${guid.guid()}`;
-        this.calciteTabsActivate = core.createEvent(this, "calciteTabsActivate", 7);
-        this.calciteTabsFocusNext = core.createEvent(this, "calciteTabsFocusNext", 7);
-        this.calciteTabsFocusPrevious = core.createEvent(this, "calciteTabsFocusPrevious", 7);
-        this.calciteTabTitleRegister = core.createEvent(this, "calciteTabTitleRegister", 7);
-        this.calciteTabTitleUnregister = core.createEvent(this, "calciteTabTitleUnregister", 7);
+        this.calciteTabsActivate = index.createEvent(this, "calciteTabsActivate", 7);
+        this.calciteTabsFocusNext = index.createEvent(this, "calciteTabsFocusNext", 7);
+        this.calciteTabsFocusPrevious = index.createEvent(this, "calciteTabsFocusPrevious", 7);
+        this.calciteTabTitleRegister = index.createEvent(this, "calciteTabTitleRegister", 7);
+        this.calciteTabTitleUnregister = index.createEvent(this, "calciteTabTitleUnregister", 7);
     }
     //--------------------------------------------------------------------------
     //
@@ -231,13 +239,17 @@ const CalciteTabTitle = class {
     componentWillLoad() {
         if (this.tab && this.isActive) {
             this.calciteTabsActivate.emit({
-                tab: this.tab
+                tab: this.tab,
             });
         }
     }
+    componentWillRender() {
+        var _a;
+        this.layout = (_a = this.el.closest("calcite-tabs")) === null || _a === void 0 ? void 0 : _a.layout;
+    }
     render() {
         const id = this.el.id || this.guid;
-        return (core.h(core.Host, { id: id, "aria-controls": this.controls, "aria-expanded": this.isActive.toString(), role: "tab", tabindex: "0" }, core.h("a", null, core.h("slot", null))));
+        return (index.h(index.Host, { id: id, "aria-controls": this.controls, "aria-expanded": this.isActive.toString(), role: "tab", tabindex: "0" }, index.h("a", null, index.h("slot", null))));
     }
     componentDidLoad() {
         this.calciteTabTitleRegister.emit();
@@ -255,26 +267,26 @@ const CalciteTabTitle = class {
             this.isActive = this.tab === event.detail.tab;
         }
         else {
-            this.getTabIndex().then(index => {
+            this.getTabIndex().then((index) => {
                 this.isActive = index === event.detail.tab;
             });
         }
     }
     onClick() {
         this.calciteTabsActivate.emit({
-            tab: this.tab
+            tab: this.tab,
         });
     }
     keyDownHandler(e) {
-        switch (e.keyCode) {
-            case keys.SPACE:
-            case keys.ENTER:
+        switch (key.getKey(e.key)) {
+            case " ":
+            case "Enter":
                 this.calciteTabsActivate.emit({
-                    tab: this.tab
+                    tab: this.tab,
                 });
                 e.preventDefault();
                 break;
-            case keys.RIGHT:
+            case "ArrowRight":
                 if (dom.getElementDir(this.el) === "ltr") {
                     this.calciteTabsFocusNext.emit();
                 }
@@ -282,7 +294,7 @@ const CalciteTabTitle = class {
                     this.calciteTabsFocusPrevious.emit();
                 }
                 break;
-            case keys.LEFT:
+            case "ArrowLeft":
                 if (dom.getElementDir(this.el) === "ltr") {
                     this.calciteTabsFocusPrevious.emit();
                 }
@@ -316,22 +328,15 @@ const CalciteTabTitle = class {
         this.controls = tabIds[titleIds.indexOf(this.el.id)] || null;
         return Promise.resolve();
     }
-    get el() { return core.getElement(this); }
-    static get style() { return ":root{--calcite-ui-blue:#007ac2;--calcite-ui-blue-hover:#2890ce;--calcite-ui-blue-press:#00619b;--calcite-ui-green:#35ac46;--calcite-ui-green-hover:#50ba5f;--calcite-ui-green-press:#288835;--calcite-ui-yellow:#edd317;--calcite-ui-yellow-hover:#f9e54e;--calcite-ui-yellow-press:#d9bc00;--calcite-ui-red:#d83020;--calcite-ui-red-hover:#e65240;--calcite-ui-red-press:#a82b1e;--calcite-ui-background:#f8f8f8;--calcite-ui-foreground:#fff;--calcite-ui-foreground-hover:#f3f3f3;--calcite-ui-foreground-press:#eaeaea;--calcite-ui-text-1:#151515;--calcite-ui-text-2:#4a4a4a;--calcite-ui-text-3:#6a6a6a;--calcite-ui-border-1:#cacaca;--calcite-ui-border-2:#dfdfdf;--calcite-ui-border-3:#eaeaea;--calcite-ui-border-hover:#9f9f9f;--calcite-ui-border-press:#757575}:host([theme=dark]){--calcite-ui-blue:#00a0ff;--calcite-ui-blue-hover:#0087d7;--calcite-ui-blue-press:#47bbff;--calcite-ui-green:#36da43;--calcite-ui-green-hover:#11ad1d;--calcite-ui-green-press:#44ed51;--calcite-ui-yellow:#ffc900;--calcite-ui-yellow-hover:#f4b000;--calcite-ui-yellow-press:#ffe24d;--calcite-ui-red:#fe583e;--calcite-ui-red-hover:#f3381b;--calcite-ui-red-press:#ff7465;--calcite-ui-background:#202020;--calcite-ui-foreground:#2b2b2b;--calcite-ui-foreground-hover:#353535;--calcite-ui-foreground-press:#404040;--calcite-ui-text-1:#fff;--calcite-ui-text-2:#bfbfbf;--calcite-ui-text-3:#9f9f9f;--calcite-ui-border-1:#4a4a4a;--calcite-ui-border-2:#404040;--calcite-ui-border-3:#353535;--calcite-ui-border-hover:#757575;--calcite-ui-border-press:#9f9f9f}:root{--calcite-border-radius:3px}:host([hidden]){display:none}body{font-family:Avenir Next W01,Avenir Next W00,Avenir Next,Avenir,Helvetica Neue,sans-serif}.overflow-hidden{overflow:hidden}calcite-tab{display:none}calcite-tab[is-active]{display:block}a{color:#007ac2}.hydrated--invisible{visibility:hidden}:host{-ms-flex:0 1 var(--calcite-tabs-tab-basis);flex:0 1 var(--calcite-tabs-tab-basis);outline:none}:host(:active) a,:host(:focus) a,:host(:hover) a{outline:none;text-decoration:none;color:var(--calcite-ui-text-1);border-bottom-color:var(--calcite-ui-border-2)}:host([is-active]) a{color:var(--calcite-ui-text-1);border-bottom-color:var(--calcite-ui-blue);font-weight:500}a{-webkit-box-sizing:border-box;box-sizing:border-box;font-size:.875rem;line-height:1.5;padding:.75rem 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-bottom:3px solid transparent;cursor:pointer;-webkit-transition:all .15s ease-in-out;transition:all .15s ease-in-out;color:var(--calcite-ui-text-3);outline:none;width:100%;display:block;text-align:var(--calcite-tabs-tab-text-align)}"; }
+    get el() { return index.getElement(this); }
 };
+CalciteTabTitle.style = calciteTabTitleCss;
+
+const calciteTabsCss = ":host([hidden]){display:none}:host{display:-ms-flexbox;display:flex;-ms-flex-direction:column;flex-direction:column}section{display:-ms-flexbox;display:flex;-ms-flex-positive:1;flex-grow:1;overflow:hidden;border-top:1px solid var(--calcite-ui-border-1)}";
 
 const CalciteTabs = class {
     constructor(hostRef) {
-        core.registerInstance(this, hostRef);
-        //--------------------------------------------------------------------------
-        //
-        //  Public Properties
-        //
-        //--------------------------------------------------------------------------
-        /**
-         * Select theme (light or dark)
-         */
-        this.theme = "light";
+        index.registerInstance(this, hostRef);
         /**
          * Align tab titles to the edge or fully justify them across the tab nav ("center")
          */
@@ -366,8 +371,7 @@ const CalciteTabs = class {
     //
     //--------------------------------------------------------------------------
     render() {
-        const dir = dom.getElementDir(this.el);
-        return (core.h(core.Host, { dir: dir }, core.h("div", null, core.h("slot", { name: "tab-nav" }), core.h("section", null, core.h("slot", null)))));
+        return (index.h(index.Host, null, index.h("slot", { name: "tab-nav" }), index.h("section", null, index.h("slot", null))));
     }
     //--------------------------------------------------------------------------
     //
@@ -457,9 +461,9 @@ const CalciteTabs = class {
         this.tabs.forEach(el => el.updateAriaInfo(tabIds, titleIds));
         this.titles.forEach(el => el.updateAriaInfo(tabIds, titleIds));
     }
-    get el() { return core.getElement(this); }
-    static get style() { return ":root{--calcite-ui-blue:#007ac2;--calcite-ui-blue-hover:#2890ce;--calcite-ui-blue-press:#00619b;--calcite-ui-green:#35ac46;--calcite-ui-green-hover:#50ba5f;--calcite-ui-green-press:#288835;--calcite-ui-yellow:#edd317;--calcite-ui-yellow-hover:#f9e54e;--calcite-ui-yellow-press:#d9bc00;--calcite-ui-red:#d83020;--calcite-ui-red-hover:#e65240;--calcite-ui-red-press:#a82b1e;--calcite-ui-background:#f8f8f8;--calcite-ui-foreground:#fff;--calcite-ui-foreground-hover:#f3f3f3;--calcite-ui-foreground-press:#eaeaea;--calcite-ui-text-1:#151515;--calcite-ui-text-2:#4a4a4a;--calcite-ui-text-3:#6a6a6a;--calcite-ui-border-1:#cacaca;--calcite-ui-border-2:#dfdfdf;--calcite-ui-border-3:#eaeaea;--calcite-ui-border-hover:#9f9f9f;--calcite-ui-border-press:#757575}:host([theme=dark]){--calcite-ui-blue:#00a0ff;--calcite-ui-blue-hover:#0087d7;--calcite-ui-blue-press:#47bbff;--calcite-ui-green:#36da43;--calcite-ui-green-hover:#11ad1d;--calcite-ui-green-press:#44ed51;--calcite-ui-yellow:#ffc900;--calcite-ui-yellow-hover:#f4b000;--calcite-ui-yellow-press:#ffe24d;--calcite-ui-red:#fe583e;--calcite-ui-red-hover:#f3381b;--calcite-ui-red-press:#ff7465;--calcite-ui-background:#202020;--calcite-ui-foreground:#2b2b2b;--calcite-ui-foreground-hover:#353535;--calcite-ui-foreground-press:#404040;--calcite-ui-text-1:#fff;--calcite-ui-text-2:#bfbfbf;--calcite-ui-text-3:#9f9f9f;--calcite-ui-border-1:#4a4a4a;--calcite-ui-border-2:#404040;--calcite-ui-border-3:#353535;--calcite-ui-border-hover:#757575;--calcite-ui-border-press:#9f9f9f}:root{--calcite-border-radius:3px}:host([hidden]){display:none}body{font-family:Avenir Next W01,Avenir Next W00,Avenir Next,Avenir,Helvetica Neue,sans-serif}.overflow-hidden{overflow:hidden}calcite-tab{display:none}calcite-tab[is-active]{display:block}a{color:#007ac2}.hydrated--invisible{visibility:hidden}:host{display:block;--calcite-tabs-layout:flex-start;--calcite-tabs-tab-basis:auto;--calcite-tabs-tab-text-align:start;--calcite-tabs-tab-margin-start:1.25rem;--calcite-tabs-tab-margin-end:0}:host([dir=rtl]){--calcite-tabs-tab-margin-start:0;--calcite-tabs-tab-margin-end:1.25rem}:host([layout=center]){--calcite-tabs-layout:center;--calcite-tabs-tab-basis:200px;--calcite-tabs-tab-text-align:center;--calcite-tabs-tab-margin-start:1.25rem;--calcite-tabs-tab-margin-end:1.25rem}section{border-top:1px solid var(--calcite-ui-border-1)}"; }
+    get el() { return index.getElement(this); }
 };
+CalciteTabs.style = calciteTabsCss;
 
 exports.calcite_tab = CalciteTab;
 exports.calcite_tab_nav = CalciteTabNav;

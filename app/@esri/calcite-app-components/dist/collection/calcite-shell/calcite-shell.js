@@ -1,7 +1,7 @@
-import { Host, h } from "@stencil/core";
+import { Component, Element, Host, Prop, h } from "@stencil/core";
 import { CSS, SLOTS } from "./resources";
 import classnames from "classnames";
-import { getCalcitePosition } from "../utils/dom";
+import { getCalcitePosition, getSlotted } from "../utils/dom";
 /**
  * @slot shell-header - A slot for adding header content. This content will be positioned at the top of the shell.
  * @slot shell-footer - A slot for adding footer content. This content will be positioned at the bottom of the shell.
@@ -17,7 +17,7 @@ export class CalciteShell {
     //
     // --------------------------------------------------------------------------
     renderHeader() {
-        const hasHeader = !!this.el.querySelector(`[slot=${SLOTS.header}]`);
+        const hasHeader = !!getSlotted(this.el, SLOTS.header);
         return hasHeader ? h("slot", { name: SLOTS.header }) : null;
     }
     renderContent() {
@@ -25,15 +25,14 @@ export class CalciteShell {
             h("slot", null)));
     }
     renderFooter() {
-        const hasFooter = !!this.el.querySelector(`[slot=${SLOTS.footer}]`);
+        const hasFooter = !!getSlotted(this.el, SLOTS.footer);
         return hasFooter ? (h("div", { class: CSS.footer },
             h("slot", { name: SLOTS.footer }))) : null;
     }
     renderMain() {
-        var _a, _b;
-        const primaryPanel = this.el.querySelector(`[slot=${SLOTS.primaryPanel}]`);
+        const primaryPanel = getSlotted(this.el, SLOTS.primaryPanel);
         const mainClasses = {
-            [CSS.mainReversed]: getCalcitePosition((_a = primaryPanel) === null || _a === void 0 ? void 0 : _a.position, (_b = primaryPanel) === null || _b === void 0 ? void 0 : _b.layout) === "end"
+            [CSS.mainReversed]: getCalcitePosition(primaryPanel === null || primaryPanel === void 0 ? void 0 : primaryPanel.position, primaryPanel === null || primaryPanel === void 0 ? void 0 : primaryPanel.layout) === "end"
         };
         return (h("div", { class: classnames(CSS.main, mainClasses) },
             h("slot", { name: SLOTS.primaryPanel }),

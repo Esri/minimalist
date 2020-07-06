@@ -1,0 +1,125 @@
+{
+  "about": {
+    "header": {
+      "defaultValue": true,
+      "express": true,
+      "title": {
+        "defaultValue": "",
+        "express": true
+      }
+    },
+    "activePanel": {
+      "defaultValue": "legendPanel",
+      "express": true,
+      "activeOptions": {
+        "legendPanel": {
+          "defaultValue": true,
+          "express": true
+        },
+        "popupPanel": {
+          "defaultValue": false,
+          "express": true
+        },
+        "details": {
+          "defaultValue": true,
+          "express": true,
+          "detailsContent": {
+            "express": false
+          }
+        }
+      }
+    }
+  },
+  "themeLayout": {
+    "theme": {
+      "applySharedTheme": {
+        "defaultValue": true,
+        "express": true
+      },
+      "theme": {
+        "defaultValue": "light",
+        "express": true
+      }
+    },
+    "layoutType": {
+      "defaultValue": "default",
+      "express": false
+    }
+  },
+  "interactivity": {
+    "exploreNavigate": {
+      "explore": {
+        "popupHover": {
+          "express": false
+        },
+        "home": {
+          "defaultValue": true,
+          "express": false,
+          "homePosition": {
+            "defaultValue": "top-left"
+          }
+        },
+        "mapZoom": {
+          "defaultValue": true,
+          "express": false,
+          "mapZoomPosition": {
+            "defaultValue": "top-left"
+          }
+        },
+        "bookmarks": {
+          "defaultValue": false,
+          "express": false,
+          "bookmarksPosition": {
+            "defaultValue": "top-right"
+          }
+        }
+      },
+      "navigate": {
+        "disableScroll": {
+          "defaultValue": false,
+          "express": false
+        },
+        "scalebar": {
+          "defaultValue": true,
+          "express": false,
+          "scalebarPosition": {
+            "defaultValue": "bottom-left"
+          }
+        }
+      }
+    },
+    "modify": {
+      "basemapToggle": {
+        "defaultValue": false,
+        "express": false,
+        "basemapTogglePosition": {
+          "defaultValue": "bottom-right"
+        },
+        "nextBasemap": {
+          "defaultValue": "topo"
+        }
+      }
+    },
+    "share": {
+      "defaultValue": true,
+      "express": false,
+      "shareIncludeSocial": {
+        "defaultValue": true
+      }
+    },
+    "search": {
+      "defaultValue": true,
+      "express": true,
+      "searchPosition": {
+        "defaultValue": "top-right"
+      },
+      "searchOpenAtStart": {
+        "defaultValue": true,
+        "express": true
+      },
+      "searchConfiguration": {
+        "express": true
+      }
+    }
+  }
+}

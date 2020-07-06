@@ -1,4 +1,4 @@
-import { Host, h } from "@stencil/core";
+import { Component, Element, Prop, Host, Event, Method, State, Listen, h } from "@stencil/core";
 export class CalciteExample {
     constructor() {
         //--------------------------------------------------------------------------

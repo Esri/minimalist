@@ -1,4 +1,4 @@
-import { Modifier, Instance as Popper } from "@popperjs/core";
+import { StrictModifiers, Instance as Popper } from "@popperjs/core";
 import { CalcitePlacement } from "../../utils/popper";
 export declare class CalciteTooltip {
     /**
@@ -32,17 +32,17 @@ export declare class CalciteTooltip {
     _referenceElement: HTMLElement;
     arrowEl: HTMLDivElement;
     popper: Popper;
+    guid: string;
     componentDidLoad(): void;
     componentDidUnload(): void;
     reposition(): Promise<void>;
     getId: () => string;
-    addReferenceAria: () => void;
-    addReferenceListeners: () => void;
-    removeReferenceListeners: () => void;
+    addReferences: () => void;
+    removeReferences: () => void;
     show: () => void;
     hide: () => void;
     getReferenceElement(): HTMLElement;
-    getModifiers(): Partial<Modifier<any>>[];
+    getModifiers(): Partial<StrictModifiers>[];
     createPopper(): void;
     destroyPopper(): void;
     render(): any;

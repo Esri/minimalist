@@ -1,8 +1,7 @@
-import { Host, h } from "@stencil/core";
+import { Component, Element, Prop, Host, Event, State, Listen, Watch, h, } from "@stencil/core";
 import { TreeSelectionMode } from "../../interfaces/TreeSelectionMode";
-import { getElementDir } from "../../utils/dom";
-import { SPACE, ENTER, LEFT, RIGHT, UP, DOWN, HOME, END } from "../../utils/keys";
-import { nodeListToArray, getSlottedElements } from "../../utils/dom";
+import { nodeListToArray, getSlottedElements, getElementDir, } from "../../utils/dom";
+import { getKey } from "../../utils/key";
 export class CalciteTreeItem {
     constructor() {
         //--------------------------------------------------------------------------
@@ -10,31 +9,42 @@ export class CalciteTreeItem {
         //  Properties
         //
         //--------------------------------------------------------------------------
-        /**
-         * Be sure to add a jsdoc comment describing your property for the generated readme file.
-         * If your property should be hidden from documentation, you can use the `@internal` tag
-         */
+        /** Is the item currently selected */
         this.selected = false;
-        this.depth = -1;
-        this.hasChildren = null;
+        /** True if the item is in an expanded state */
         this.expanded = false;
-        this.parentExpanded = false;
         this.iconClickHandler = (event) => {
             event.stopPropagation();
             this.expanded = !this.expanded;
             this.calciteTreeItemSelect.emit({
                 modifyCurrentSelection: event.shiftKey,
-                forceToggle: true
+                forceToggle: true,
             });
         };
-        this.childrenClickHandler = event => event.stopPropagation();
+        this.childrenClickHandler = (event) => event.stopPropagation();
+        //--------------------------------------------------------------------------
+        //
+        //  Public Methods
+        //
+        //--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
+        //
+        //  Private State/Props
+        //
+        //--------------------------------------------------------------------------
+        /** @internal Is the parent of this item expanded? */
+        this.parentExpanded = false;
+        /** @internal What level of depth is this item at? */
+        this.depth = -1;
+        /** @internal Does this tree item have a tree inside it? */
+        this.hasChildren = null;
     }
     expandedHandler(newValue) {
         if (this.childrenSlotWrapper) {
             const [childTree] = getSlottedElements(this.childrenSlotWrapper, "calcite-tree");
             if (childTree) {
                 const items = getSlottedElements(childTree, "calcite-tree-item");
-                items.forEach(item => (item.parentExpanded = newValue));
+                items.forEach((item) => (item.parentExpanded = newValue));
             }
         }
     }
@@ -48,6 +58,9 @@ export class CalciteTreeItem {
         let parentTree = this.el.closest("calcite-tree");
         this.selectionMode = parentTree.selectionMode;
         this.depth = 0;
+        this.scale = (parentTree && parentTree.scale) || "m";
+        this.lines = parentTree && parentTree.lines;
+        this.el.dir = getElementDir(this.el);
         let nextParentTree;
         while (parentTree) {
             nextParentTree = parentTree.parentElement.closest("calcite-tree");
@@ -61,18 +74,17 @@ export class CalciteTreeItem {
         }
     }
     render() {
-        const dir = getElementDir(this.el);
         const icon = this.hasChildren ? (h("calcite-icon", { class: "calcite-tree-chevron", icon: "chevron-right", scale: "s", onClick: this.iconClickHandler, "data-test-id": "icon" })) : null;
-        return (h(Host, { tabindex: this.parentExpanded || this.depth === 1 ? "0" : "-1", dir: dir, "aria-role": "treeitem", "aria-hidden": this.parentExpanded || this.depth === 1 ? undefined : "true", "aria-selected": this.selected
+        return (h(Host, { tabindex: this.parentExpanded || this.depth === 1 ? "0" : "-1", "aria-role": "treeitem", "aria-hidden": this.parentExpanded || this.depth === 1 ? undefined : "true", "aria-selected": this.selected
                 ? "true"
                 : this.selectionMode === TreeSelectionMode.Multi ||
                     this.selectionMode === TreeSelectionMode.MultiChildren
                     ? "false"
                     : undefined, "aria-expanded": this.hasChildren ? this.expanded.toString() : undefined },
-            h("div", { class: "calcite-tree-node", ref: el => (this.defaultSlotWrapper = el) },
+            h("div", { class: "calcite-tree-node", ref: (el) => (this.defaultSlotWrapper = el) },
                 icon,
                 h("slot", null)),
-            h("div", { class: "calcite-tree-children", "data-test-id": "calcite-tree-children", role: this.hasChildren ? "group" : undefined, ref: el => (this.childrenSlotWrapper = el), onClick: this.childrenClickHandler },
+            h("div", { class: "calcite-tree-children", "data-test-id": "calcite-tree-children", role: this.hasChildren ? "group" : undefined, ref: (el) => (this.childrenSlotWrapper = el), onClick: this.childrenClickHandler },
                 h("slot", { name: "children" }))));
     }
     //--------------------------------------------------------------------------
@@ -91,20 +103,20 @@ export class CalciteTreeItem {
         this.expanded = !this.expanded;
         this.calciteTreeItemSelect.emit({
             modifyCurrentSelection: e.shiftKey,
-            forceToggle: false
+            forceToggle: false,
         });
     }
     keyDownHandler(e) {
         let root;
-        switch (e.keyCode) {
-            case SPACE:
+        switch (getKey(e.key)) {
+            case " ":
                 this.selected = !this.selected;
                 e.preventDefault();
                 e.stopPropagation();
                 break;
-            case ENTER:
+            case "Enter":
                 // activates a node, i.e., performs its default action. For parent nodes, one possible default action is to open or close the node. In single-select trees where selection does not follow focus (see note below), the default action is typically to select the focused node.
-                const link = nodeListToArray(this.el.children).find(e => e.matches("a"));
+                const link = nodeListToArray(this.el.children).find((e) => e.matches("a"));
                 if (link) {
                     link.click();
                     this.selected = true;
@@ -115,7 +127,7 @@ export class CalciteTreeItem {
                 e.preventDefault();
                 e.stopPropagation();
                 break;
-            case LEFT:
+            case "ArrowLeft":
                 // When focus is on an open node, closes the node.
                 if (this.hasChildren && this.expanded) {
                     this.expanded = false;
@@ -133,7 +145,7 @@ export class CalciteTreeItem {
                 }
                 // When focus is on a root node that is also either an end node or a closed node, does nothing.
                 break;
-            case RIGHT:
+            case "ArrowRight":
                 // When focus is on a closed node, opens the node; focus does not move.
                 if (this.hasChildren && this.expanded === false) {
                     this.expanded = true;
@@ -148,31 +160,31 @@ export class CalciteTreeItem {
                 }
                 // When focus is on an end node, does nothing.
                 break;
-            case UP:
+            case "ArrowUp":
                 const previous = this.el
                     .previousElementSibling;
                 if (previous && previous.matches("calcite-tree-item")) {
                     previous.focus();
                 }
                 break;
-            case DOWN:
+            case "ArrowDown":
                 const next = this.el.nextElementSibling;
                 if (next && next.matches("calcite-tree-item")) {
                     next.focus();
                 }
                 break;
-            case HOME:
+            case "Home":
                 root = this.el.closest("calcite-tree[root]");
                 const firstNode = root.querySelector("calcite-tree-item");
                 firstNode.focus();
                 break;
-            case END:
+            case "End":
                 root = this.el.closest("calcite-tree[root]");
                 let currentNode = root.children[root.children.length - 1]; // last child
-                let currentTree = nodeListToArray(currentNode.children).find(e => e.matches("calcite-tree"));
+                let currentTree = nodeListToArray(currentNode.children).find((e) => e.matches("calcite-tree"));
                 while (currentTree) {
                     currentNode = currentTree.children[root.children.length - 1];
-                    currentTree = nodeListToArray(currentNode.children).find(e => e.matches("calcite-tree"));
+                    currentTree = nodeListToArray(currentNode.children).find((e) => e.matches("calcite-tree"));
                 }
                 currentNode.focus();
                 break;
@@ -199,10 +211,49 @@ export class CalciteTreeItem {
             "optional": false,
             "docs": {
                 "tags": [],
-                "text": "Be sure to add a jsdoc comment describing your property for the generated readme file.\nIf your property should be hidden from documentation, you can use the `@internal` tag"
+                "text": "Is the item currently selected"
             },
             "attribute": "selected",
             "reflect": true,
+            "defaultValue": "false"
+        },
+        "expanded": {
+            "type": "boolean",
+            "mutable": true,
+            "complexType": {
+                "original": "boolean",
+                "resolved": "boolean",
+                "references": {}
+            },
+            "required": false,
+            "optional": false,
+            "docs": {
+                "tags": [],
+                "text": "True if the item is in an expanded state"
+            },
+            "attribute": "expanded",
+            "reflect": true,
+            "defaultValue": "false"
+        },
+        "parentExpanded": {
+            "type": "boolean",
+            "mutable": true,
+            "complexType": {
+                "original": "boolean",
+                "resolved": "boolean",
+                "references": {}
+            },
+            "required": false,
+            "optional": false,
+            "docs": {
+                "tags": [{
+                        "text": "Is the parent of this item expanded?",
+                        "name": "internal"
+                    }],
+                "text": ""
+            },
+            "attribute": "parent-expanded",
+            "reflect": false,
             "defaultValue": "false"
         },
         "depth": {
@@ -216,7 +267,10 @@ export class CalciteTreeItem {
             "required": false,
             "optional": false,
             "docs": {
-                "tags": [],
+                "tags": [{
+                        "text": "What level of depth is this item at?",
+                        "name": "internal"
+                    }],
                 "text": ""
             },
             "attribute": "depth",
@@ -234,14 +288,17 @@ export class CalciteTreeItem {
             "required": false,
             "optional": false,
             "docs": {
-                "tags": [],
+                "tags": [{
+                        "text": "Does this tree item have a tree inside it?",
+                        "name": "internal"
+                    }],
                 "text": ""
             },
             "attribute": "has-children",
             "reflect": true,
             "defaultValue": "null"
         },
-        "expanded": {
+        "lines": {
             "type": "boolean",
             "mutable": true,
             "complexType": {
@@ -252,30 +309,34 @@ export class CalciteTreeItem {
             "required": false,
             "optional": false,
             "docs": {
-                "tags": [],
+                "tags": [{
+                        "text": "Draw lines (set on parent)",
+                        "name": "internal"
+                    }],
                 "text": ""
             },
-            "attribute": "expanded",
-            "reflect": true,
-            "defaultValue": "false"
+            "attribute": "lines",
+            "reflect": true
         },
-        "parentExpanded": {
-            "type": "boolean",
+        "scale": {
+            "type": "string",
             "mutable": true,
             "complexType": {
-                "original": "boolean",
-                "resolved": "boolean",
+                "original": "\"s\" | \"m\"",
+                "resolved": "\"m\" | \"s\"",
                 "references": {}
             },
             "required": false,
             "optional": false,
             "docs": {
-                "tags": [],
+                "tags": [{
+                        "text": "Scale of the parent tree, defaults to m",
+                        "name": "internal"
+                    }],
                 "text": ""
             },
-            "attribute": "parent-expanded",
-            "reflect": false,
-            "defaultValue": "false"
+            "attribute": "scale",
+            "reflect": true
         }
     }; }
     static get states() { return {

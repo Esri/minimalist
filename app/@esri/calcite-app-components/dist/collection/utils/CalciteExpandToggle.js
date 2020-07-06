@@ -9,7 +9,12 @@ function getClosestShellPosition(el) {
     if (!shellNode) {
         return;
     }
-    return shellNode.position;
+    if (shellNode.position) {
+        return shellNode.position;
+    }
+    if (shellNode.layout) {
+        return shellNode.layout === "trailing" ? "end" : "start";
+    }
 }
 function getCalcitePosition(position, el) {
     return position || getClosestShellPosition(el) || "start";
@@ -17,9 +22,15 @@ function getCalcitePosition(position, el) {
 export function toggleChildActionText({ parent, expanded }) {
     parent.querySelectorAll("calcite-action").forEach((action) => (action.textEnabled = expanded));
 }
-export const CalciteExpandToggle = ({ expanded, textExpand, textCollapse, toggleExpand, el, position }) => {
+const setTooltipReference = (tooltip, referenceElement, expanded) => {
+    if (tooltip) {
+        tooltip.referenceElement = !expanded && referenceElement;
+    }
+    return referenceElement;
+};
+export const CalciteExpandToggle = ({ expanded, intlExpand, intlCollapse, toggleExpand, el, position, tooltipExpand }) => {
     const rtl = getElementDir(el) === "rtl";
-    const expandText = expanded ? textCollapse : textExpand;
+    const expandText = expanded ? intlCollapse : intlExpand;
     const icons = [ICONS.chevronsLeft, ICONS.chevronsRight];
     if (rtl) {
         icons.reverse();
@@ -27,6 +38,6 @@ export const CalciteExpandToggle = ({ expanded, textExpand, textCollapse, toggle
     const end = getCalcitePosition(position, el) === "end";
     const expandIcon = end ? icons[1] : icons[0];
     const collapseIcon = end ? icons[0] : icons[1];
-    return (h("calcite-action", { onClick: toggleExpand, textEnabled: expanded, text: expandText },
-        h("calcite-icon", { scale: "s", icon: expanded ? expandIcon : collapseIcon })));
+    const actionNode = (h("calcite-action", { ref: (referenceElement) => setTooltipReference(tooltipExpand, referenceElement, expanded), onClick: toggleExpand, textEnabled: expanded, text: expandText, icon: expanded ? expandIcon : collapseIcon }));
+    return tooltipExpand ? (h("calcite-tooltip-manager", null, actionNode)) : (actionNode);
 };

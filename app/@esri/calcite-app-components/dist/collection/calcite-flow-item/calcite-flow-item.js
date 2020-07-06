@@ -1,5 +1,5 @@
-import { Host, h } from "@stencil/core";
-import { focusElement, getElementDir } from "../utils/dom";
+import { Component, Element, Event, Host, Listen, Prop, h } from "@stencil/core";
+import { focusElement, getElementDir, getSlotted } from "../utils/dom";
 import classnames from "classnames";
 import { BLACKLISTED_MENU_ACTIONS_COMPONENTS, CSS, ICONS, SLOTS, TEXT } from "./resources";
 import { SLOTS as PANEL_SLOTS } from "../calcite-panel/resources";
@@ -7,6 +7,7 @@ import { getRoundRobinIndex } from "../utils/array";
 const SUPPORTED_ARROW_KEYS = ["ArrowUp", "ArrowDown"];
 /**
  * @slot menu-actions - A slot for adding `calcite-action`s to a menu under the `...` in the header. These actions are displayed when the menu is open.
+ * @slot fab - A slot for adding a `calcite-fab` (floating action button) to perform an action.
  * @slot footer-actions - A slot for adding `calcite-button`s to the footer.
  * @slot - A slot for adding content to the flow item.
  */
@@ -28,18 +29,6 @@ export class CalciteFlowItem {
          * Shows a back button in the header.
          */
         this.showBackButton = false;
-        /**
-         * 'Back' text string.
-         */
-        this.textBack = TEXT.back;
-        /**
-         * 'Close' text string for the menu.
-         */
-        this.textClose = TEXT.close;
-        /**
-         * 'Open' text string for the menu.
-         */
-        this.textOpen = TEXT.open;
         this.toggleMenuOpen = () => {
             this.menuOpen = !this.menuOpen;
         };
@@ -105,8 +94,14 @@ export class CalciteFlowItem {
     //  Private Methods
     //
     // --------------------------------------------------------------------------
+    handleCalcitePanelScroll(event) {
+        event.stopPropagation();
+        this.calciteFlowItemScroll.emit();
+    }
     queryActions() {
-        return Array.from(this.el.querySelectorAll(`[slot=${SLOTS.menuActions}] calcite-action`));
+        return getSlotted(this.el, SLOTS.menuActions, {
+            all: true
+        });
     }
     isValidKey(key, supportedKeys) {
         return !!supportedKeys.find((k) => k === key);
@@ -117,16 +112,17 @@ export class CalciteFlowItem {
     //
     // --------------------------------------------------------------------------
     renderBackButton(rtl) {
-        const { showBackButton, textBack, backButtonClick } = this;
+        const { showBackButton, intlBack, textBack, backButtonClick } = this;
+        const label = intlBack || textBack || TEXT.back;
         const icon = rtl ? ICONS.backRight : ICONS.backLeft;
-        return showBackButton ? (h("calcite-action", { slot: PANEL_SLOTS.headerLeadingContent, key: "back-button", "aria-label": textBack, text: textBack, class: CSS.backButton, onClick: backButtonClick },
-            h("calcite-icon", { scale: "s", filled: true, icon: icon }))) : null;
+        return showBackButton ? (h("calcite-action", { slot: PANEL_SLOTS.headerLeadingContent, key: "back-button", "aria-label": label, text: label, class: CSS.backButton, onClick: backButtonClick, icon: icon })) : null;
     }
     renderMenuButton() {
-        const { menuOpen, textOpen, textClose } = this;
-        const menuLabel = menuOpen ? textClose : textOpen;
-        return (h("calcite-action", { class: CSS.menuButton, "aria-label": menuLabel, text: menuLabel, onClick: this.toggleMenuOpen, onKeyDown: this.menuButtonKeyDown },
-            h("calcite-icon", { scale: "s", icon: ICONS.menu })));
+        const { menuOpen, textOpen, intlOpen, intlClose, textClose } = this;
+        const closeLabel = intlClose || textClose || TEXT.close;
+        const openLabel = intlOpen || textOpen || TEXT.open;
+        const menuLabel = menuOpen ? closeLabel : openLabel;
+        return (h("calcite-action", { class: CSS.menuButton, "aria-label": menuLabel, text: menuLabel, onClick: this.toggleMenuOpen, onKeyDown: this.menuButtonKeyDown, icon: ICONS.menu }));
     }
     renderMenuActions() {
         const { menuOpen } = this;
@@ -134,7 +130,7 @@ export class CalciteFlowItem {
             h("slot", { name: SLOTS.menuActions })));
     }
     renderFooterActions() {
-        const hasFooterActions = !!this.el.querySelector(`[slot=${SLOTS.footerActions}]`);
+        const hasFooterActions = !!getSlotted(this.el, SLOTS.footerActions);
         return hasFooterActions ? (h("div", { slot: PANEL_SLOTS.footer, class: CSS.footerActions },
             h("slot", { name: SLOTS.footerActions }))) : null;
     }
@@ -148,13 +144,12 @@ export class CalciteFlowItem {
             this.renderMenuActions()));
     }
     renderHeaderActions() {
-        const menuActionsNode = this.el.querySelector(`[slot=${SLOTS.menuActions}]`);
-        const hasMenuActionsInBlacklisted = menuActionsNode && menuActionsNode.closest(BLACKLISTED_MENU_ACTIONS_COMPONENTS.join(","));
-        const hasMenuActions = !!menuActionsNode && !hasMenuActionsInBlacklisted;
-        const actionCount = hasMenuActions ? menuActionsNode.childElementCount : 0;
+        const menuActions = getSlotted(this.el, SLOTS.menuActions, { all: true });
+        const filteredActions = menuActions.filter((el) => !el.closest(BLACKLISTED_MENU_ACTIONS_COMPONENTS.join(",")));
+        const actionCount = filteredActions.length;
         const menuActionsNodes = actionCount === 1
             ? this.renderSingleActionContainer()
-            : hasMenuActions
+            : actionCount
                 ? this.renderMenuActionsContainer()
                 : null;
         return menuActionsNodes ? (h("div", { slot: PANEL_SLOTS.headerTrailingContent, class: CSS.headerActions }, menuActionsNodes)) : null;
@@ -174,6 +169,11 @@ export class CalciteFlowItem {
             headingNode,
             summaryNode)) : null;
     }
+    renderFab() {
+        const hasFab = getSlotted(this.el, SLOTS.fab);
+        return hasFab ? (h("div", { class: CSS.fabContainer, slot: PANEL_SLOTS.fab },
+            h("slot", { name: SLOTS.fab }))) : null;
+    }
     render() {
         const { el } = this;
         const dir = getElementDir(el);
@@ -183,7 +183,8 @@ export class CalciteFlowItem {
                 this.renderHeader(),
                 this.renderHeaderActions(),
                 h("slot", null),
-                this.renderFooterActions())));
+                this.renderFooterActions(),
+                this.renderFab())));
     }
     static get is() { return "calcite-flow-item"; }
     static get encapsulation() { return "shadow"; }
@@ -341,6 +342,23 @@ export class CalciteFlowItem {
             "attribute": "summary",
             "reflect": false
         },
+        "intlBack": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": true,
+            "docs": {
+                "tags": [],
+                "text": "'Back' text string."
+            },
+            "attribute": "intl-back",
+            "reflect": false
+        },
         "textBack": {
             "type": "string",
             "mutable": false,
@@ -350,14 +368,33 @@ export class CalciteFlowItem {
                 "references": {}
             },
             "required": false,
-            "optional": false,
+            "optional": true,
             "docs": {
-                "tags": [],
+                "tags": [{
+                        "text": "use \"intlBack\" instead.",
+                        "name": "deprecated"
+                    }],
                 "text": "'Back' text string."
             },
             "attribute": "text-back",
-            "reflect": false,
-            "defaultValue": "TEXT.back"
+            "reflect": false
+        },
+        "intlClose": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": true,
+            "docs": {
+                "tags": [],
+                "text": "'Close' text string for the close button. The close button will only be shown when 'dismissible' is true."
+            },
+            "attribute": "intl-close",
+            "reflect": false
         },
         "textClose": {
             "type": "string",
@@ -368,14 +405,33 @@ export class CalciteFlowItem {
                 "references": {}
             },
             "required": false,
-            "optional": false,
+            "optional": true,
             "docs": {
-                "tags": [],
+                "tags": [{
+                        "text": "use \"intlClose\" instead.",
+                        "name": "deprecated"
+                    }],
                 "text": "'Close' text string for the menu."
             },
             "attribute": "text-close",
-            "reflect": false,
-            "defaultValue": "TEXT.close"
+            "reflect": false
+        },
+        "intlOpen": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": true,
+            "docs": {
+                "tags": [],
+                "text": "'Open' text string for the menu."
+            },
+            "attribute": "intl-open",
+            "reflect": false
         },
         "textOpen": {
             "type": "string",
@@ -386,14 +442,16 @@ export class CalciteFlowItem {
                 "references": {}
             },
             "required": false,
-            "optional": false,
+            "optional": true,
             "docs": {
-                "tags": [],
+                "tags": [{
+                        "text": "use \"intlOpen\" instead.",
+                        "name": "deprecated"
+                    }],
                 "text": "'Open' text string for the menu."
             },
             "attribute": "text-open",
-            "reflect": false,
-            "defaultValue": "TEXT.open"
+            "reflect": false
         },
         "theme": {
             "type": "string",
@@ -433,6 +491,28 @@ export class CalciteFlowItem {
                 "resolved": "any",
                 "references": {}
             }
+        }, {
+            "method": "calciteFlowItemScroll",
+            "name": "calciteFlowItemScroll",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "docs": {
+                "tags": [],
+                "text": "Emitted when the content has been scrolled."
+            },
+            "complexType": {
+                "original": "any",
+                "resolved": "any",
+                "references": {}
+            }
         }]; }
     static get elementRef() { return "el"; }
+    static get listeners() { return [{
+            "name": "calcitePanelScroll",
+            "method": "handleCalcitePanelScroll",
+            "target": undefined,
+            "capture": false,
+            "passive": false
+        }]; }
 }

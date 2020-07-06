@@ -1,39 +1,26 @@
-/// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
-/// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
-/*
-  Copyright 2020 Esri
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-    http://www.apache.org/licenses/LICENSE-2.0
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.​
-*/
+
 import Accessor = require("esri/core/Accessor");
 
 import {
-  declared,
+
   property,
   subclass
 } from "esri/core/accessorSupport/decorators";
 
 import { LayoutProps, State } from "../../interfaces/interfaces";
 import Error from "../Error";
-import ApplicationBase from "ApplicationBase/ApplicationBase";
+import ApplicationBase from "../../application-base-js/ApplicationBase";
 import AppConfig from "../../ConfigurationSettings";
 
 import {
   createMapFromItem,
   createView,
   getConfigViewProperties
-} from "ApplicationBase/support/itemUtils";
+} from "../../application-base-js/support/itemUtils";
 
 
 @subclass("esri.demo.LayoutViewModel")
-class LayoutViewModel extends declared(Accessor) {
+class LayoutViewModel extends (Accessor) {
   //--------------------------------------------------------------------------
   //
   //  Lifecycle
@@ -86,9 +73,7 @@ class LayoutViewModel extends declared(Accessor) {
     const mapContainer = {
       container
     };
-    const components = this.applicationConfig.mapZoom
-      ? ["attribution", "zoom"]
-      : ["attribution"];
+    const components = ["attribution"];
     const viewProperties = {
       ...defaultViewProperties,
       ui: { components },

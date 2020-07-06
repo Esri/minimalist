@@ -2,13 +2,15 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-const index = require('./index-fd9e9986.js');
-require('./CalciteScrim-2a14bab2.js');
-const guid = require('./guid-d8484e41.js');
-require('./resources-7abf05d3.js');
-require('./lodash-ec33c868.js');
-const sharedListRender = require('./shared-list-render-932f17a9.js');
-const sortable_esm = require('./sortable.esm-0cff36cb.js');
+const index = require('./index-bed90626.js');
+require('./CalciteScrim-1f0f6712.js');
+require('./dom-ead89a9a.js');
+const guid = require('./guid-0f396d1c.js');
+require('./array-d5ecc334.js');
+require('./resources-d30f8d23.js');
+require('./lodash-7ff3eef0.js');
+const sharedListRender = require('./shared-list-render-f11fa0b4.js');
+const sortable_esm = require('./sortable.esm-00feadfc.js');
 
 const CSS = {
     container: "container",
@@ -22,7 +24,8 @@ const TEXT = {
     filterPlaceholder: "Filter results"
 };
 
-const { mutationObserverCallback, initialize, initializeObserver, cleanUpObserver, calciteListItemChangeHandler, calciteListItemValueChangeHandler, setUpItems, deselectSiblingItems, selectSiblings, handleFilter, getItemData } = sharedListRender.sharedListMethods;
+const calciteValueListCss = ":host{-webkit-box-sizing:border-box;box-sizing:border-box;color:var(--calcite-app-foreground);font-family:var(--calcite-app-font-family);font-size:var(--calcite-app-font-size-0);line-height:var(--calcite-app-line-height);background-color:var(--calcite-app-background)}:host *{-webkit-box-sizing:border-box;box-sizing:border-box}:host{-ms-flex-align:stretch;align-items:stretch;background-color:var(--calcite-app-background-clear);display:-ms-flexbox;display:flex;-ms-flex:0 0 auto;flex:0 0 auto;-ms-flex-flow:column;flex-flow:column;position:relative}:host([hidden]){display:none}:host([theme=dark]){--calcite-app-background:#404040;--calcite-app-foreground:#dfdfdf;--calcite-app-background-hover:#2b2b2b;--calcite-app-foreground-hover:#f3f3f3;--calcite-app-background-active:#151515;--calcite-app-foreground-active:#59d6ff;--calcite-app-foreground-subtle:#eaeaea;--calcite-app-background-content:#2b2b2b;--calcite-app-border:#2b2b2b;--calcite-app-border-hover:#2b2b2b;--calcite-app-border-subtle:#2b2b2b;--calcite-app-scrim:rgba(64, 64, 64, 0.8)}:host([theme=light]){--calcite-app-background:#ffffff;--calcite-app-foreground:#404040;--calcite-app-background-hover:#eaeaea;--calcite-app-foreground-hover:#2b2b2b;--calcite-app-background-active:#c7eaff;--calcite-app-foreground-active:#00619b;--calcite-app-foreground-subtle:#757575;--calcite-app-foreground-link:#007ac2;--calcite-app-background-content:#f3f3f3;--calcite-app-background-clear:transparent;--calcite-app-border:#eaeaea;--calcite-app-border-hover:#dfdfdf;--calcite-app-border-subtle:#f3f3f3;--calcite-app-border-active:#007ac2;--calcite-app-disabled-opacity:0.25;--calcite-app-scrim:rgba(255, 255, 255, 0.8)}header{background-color:var(--calcite-app-background);display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end;-ms-flex-align:center;align-items:center;margin-bottom:var(--calcite-app-cap-spacing-quarter);-webkit-box-shadow:0 -1px 0 var(--calcite-app-border) inset;box-shadow:0 -1px 0 var(--calcite-app-border) inset}header.sticky{position:-webkit-sticky;position:sticky;top:0;z-index:1}calcite-filter{margin-bottom:1px}slot[name=menu-actions]::slotted(calcite-action){padding:0 var(--calcite-app-side-spacing-half)}";
+
 const CalciteValueList = class {
     constructor(hostRef) {
         index.registerInstance(this, hostRef);
@@ -33,6 +36,8 @@ const CalciteValueList = class {
         // --------------------------------------------------------------------------
         /**
          * Compact reduces the size of all items in the list.
+         *
+         * @deprecated This property will be removed in a future release.
          */
         this.compact = false;
         /**
@@ -71,23 +76,22 @@ const CalciteValueList = class {
         this.dataForFilter = [];
         this.lastSelectedItem = null;
         this.guid = `calcite-value-list-${guid.guid$1()}`;
-        this.observer = new MutationObserver(mutationObserverCallback.bind(this));
+        this.observer = new MutationObserver(sharedListRender.mutationObserverCallback.bind(this));
         this.sortables = [];
-        this.deselectSiblingItems = deselectSiblingItems.bind(this);
-        this.selectSiblings = selectSiblings.bind(this);
-        this.handleFilter = handleFilter.bind(this);
-        this.getItemData = getItemData.bind(this);
+        this.deselectSiblingItems = sharedListRender.deselectSiblingItems.bind(this);
+        this.selectSiblings = sharedListRender.selectSiblings.bind(this);
+        this.handleFilter = sharedListRender.handleFilter.bind(this);
+        this.getItemData = sharedListRender.getItemData.bind(this);
         this.keyDownHandler = (event) => {
-            const handleElement = event.composedPath().find((item) => {
-                var _a;
-                return (_a = item.dataset) === null || _a === void 0 ? void 0 : _a.jsHandle;
-            });
-            const valueListElement = event.composedPath().find((item) => {
-                var _a;
-                return ((_a = item.tagName) === null || _a === void 0 ? void 0 : _a.toLowerCase()) === "calcite-value-list-item";
-            });
+            const handleElement = event
+                .composedPath()
+                .find((item) => { var _a; return (_a = item.dataset) === null || _a === void 0 ? void 0 : _a.jsHandle; });
+            const valueListElement = event
+                .composedPath()
+                .find((item) => { var _a; return ((_a = item.tagName) === null || _a === void 0 ? void 0 : _a.toLowerCase()) === "calcite-value-list-item"; });
             // Only trigger keyboard sorting when the internal drag handle is focused and activated
             if (!handleElement || !valueListElement.handleActivated) {
+                sharedListRender.keyDownHandler.call(this, event);
                 return;
             }
             const lastIndex = this.items.length - 1;
@@ -140,25 +144,25 @@ const CalciteValueList = class {
     //
     // --------------------------------------------------------------------------
     connectedCallback() {
-        initialize.call(this);
+        sharedListRender.initialize.call(this);
+        sharedListRender.initializeObserver.call(this);
     }
     componentDidLoad() {
         this.setUpDragAndDrop();
-        initializeObserver.call(this);
     }
     componentDidUnload() {
-        cleanUpObserver.call(this);
+        sharedListRender.cleanUpObserver.call(this);
         this.cleanUpDragAndDrop();
     }
     calciteListItemChangeHandler(event) {
-        calciteListItemChangeHandler.call(this, event);
+        sharedListRender.calciteListItemChangeHandler.call(this, event);
     }
     calciteListItemPropsChangeHandler(event) {
         event.stopPropagation();
         this.setUpFilter();
     }
     calciteListItemValueChangeHandler(event) {
-        calciteListItemValueChangeHandler.call(this, event);
+        sharedListRender.calciteListItemValueChangeHandler.call(this, event);
     }
     // --------------------------------------------------------------------------
     //
@@ -166,7 +170,7 @@ const CalciteValueList = class {
     //
     // --------------------------------------------------------------------------
     setUpItems() {
-        setUpItems.call(this, "calcite-value-list-item");
+        sharedListRender.setUpItems.call(this, "calcite-value-list-item");
     }
     setUpFilter() {
         if (this.filterEnabled) {
@@ -205,6 +209,9 @@ const CalciteValueList = class {
     async getSelectedItems() {
         return this.selectedValues;
     }
+    async setFocus() {
+        return sharedListRender.setFocus.call(this);
+    }
     // --------------------------------------------------------------------------
     //
     //  Render Methods
@@ -221,7 +228,7 @@ const CalciteValueList = class {
         return index.h(sharedListRender.List, { props: this, onKeyDown: this.keyDownHandler });
     }
     get el() { return index.getElement(this); }
-    static get style() { return ":host{-webkit-box-sizing:border-box;box-sizing:border-box;color:var(--calcite-app-foreground);font-family:var(--calcite-app-font-family);font-size:var(--calcite-app-font-size-0);line-height:var(--calcite-app-line-height);background-color:var(--calcite-app-background)}:host *{-webkit-box-sizing:border-box;box-sizing:border-box}:host{-ms-flex-align:stretch;align-items:stretch;background-color:var(--calcite-app-background-clear);display:-ms-flexbox;display:flex;-ms-flex:0 0 auto;flex:0 0 auto;-ms-flex-flow:column;flex-flow:column;position:relative}:host([hidden]){display:none}:host([theme=dark]){--calcite-app-background:#404040;--calcite-app-foreground:#dfdfdf;--calcite-app-background-hover:#2b2b2b;--calcite-app-foreground-hover:#f3f3f3;--calcite-app-background-active:#151515;--calcite-app-foreground-active:#59d6ff;--calcite-app-foreground-subtle:#eaeaea;--calcite-app-background-content:#2b2b2b;--calcite-app-border:#2b2b2b;--calcite-app-border-hover:#2b2b2b;--calcite-app-border-subtle:#2b2b2b;--calcite-app-scrim:rgba(64, 64, 64, 0.8)}:host([theme=light]){--calcite-app-background:#ffffff;--calcite-app-foreground:#404040;--calcite-app-background-hover:#eaeaea;--calcite-app-foreground-hover:#2b2b2b;--calcite-app-background-active:#c7eaff;--calcite-app-foreground-active:#00619b;--calcite-app-foreground-subtle:#757575;--calcite-app-foreground-link:#007ac2;--calcite-app-background-content:#f3f3f3;--calcite-app-background-clear:transparent;--calcite-app-border:#eaeaea;--calcite-app-border-hover:#dfdfdf;--calcite-app-border-subtle:#f3f3f3;--calcite-app-border-active:#007ac2;--calcite-app-disabled-opacity:0.25;--calcite-app-scrim:rgba(255, 255, 255, 0.8)}header{background-color:var(--calcite-app-background);display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end;-ms-flex-align:center;align-items:center;margin-bottom:var(--calcite-app-cap-spacing-quarter);-webkit-box-shadow:0 -1px 0 var(--calcite-app-border) inset;box-shadow:0 -1px 0 var(--calcite-app-border) inset}header.sticky{position:-webkit-sticky;position:sticky;top:0;z-index:1}calcite-filter{margin-bottom:1px}slot[name=menu-actions]::slotted(calcite-action){padding:0 var(--calcite-app-side-spacing-half)}"; }
 };
+CalciteValueList.style = calciteValueListCss;
 
 exports.calcite_value_list = CalciteValueList;

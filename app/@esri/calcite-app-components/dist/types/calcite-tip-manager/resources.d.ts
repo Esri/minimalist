@@ -1,10 +1,3 @@
-export declare const TEXT: {
-    defaultGroupTitle: string;
-    defaultPaginationLabel: string;
-    close: string;
-    previous: string;
-    next: string;
-};
 export declare const CSS: {
     header: string;
     heading: string;
@@ -22,4 +15,11 @@ export declare const ICONS: {
     chevronLeft: string;
     chevronRight: string;
     close: string;
+};
+export declare const TEXT: {
+    defaultGroupTitle: string;
+    defaultPaginationLabel: string;
+    close: string;
+    previous: string;
+    next: string;
 };

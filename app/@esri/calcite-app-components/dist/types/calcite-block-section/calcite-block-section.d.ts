@@ -1,9 +1,17 @@
-import { EventEmitter } from "../stencil-public-runtime";
+import { EventEmitter, VNode } from "../stencil-public-runtime";
 import { CalciteBlockSectionToggleDisplay } from "../interfaces";
 /**
  * @slot - A slot for adding content to the block section.
  */
 export declare class CalciteBlockSection {
+    /**
+     * Tooltip used for the toggle when expanded.
+     */
+    intlCollapse?: string;
+    /**
+     * Tooltip used for the toggle when collapsed.
+     */
+    intlExpand?: string;
     /**
      * When true, the block's section content will be displayed.
      */
@@ -13,13 +21,17 @@ export declare class CalciteBlockSection {
      */
     text: string;
     /**
-     * Tooltip used for the toggle when collapsed.
-     */
-    textExpand: string;
-    /**
      * Tooltip used for the toggle when expanded.
+     *
+     * @deprecated use "intlCollapse" instead.
      */
-    textCollapse: string;
+    textCollapse?: string;
+    /**
+     * Tooltip used for the toggle when collapsed.
+     *
+     * @deprecated use "intlExpand" instead.
+     */
+    textExpand?: string;
     /**
      * This property determines the look of the section toggle.
      * If the value is "switch", a toggle-switch will be displayed.
@@ -36,5 +48,5 @@ export declare class CalciteBlockSection {
     calciteBlockSectionToggle: EventEmitter;
     handleHeaderLabelKeyDown(this: HTMLLabelElement, event: KeyboardEvent): void;
     toggleSection: () => void;
-    render(): any;
+    render(): VNode;
 }

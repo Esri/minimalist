@@ -7,7 +7,8 @@ define({
     "popup": "Info"
   },
   "popupPanel": {
-    "noResultsMessage": "Klik på kortet for at få vist objektoplysninger"
+    "noResultsMessage": "Klik på kortet for at få vist objektoplysninger",
+    "noResultsHoverMessage": "Hold musen over positioner på kortet for at få vist objektoplysninger"
   },
   "close": "luk",
   "toggle": "Skift panelhøjde"

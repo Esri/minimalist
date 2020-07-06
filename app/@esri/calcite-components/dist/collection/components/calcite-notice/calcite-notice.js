@@ -1,4 +1,4 @@
-import { h, Host } from "@stencil/core";
+import { Component, Element, Event, h, Host, Method, Prop, } from "@stencil/core";
 import { getElementDir } from "../../utils/dom";
 /** Notices are intended to be used to present users with important-but-not-crucial contextual tips or copy. Because
  * notices are displayed inline, a common use case is displaying them on page-load to present users with short hints or contextual copy.
@@ -21,11 +21,9 @@ export class CalciteNotice {
         this.active = false;
         /** Color for the notice (will apply to top border and icon) */
         this.color = "blue";
-        /** Select theme (light or dark) */
-        this.theme = "light";
         /** specify the scale of the notice, defaults to m */
         this.scale = "m";
-        /** specify the scale of the button, defaults to m */
+        /** specify the width of the notice, defaults to m */
         this.width = "auto";
         /** Select theme (light or dark) */
         this.dismissible = false;
@@ -42,7 +40,7 @@ export class CalciteNotice {
             green: "checkCircle",
             yellow: "exclamationMarkTriangle",
             red: "exclamationMarkTriangle",
-            blue: "lightbulb"
+            blue: "lightbulb",
         };
     }
     //--------------------------------------------------------------------------
@@ -55,9 +53,6 @@ export class CalciteNotice {
         let colors = ["blue", "red", "green", "yellow"];
         if (!colors.includes(this.color))
             this.color = "blue";
-        let themes = ["dark", "light"];
-        if (!themes.includes(this.theme))
-            this.theme = "light";
         let scales = ["s", "m", "l"];
         if (!scales.includes(this.scale))
             this.scale = "m";
@@ -66,12 +61,12 @@ export class CalciteNotice {
             this.width = "auto";
     }
     componentDidLoad() {
-        this.noticeLinkEl = this.el.querySelectorAll("calcite-button")[0];
+        this.noticeLinkEl = this.el.querySelectorAll("calcite-link")[0];
     }
     render() {
         const dir = getElementDir(this.el);
-        const closeButton = (h("button", { class: "notice-close", "aria-label": "close", onClick: () => this.close(), ref: el => (this.closeButton = el) },
-            h("calcite-icon", { icon: "x", scale: "s" })));
+        const closeButton = (h("button", { class: "notice-close", "aria-label": "close", onClick: () => this.close(), ref: (el) => (this.closeButton = el) },
+            h("calcite-icon", { icon: "x", scale: "m" })));
         return (h(Host, { active: this.active, dir: dir },
             this.icon ? this.setIcon() : null,
             h("div", { class: "notice-content" },
@@ -109,7 +104,7 @@ export class CalciteNotice {
     setIcon() {
         var path = this.iconDefaults[this.color];
         return (h("div", { class: "notice-icon" },
-            h("calcite-icon", { icon: path, filled: true, scale: "s" })));
+            h("calcite-icon", { icon: path, scale: "m" })));
     }
     static get is() { return "calcite-notice"; }
     static get encapsulation() { return "shadow"; }
@@ -171,8 +166,7 @@ export class CalciteNotice {
                 "text": "Select theme (light or dark)"
             },
             "attribute": "theme",
-            "reflect": true,
-            "defaultValue": "\"light\""
+            "reflect": true
         },
         "scale": {
             "type": "string",
@@ -204,7 +198,7 @@ export class CalciteNotice {
             "optional": false,
             "docs": {
                 "tags": [],
-                "text": "specify the scale of the button, defaults to m"
+                "text": "specify the width of the notice, defaults to m"
             },
             "attribute": "width",
             "reflect": true,

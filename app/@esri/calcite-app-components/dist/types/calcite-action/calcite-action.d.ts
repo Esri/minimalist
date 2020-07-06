@@ -19,6 +19,10 @@ export declare class CalciteAction {
      */
     disabled: boolean;
     /**
+     * The name of the icon to display. The value of this property must match the icon name from https://esri.github.io/calcite-ui-icons/.
+     */
+    icon?: string;
+    /**
      * Indicates unread changes.
      */
     indicator: boolean;
@@ -47,9 +51,12 @@ export declare class CalciteAction {
      */
     theme: CalciteTheme;
     el: HTMLCalciteActionElement;
-    private buttonEl;
+    buttonEl: HTMLButtonElement;
+    observer: MutationObserver;
+    connectedCallback(): void;
+    componentDidUnload(): void;
     setFocus(): Promise<void>;
     renderTextContainer(): VNode;
     renderIconContainer(): VNode;
-    render(): any;
+    render(): VNode;
 }

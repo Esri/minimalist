@@ -26,6 +26,10 @@ export namespace Components {
          */
         "disabled": boolean;
         /**
+          * The name of the icon to display. The value of this property must match the icon name from https://esri.github.io/calcite-ui-icons/.
+         */
+        "icon"?: string;
+        /**
           * Indicates unread changes.
          */
         "indicator": boolean;
@@ -65,7 +69,16 @@ export namespace Components {
          */
         "expanded": boolean;
         /**
-          * @deprecated since 5.3 - use "position" instead. Arrangement of the component. Leading and trailing are different depending on if the direction is LTR or RTL. For example, "leading" in a LTR app will appear on the left.
+          * Updates the label of the collapse icon when the component is expanded.
+         */
+        "intlCollapse"?: string;
+        /**
+          * Updates the label of the expand icon when the component is not expanded.
+         */
+        "intlExpand"?: string;
+        /**
+          * Arrangement of the component. Leading and trailing are different depending on if the direction is LTR or RTL. For example, "leading" in a LTR app will appear on the left.
+          * @deprecated use "position" instead.
          */
         "layout": CalciteLayout;
         /**
@@ -74,16 +87,22 @@ export namespace Components {
         "position": CalcitePosition;
         /**
           * Updates the label of the collapse icon when the component is expanded.
+          * @deprecated use "intlCollapse" instead.
          */
-        "textCollapse": string;
+        "textCollapse"?: string;
         /**
           * Updates the label of the expand icon when the component is not expanded.
+          * @deprecated use "intlExpand" instead.
          */
-        "textExpand": string;
+        "textExpand"?: string;
         /**
           * Used to set the component's color scheme.
          */
         "theme": CalciteTheme;
+        /**
+          * Used to set the tooltip for the expand toggle.
+         */
+        "tooltipExpand"?: HTMLCalciteTooltipElement;
     }
     interface CalciteActionGroup {
     }
@@ -97,7 +116,16 @@ export namespace Components {
          */
         "expanded": boolean;
         /**
-          * @deprecated since 5.3 - use "position" instead. Arrangement of the component.
+          * Updates the label of the collapse icon when the component is expanded.
+         */
+        "intlCollapse"?: string;
+        /**
+          * Updates the label of the expand icon when the component is not expanded.
+         */
+        "intlExpand"?: string;
+        /**
+          * Arrangement of the component.
+          * @deprecated use "position" instead.
          */
         "layout": CalciteLayout;
         /**
@@ -106,16 +134,22 @@ export namespace Components {
         "position": CalcitePosition;
         /**
           * Updates the label of the collapse icon when the component is expanded.
+          * @deprecated use "intlCollapse" instead.
          */
-        "textCollapse": string;
+        "textCollapse"?: string;
         /**
           * Updates the label of the expand icon when the component is not expanded.
+          * @deprecated use "intlExpand" instead.
          */
-        "textExpand": string;
+        "textExpand"?: string;
         /**
           * Used to set the component's color scheme.
          */
         "theme": CalciteTheme;
+        /**
+          * Used to set the tooltip for the expand toggle.
+         */
+        "tooltipExpand"?: HTMLCalciteTooltipElement;
     }
     interface CalciteBlock {
         /**
@@ -135,6 +169,14 @@ export namespace Components {
          */
         "heading": string;
         /**
+          * Tooltip used for the toggle when expanded.
+         */
+        "intlCollapse"?: string;
+        /**
+          * Tooltip used for the toggle when collapsed.
+         */
+        "intlExpand"?: string;
+        /**
           * When true, content is waiting to be loaded. This state shows a busy indicator.
          */
         "loading": boolean;
@@ -148,18 +190,28 @@ export namespace Components {
         "summary": string;
         /**
           * Tooltip used for the toggle when expanded.
+          * @deprecated use "intlCollapse" instead.
          */
-        "textCollapse": string;
+        "textCollapse"?: string;
         /**
           * Tooltip used for the toggle when collapsed.
+          * @deprecated use "intlExpand" instead.
          */
-        "textExpand": string;
+        "textExpand"?: string;
         /**
           * Used to set the component's color scheme.
          */
         "theme": CalciteTheme;
     }
     interface CalciteBlockSection {
+        /**
+          * Tooltip used for the toggle when expanded.
+         */
+        "intlCollapse"?: string;
+        /**
+          * Tooltip used for the toggle when collapsed.
+         */
+        "intlExpand"?: string;
         /**
           * When true, the block's section content will be displayed.
          */
@@ -170,17 +222,58 @@ export namespace Components {
         "text": string;
         /**
           * Tooltip used for the toggle when expanded.
+          * @deprecated use "intlCollapse" instead.
          */
-        "textCollapse": string;
+        "textCollapse"?: string;
         /**
           * Tooltip used for the toggle when collapsed.
+          * @deprecated use "intlExpand" instead.
          */
-        "textExpand": string;
+        "textExpand"?: string;
         /**
           * This property determines the look of the section toggle. If the value is "switch", a toggle-switch will be displayed. If the value is "button", a clickable header is displayed.
           * @todo revisit doc
          */
         "toggleDisplay": CalciteBlockSectionToggleDisplay;
+    }
+    interface CalciteFab {
+        /**
+          * Used to set the button's appearance. Default is outline.
+         */
+        "appearance": CalciteAppearance;
+        /**
+          * When true, disabled prevents interaction. This state shows items with lower opacity/grayed.
+         */
+        "disabled": boolean;
+        /**
+          * The name of the icon to display. The value of this property must match the icon name from https://esri.github.io/calcite-ui-icons/.
+         */
+        "icon"?: string;
+        /**
+          * Label of the FAB, exposed on hover. If no label is provided, the label inherits what's provided for the `text` prop.
+         */
+        "label"?: string;
+        /**
+          * When true, content is waiting to be loaded. This state shows a busy indicator.
+         */
+        "loading": boolean;
+        /**
+          * Specifies the size of the fab.
+         */
+        "scale": CalciteScale;
+        "setFocus": () => Promise<void>;
+        /**
+          * Text that accompanies the FAB icon.
+         */
+        "text"?: string;
+        /**
+          * Indicates whether the text is displayed.
+         */
+        "textEnabled": boolean;
+        /**
+          * Used to set the component's color scheme.
+         */
+        "theme": CalciteTheme;
     }
     interface CalciteFilter {
         /**
@@ -188,19 +281,33 @@ export namespace Components {
          */
         "data": object[];
         /**
+          * A text label that will appear on the clear button.
+         */
+        "intlClear"?: string;
+        /**
           * A text label that will appear next to the input field.
          */
-        "textLabel": string;
+        "intlLabel"?: string;
         /**
           * Placeholder text for the input element's placeholder attribute
          */
-        "textPlaceholder": string;
+        "placeholder"?: string;
+        /**
+          * A text label that will appear next to the input field.
+          * @deprecated use "intlLabel" instead.
+         */
+        "textLabel"?: string;
+        /**
+          * Placeholder text for the input element's placeholder attribute
+          * @deprecated use "placeholder" instead.
+         */
+        "textPlaceholder"?: string;
     }
     interface CalciteFlow {
         /**
           * Removes the currently active `calcite-flow-item`.
          */
-        "back": () => Promise<any>;
+        "back": () => Promise<HTMLCalciteFlowItemElement>;
         /**
           * Used to set the component's color scheme.
          */
@@ -224,6 +331,18 @@ export namespace Components {
          */
         "heightScale": CalciteScale;
         /**
+          * 'Back' text string.
+         */
+        "intlBack"?: string;
+        /**
+          * 'Close' text string for the close button. The close button will only be shown when 'dismissible' is true.
+         */
+        "intlClose"?: string;
+        /**
+          * 'Open' text string for the menu.
+         */
+        "intlOpen"?: string;
+        /**
           * When true, content is waiting to be loaded. This state shows a busy indicator.
          */
         "loading": boolean;
@@ -241,16 +360,19 @@ export namespace Components {
         "summary"?: string;
         /**
           * 'Back' text string.
+          * @deprecated use "intlBack" instead.
          */
-        "textBack": string;
+        "textBack"?: string;
         /**
           * 'Close' text string for the menu.
+          * @deprecated use "intlClose" instead.
          */
-        "textClose": string;
+        "textClose"?: string;
         /**
           * 'Open' text string for the menu.
+          * @deprecated use "intlOpen" instead.
          */
-        "textOpen": string;
+        "textOpen"?: string;
         /**
           * Used to set the component's color scheme.
          */
@@ -282,14 +404,19 @@ export namespace Components {
          */
         "heightScale": CalciteScale;
         /**
+          * 'Close' text string for the close button. The close button will only be shown when 'dismissible' is true.
+         */
+        "intlClose"?: string;
+        /**
           * When true, content is waiting to be loaded. This state shows a busy indicator.
          */
         "loading": boolean;
         "setFocus": (focusId?: "dismiss-button") => Promise<void>;
         /**
           * 'Close' text string for the close button. The close button will only be shown when 'dismissible' is true.
+          * @deprecated use "intlClose" instead.
          */
-        "textClose": string;
+        "textClose"?: string;
         /**
           * Used to set the component's color scheme.
          */
@@ -298,6 +425,7 @@ export namespace Components {
     interface CalcitePickList {
         /**
           * Compact removes the selection icon (radio or checkbox) and adds a compact attribute. This allows for a more compact version of the `calcite-pick-list-item`.
+          * @deprecated This property will be removed in a future release.
          */
         "compact": boolean;
         /**
@@ -317,10 +445,11 @@ export namespace Components {
           * Multiple works similar to standard radio buttons and checkboxes. When true, a user can select multiple items at a time. When false, only a single item can be selected at a time and selecting a new item will deselect any other selected items.
          */
         "multiple": boolean;
+        "setFocus": () => Promise<void>;
         /**
           * Placeholder text for the filter input field.
          */
-        "textFilterPlaceholder"?: string;
+        "textFilterPlaceholder": string;
     }
     interface CalcitePickListGroup {
         /**
@@ -331,6 +460,7 @@ export namespace Components {
     interface CalcitePickListItem {
         /**
           * Compact removes the selection icon (radio or checkbox) and adds a compact attribute. This allows for a more compact version of the `calcite-pick-list-item`.
+          * @deprecated This property will be removed in a future release.
          */
         "compact"?: boolean;
         /**
@@ -350,9 +480,14 @@ export namespace Components {
          */
         "metadata"?: object;
         /**
+          * Set this to true to display a remove action that removes the item from the list.
+         */
+        "removable"?: boolean;
+        /**
           * Set this to true to pre-select an item. Toggles when an item is checked/unchecked.
          */
         "selected": boolean;
+        "setFocus": () => Promise<void>;
         /**
           * An optional description for this item.  This will appear below the label text.
          */
@@ -361,6 +496,10 @@ export namespace Components {
           * The main label for this item. This will appear next to the icon.
          */
         "textLabel": string;
+        /**
+          * The text for the remove item buttons. Only applicable if removable is true.
+         */
+        "textRemove": string;
         /**
           * Used to toggle the selection state. By default this won't trigger an event. The first argument allows the value to be coerced, rather than swapping values.
          */
@@ -390,7 +529,8 @@ export namespace Components {
          */
         "detachedScale": CalciteScale;
         /**
-          * @deprecated since 5.3 - use "position" instead. Arrangement of the component.
+          * Arrangement of the component.
+          * @deprecated use "position" instead.
          */
         "layout": CalciteLayout;
         /**
@@ -422,6 +562,10 @@ export namespace Components {
          */
         "heading"?: string;
         /**
+          * Alternate text for closing the tip.
+         */
+        "intlClose"?: string;
+        /**
           * Indicates whether the tip can be dismissed.
          */
         "nonDismissible": boolean;
@@ -431,8 +575,9 @@ export namespace Components {
         "selected"?: boolean;
         /**
           * Alternate text for closing the tip.
+          * @deprecated use "intlClose" instead.
          */
-        "textClose": string;
+        "textClose"?: string;
         /**
           * Used to set the component's color scheme.
          */
@@ -442,35 +587,60 @@ export namespace Components {
         /**
           * The title used for all nested tips.
          */
-        "textGroupTitle": string;
+        "textGroupTitle"?: string;
     }
     interface CalciteTipManager {
         /**
           * Alternate text for closing the `calcite-tip-manager`.
          */
         "closed": boolean;
-        "nextTip": () => Promise<void>;
-        "previousTip": () => Promise<void>;
         /**
-          * Alternate text for closing the `calcite-tip-manager`.
+          * Alternate text for closing the tip.
          */
-        "textClose": string;
+        "intlClose"?: string;
         /**
           * The default group title for the `calcite-tip-manager`.
          */
-        "textDefaultTitle": string;
+        "intlDefaultTitle"?: string;
         /**
           * Alternate text for navigating to the next tip.
          */
-        "textNext": string;
+        "intlNext"?: string;
         /**
           * Label that appears on hover of pagination icon.
          */
-        "textPaginationLabel": string;
+        "intlPaginationLabel"?: string;
         /**
           * Alternate text for navigating to the previous tip.
          */
-        "textPrevious": string;
+        "intlPrevious"?: string;
+        "nextTip": () => Promise<void>;
+        "previousTip": () => Promise<void>;
+        /**
+          * Alternate text for closing the tip.
+          * @deprecated use "intlClose" instead.
+         */
+        "textClose"?: string;
+        /**
+          * The default group title for the `calcite-tip-manager`.
+          * @deprecated use "intlDefaultTitle" instead.
+         */
+        "textDefaultTitle"?: string;
+        /**
+          * Alternate text for navigating to the next tip.
+          * @deprecated use "intlNext" instead.
+         */
+        "textNext"?: string;
+        /**
+          * Label that appears on hover of pagination icon.
+          * @deprecated use "intlPaginationLabel" instead.
+         */
+        "textPaginationLabel"?: string;
+        /**
+          * Alternate text for navigating to the previous tip.
+          * @deprecated use "intlPrevious" instead.
+         */
+        "textPrevious"?: string;
         /**
           * Used to set the component's color scheme.
          */
@@ -479,6 +649,7 @@ export namespace Components {
     interface CalciteValueList {
         /**
           * Compact reduces the size of all items in the list.
+          * @deprecated This property will be removed in a future release.
          */
         "compact": boolean;
         /**
@@ -502,14 +673,16 @@ export namespace Components {
           * Multiple Works similar to standard radio buttons and checkboxes. When true, a user can select multiple items at a time. When false, only a single item can be selected at a time and selecting a new item will deselect any other selected items.
          */
         "multiple": boolean;
+        "setFocus": () => Promise<void>;
         /**
           * Placeholder text for the filter input field.
          */
-        "textFilterPlaceholder"?: string;
+        "textFilterPlaceholder": string;
     }
     interface CalciteValueListItem {
         /**
           * Compact reduces the size of the item.
+          * @deprecated This property will be removed in a future release.
          */
         "compact"?: boolean;
         "disableDeselect": boolean;
@@ -527,9 +700,14 @@ export namespace Components {
          */
         "metadata"?: object;
         /**
+          * Set this to true to display a remove action that removes the item from the list.
+         */
+        "removable": boolean;
+        /**
           * Set this to true to pre-select an item. Toggles when an item is checked/unchecked.
          */
         "selected": boolean;
+        "setFocus": () => Promise<void>;
         /**
           * An optional description for this item. Will appear below the label text.
          */
@@ -581,6 +759,12 @@ declare global {
     var HTMLCalciteBlockSectionElement: {
         prototype: HTMLCalciteBlockSectionElement;
         new (): HTMLCalciteBlockSectionElement;
+    };
+    interface HTMLCalciteFabElement extends Components.CalciteFab, HTMLStencilElement {
+    }
+    var HTMLCalciteFabElement: {
+        prototype: HTMLCalciteFabElement;
+        new (): HTMLCalciteFabElement;
     };
     interface HTMLCalciteFilterElement extends Components.CalciteFilter, HTMLStencilElement {
     }
@@ -685,6 +869,7 @@ declare global {
         "calcite-action-pad": HTMLCalciteActionPadElement;
         "calcite-block": HTMLCalciteBlockElement;
         "calcite-block-section": HTMLCalciteBlockSectionElement;
+        "calcite-fab": HTMLCalciteFabElement;
         "calcite-filter": HTMLCalciteFilterElement;
         "calcite-flow": HTMLCalciteFlowElement;
         "calcite-flow-item": HTMLCalciteFlowItemElement;
@@ -721,6 +906,10 @@ declare namespace LocalJSX {
           * When true, disabled prevents interaction. This state shows items with lower opacity/grayed.
          */
         "disabled"?: boolean;
+        /**
+          * The name of the icon to display. The value of this property must match the icon name from https://esri.github.io/calcite-ui-icons/.
+         */
+        "icon"?: string;
         /**
           * Indicates unread changes.
          */
@@ -760,7 +949,16 @@ declare namespace LocalJSX {
          */
         "expanded"?: boolean;
         /**
-          * @deprecated since 5.3 - use "position" instead. Arrangement of the component. Leading and trailing are different depending on if the direction is LTR or RTL. For example, "leading" in a LTR app will appear on the left.
+          * Updates the label of the collapse icon when the component is expanded.
+         */
+        "intlCollapse"?: string;
+        /**
+          * Updates the label of the expand icon when the component is not expanded.
+         */
+        "intlExpand"?: string;
+        /**
+          * Arrangement of the component. Leading and trailing are different depending on if the direction is LTR or RTL. For example, "leading" in a LTR app will appear on the left.
+          * @deprecated use "position" instead.
          */
         "layout"?: CalciteLayout;
         /**
@@ -773,16 +971,22 @@ declare namespace LocalJSX {
         "position"?: CalcitePosition;
         /**
           * Updates the label of the collapse icon when the component is expanded.
+          * @deprecated use "intlCollapse" instead.
          */
         "textCollapse"?: string;
         /**
           * Updates the label of the expand icon when the component is not expanded.
+          * @deprecated use "intlExpand" instead.
          */
         "textExpand"?: string;
         /**
           * Used to set the component's color scheme.
          */
         "theme"?: CalciteTheme;
+        /**
+          * Used to set the tooltip for the expand toggle.
+         */
+        "tooltipExpand"?: HTMLCalciteTooltipElement;
     }
     interface CalciteActionGroup {
     }
@@ -796,7 +1000,16 @@ declare namespace LocalJSX {
          */
         "expanded"?: boolean;
         /**
-          * @deprecated since 5.3 - use "position" instead. Arrangement of the component.
+          * Updates the label of the collapse icon when the component is expanded.
+         */
+        "intlCollapse"?: string;
+        /**
+          * Updates the label of the expand icon when the component is not expanded.
+         */
+        "intlExpand"?: string;
+        /**
+          * Arrangement of the component.
+          * @deprecated use "position" instead.
          */
         "layout"?: CalciteLayout;
         /**
@@ -809,16 +1022,22 @@ declare namespace LocalJSX {
         "position"?: CalcitePosition;
         /**
           * Updates the label of the collapse icon when the component is expanded.
+          * @deprecated use "intlCollapse" instead.
          */
         "textCollapse"?: string;
         /**
           * Updates the label of the expand icon when the component is not expanded.
+          * @deprecated use "intlExpand" instead.
          */
         "textExpand"?: string;
         /**
           * Used to set the component's color scheme.
          */
         "theme"?: CalciteTheme;
+        /**
+          * Used to set the tooltip for the expand toggle.
+         */
+        "tooltipExpand"?: HTMLCalciteTooltipElement;
     }
     interface CalciteBlock {
         /**
@@ -838,6 +1057,14 @@ declare namespace LocalJSX {
          */
         "heading"?: string;
         /**
+          * Tooltip used for the toggle when expanded.
+         */
+        "intlCollapse"?: string;
+        /**
+          * Tooltip used for the toggle when collapsed.
+         */
+        "intlExpand"?: string;
+        /**
           * When true, content is waiting to be loaded. This state shows a busy indicator.
          */
         "loading"?: boolean;
@@ -855,10 +1082,12 @@ declare namespace LocalJSX {
         "summary"?: string;
         /**
           * Tooltip used for the toggle when expanded.
+          * @deprecated use "intlCollapse" instead.
          */
         "textCollapse"?: string;
         /**
           * Tooltip used for the toggle when collapsed.
+          * @deprecated use "intlExpand" instead.
          */
         "textExpand"?: string;
         /**
@@ -867,6 +1096,14 @@ declare namespace LocalJSX {
         "theme"?: CalciteTheme;
     }
     interface CalciteBlockSection {
+        /**
+          * Tooltip used for the toggle when expanded.
+         */
+        "intlCollapse"?: string;
+        /**
+          * Tooltip used for the toggle when collapsed.
+         */
+        "intlExpand"?: string;
         /**
           * Emitted when the header has been clicked.
          */
@@ -881,10 +1118,12 @@ declare namespace LocalJSX {
         "text"?: string;
         /**
           * Tooltip used for the toggle when expanded.
+          * @deprecated use "intlCollapse" instead.
          */
         "textCollapse"?: string;
         /**
           * Tooltip used for the toggle when collapsed.
+          * @deprecated use "intlExpand" instead.
          */
         "textExpand"?: string;
         /**
@@ -893,18 +1132,70 @@ declare namespace LocalJSX {
          */
         "toggleDisplay"?: CalciteBlockSectionToggleDisplay;
     }
+    interface CalciteFab {
+        /**
+          * Used to set the button's appearance. Default is outline.
+         */
+        "appearance"?: CalciteAppearance;
+        /**
+          * When true, disabled prevents interaction. This state shows items with lower opacity/grayed.
+         */
+        "disabled"?: boolean;
+        /**
+          * The name of the icon to display. The value of this property must match the icon name from https://esri.github.io/calcite-ui-icons/.
+         */
+        "icon"?: string;
+        /**
+          * Label of the FAB, exposed on hover. If no label is provided, the label inherits what's provided for the `text` prop.
+         */
+        "label"?: string;
+        /**
+          * When true, content is waiting to be loaded. This state shows a busy indicator.
+         */
+        "loading"?: boolean;
+        /**
+          * Specifies the size of the fab.
+         */
+        "scale"?: CalciteScale;
+        /**
+          * Text that accompanies the FAB icon.
+         */
+        "text"?: string;
+        /**
+          * Indicates whether the text is displayed.
+         */
+        "textEnabled"?: boolean;
+        /**
+          * Used to set the component's color scheme.
+         */
+        "theme"?: CalciteTheme;
+    }
     interface CalciteFilter {
         /**
           * The input data. The filter uses this as the starting point, and returns items that contain the string entered in the input, using a partial match and recursive search.
          */
         "data"?: object[];
-        "onCalciteFilterChange"?: (event: CustomEvent<any>) => void;
+        /**
+          * A text label that will appear on the clear button.
+         */
+        "intlClear"?: string;
         /**
           * A text label that will appear next to the input field.
+         */
+        "intlLabel"?: string;
+        "onCalciteFilterChange"?: (event: CustomEvent<any>) => void;
+        /**
+          * Placeholder text for the input element's placeholder attribute
+         */
+        "placeholder"?: string;
+        /**
+          * A text label that will appear next to the input field.
+          * @deprecated use "intlLabel" instead.
          */
         "textLabel"?: string;
         /**
           * Placeholder text for the input element's placeholder attribute
+          * @deprecated use "placeholder" instead.
          */
         "textPlaceholder"?: string;
     }
@@ -932,6 +1223,18 @@ declare namespace LocalJSX {
          */
         "heightScale"?: CalciteScale;
         /**
+          * 'Back' text string.
+         */
+        "intlBack"?: string;
+        /**
+          * 'Close' text string for the close button. The close button will only be shown when 'dismissible' is true.
+         */
+        "intlClose"?: string;
+        /**
+          * 'Open' text string for the menu.
+         */
+        "intlOpen"?: string;
+        /**
           * When true, content is waiting to be loaded. This state shows a busy indicator.
          */
         "loading"?: boolean;
@@ -944,6 +1247,10 @@ declare namespace LocalJSX {
          */
         "onCalciteFlowItemBackClick"?: (event: CustomEvent<any>) => void;
         /**
+          * Emitted when the content has been scrolled.
+         */
+        "onCalciteFlowItemScroll"?: (event: CustomEvent<any>) => void;
+        /**
           * Shows a back button in the header.
          */
         "showBackButton"?: boolean;
@@ -953,14 +1260,17 @@ declare namespace LocalJSX {
         "summary"?: string;
         /**
           * 'Back' text string.
+          * @deprecated use "intlBack" instead.
          */
         "textBack"?: string;
         /**
           * 'Close' text string for the menu.
+          * @deprecated use "intlClose" instead.
          */
         "textClose"?: string;
         /**
           * 'Open' text string for the menu.
+          * @deprecated use "intlOpen" instead.
          */
         "textOpen"?: string;
         /**
@@ -997,6 +1307,10 @@ declare namespace LocalJSX {
          */
         "heightScale"?: CalciteScale;
         /**
+          * 'Close' text string for the close button. The close button will only be shown when 'dismissible' is true.
+         */
+        "intlClose"?: string;
+        /**
           * When true, content is waiting to be loaded. This state shows a busy indicator.
          */
         "loading"?: boolean;
@@ -1005,7 +1319,12 @@ declare namespace LocalJSX {
          */
         "onCalcitePanelDismissedChange"?: (event: CustomEvent<any>) => void;
         /**
+          * Emitted when the content has been scrolled.
+         */
+        "onCalcitePanelScroll"?: (event: CustomEvent<any>) => void;
+        /**
           * 'Close' text string for the close button. The close button will only be shown when 'dismissible' is true.
+          * @deprecated use "intlClose" instead.
          */
         "textClose"?: string;
         /**
@@ -1016,6 +1335,7 @@ declare namespace LocalJSX {
     interface CalcitePickList {
         /**
           * Compact removes the selection icon (radio or checkbox) and adds a compact attribute. This allows for a more compact version of the `calcite-pick-list-item`.
+          * @deprecated This property will be removed in a future release.
          */
         "compact"?: boolean;
         /**
@@ -1053,6 +1373,7 @@ declare namespace LocalJSX {
     interface CalcitePickListItem {
         /**
           * Compact removes the selection icon (radio or checkbox) and adds a compact attribute. This allows for a more compact version of the `calcite-pick-list-item`.
+          * @deprecated This property will be removed in a future release.
          */
         "compact"?: boolean;
         /**
@@ -1075,7 +1396,21 @@ declare namespace LocalJSX {
           * Emitted whenever the item is selected or unselected.
           * @event calciteListItemChange
          */
-        "onCalciteListItemChange"?: (event: CustomEvent<any>) => void;
+        "onCalciteListItemChange"?: (event: CustomEvent<{
+            item: HTMLCalcitePickListItemElement;
+            value: string;
+            selected: boolean;
+            shiftPressed: boolean;
+        }>) => void;
+        /**
+          * Emitted whenever the remove button is pressed.
+          * @event calciteListItemRemove
+         */
+        "onCalciteListItemRemove"?: (event: CustomEvent<void>) => void;
+        /**
+          * Set this to true to display a remove action that removes the item from the list.
+         */
+        "removable"?: boolean;
         /**
           * Set this to true to pre-select an item. Toggles when an item is checked/unchecked.
          */
@@ -1088,6 +1423,10 @@ declare namespace LocalJSX {
           * The main label for this item. This will appear next to the icon.
          */
         "textLabel"?: string;
+        /**
+          * The text for the remove item buttons. Only applicable if removable is true.
+         */
+        "textRemove"?: string;
         /**
           * A unique value used to identify this item - similar to the value attribute on an <input>.
          */
@@ -1113,7 +1452,8 @@ declare namespace LocalJSX {
          */
         "detachedScale"?: CalciteScale;
         /**
-          * @deprecated since 5.3 - use "position" instead. Arrangement of the component.
+          * Arrangement of the component.
+          * @deprecated use "position" instead.
          */
         "layout"?: CalciteLayout;
         /**
@@ -1154,6 +1494,10 @@ declare namespace LocalJSX {
          */
         "heading"?: string;
         /**
+          * Alternate text for closing the tip.
+         */
+        "intlClose"?: string;
+        /**
           * Indicates whether the tip can be dismissed.
          */
         "nonDismissible"?: boolean;
@@ -1167,6 +1511,7 @@ declare namespace LocalJSX {
         "selected"?: boolean;
         /**
           * Alternate text for closing the tip.
+          * @deprecated use "intlClose" instead.
          */
         "textClose"?: string;
         /**
@@ -1186,27 +1531,52 @@ declare namespace LocalJSX {
          */
         "closed"?: boolean;
         /**
+          * Alternate text for closing the tip.
+         */
+        "intlClose"?: string;
+        /**
+          * The default group title for the `calcite-tip-manager`.
+         */
+        "intlDefaultTitle"?: string;
+        /**
+          * Alternate text for navigating to the next tip.
+         */
+        "intlNext"?: string;
+        /**
+          * Label that appears on hover of pagination icon.
+         */
+        "intlPaginationLabel"?: string;
+        /**
+          * Alternate text for navigating to the previous tip.
+         */
+        "intlPrevious"?: string;
+        /**
           * Emitted when the `calcite-tip-manager` has been toggled open or closed.
          */
         "onCalciteTipManagerToggle"?: (event: CustomEvent<any>) => void;
         /**
-          * Alternate text for closing the `calcite-tip-manager`.
+          * Alternate text for closing the tip.
+          * @deprecated use "intlClose" instead.
          */
         "textClose"?: string;
         /**
           * The default group title for the `calcite-tip-manager`.
+          * @deprecated use "intlDefaultTitle" instead.
          */
         "textDefaultTitle"?: string;
         /**
           * Alternate text for navigating to the next tip.
+          * @deprecated use "intlNext" instead.
          */
         "textNext"?: string;
         /**
           * Label that appears on hover of pagination icon.
+          * @deprecated use "intlPaginationLabel" instead.
          */
         "textPaginationLabel"?: string;
         /**
           * Alternate text for navigating to the previous tip.
+          * @deprecated use "intlPrevious" instead.
          */
         "textPrevious"?: string;
         /**
@@ -1217,6 +1587,7 @@ declare namespace LocalJSX {
     interface CalciteValueList {
         /**
           * Compact reduces the size of all items in the list.
+          * @deprecated This property will be removed in a future release.
          */
         "compact"?: boolean;
         /**
@@ -1257,6 +1628,7 @@ declare namespace LocalJSX {
     interface CalciteValueListItem {
         /**
           * Compact reduces the size of the item.
+          * @deprecated This property will be removed in a future release.
          */
         "compact"?: boolean;
         /**
@@ -1271,6 +1643,10 @@ declare namespace LocalJSX {
           * Used to provide additional metadata to an item, primarily used when the parent list has a filter.
          */
         "metadata"?: object;
+        /**
+          * Set this to true to display a remove action that removes the item from the list.
+         */
+        "removable"?: boolean;
         /**
           * Set this to true to pre-select an item. Toggles when an item is checked/unchecked.
          */
@@ -1295,6 +1671,7 @@ declare namespace LocalJSX {
         "calcite-action-pad": CalciteActionPad;
         "calcite-block": CalciteBlock;
         "calcite-block-section": CalciteBlockSection;
+        "calcite-fab": CalciteFab;
         "calcite-filter": CalciteFilter;
         "calcite-flow": CalciteFlow;
         "calcite-flow-item": CalciteFlowItem;
@@ -1323,6 +1700,7 @@ declare module "@stencil/core" {
             "calcite-action-pad": LocalJSX.CalciteActionPad & JSXBase.HTMLAttributes<HTMLCalciteActionPadElement>;
             "calcite-block": LocalJSX.CalciteBlock & JSXBase.HTMLAttributes<HTMLCalciteBlockElement>;
             "calcite-block-section": LocalJSX.CalciteBlockSection & JSXBase.HTMLAttributes<HTMLCalciteBlockSectionElement>;
+            "calcite-fab": LocalJSX.CalciteFab & JSXBase.HTMLAttributes<HTMLCalciteFabElement>;
             "calcite-filter": LocalJSX.CalciteFilter & JSXBase.HTMLAttributes<HTMLCalciteFilterElement>;
             "calcite-flow": LocalJSX.CalciteFlow & JSXBase.HTMLAttributes<HTMLCalciteFlowElement>;
             "calcite-flow-item": LocalJSX.CalciteFlowItem & JSXBase.HTMLAttributes<HTMLCalciteFlowItemElement>;

@@ -1,4 +1,4 @@
-import { h, Host } from "@stencil/core";
+import { Component, Listen, Prop, Watch, Event, Element, State, h, Host } from "@stencil/core";
 import { getSlottedElements } from "../../utils/dom";
 export class CalciteTabNav {
     selectedTabChanged() {
@@ -25,6 +25,10 @@ export class CalciteTabNav {
                 tab: this.selectedTab
             });
         }
+    }
+    componentWillRender() {
+        var _a;
+        this.layout = (_a = this.el.closest("calcite-tabs")) === null || _a === void 0 ? void 0 : _a.layout;
     }
     render() {
         return (h(Host, { role: "tablist" },
@@ -149,6 +153,26 @@ export class CalciteTabNav {
             },
             "attribute": "sync-id",
             "reflect": false
+        },
+        "layout": {
+            "type": "string",
+            "mutable": true,
+            "complexType": {
+                "original": "\"center\" | \"inline\"",
+                "resolved": "\"center\" | \"inline\"",
+                "references": {}
+            },
+            "required": false,
+            "optional": false,
+            "docs": {
+                "tags": [{
+                        "text": "Parent tabs component layout value",
+                        "name": "internal"
+                    }],
+                "text": ""
+            },
+            "attribute": "layout",
+            "reflect": true
         }
     }; }
     static get states() { return {

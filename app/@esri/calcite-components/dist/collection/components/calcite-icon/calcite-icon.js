@@ -1,4 +1,4 @@
-import { h, Host, Build } from "@stencil/core";
+import { Build, Component, Element, h, Host, Prop, State, Watch, } from "@stencil/core";
 import { CSS } from "./resources";
 import { getElementDir } from "../../utils/dom";
 import { fetchIcon, scaleToPx } from "./utils";
@@ -9,10 +9,6 @@ export class CalciteIcon {
         //  Properties
         //
         //--------------------------------------------------------------------------
-        /**
-         * When true, the icon will be filled.
-         */
-        this.filled = false;
         /**
          * The name of the icon to display. The value of this property must match the icon name from https://esri.github.io/calcite-ui-icons/.
          */
@@ -25,10 +21,6 @@ export class CalciteIcon {
          * Icon scale. Can be "s" | "m" | "l".
          */
         this.scale = "m";
-        /**
-         * Icon theme. Can be "light" or "dark".
-         */
-        this.theme = "light";
         this.visible = false;
     }
     //--------------------------------------------------------------------------
@@ -56,11 +48,12 @@ export class CalciteIcon {
         const dir = getElementDir(el);
         const size = scaleToPx[scale];
         const semantic = !!textLabel;
+        const paths = [].concat(pathData || "");
         return (h(Host, { "aria-label": semantic ? textLabel : null, role: semantic ? "img" : null },
             h("svg", { class: {
-                    [CSS.mirrored]: dir === "rtl" && mirrored
-                }, xmlns: "http://www.w3.org/2000/svg", fill: "currentColor", height: size, width: size, viewBox: `0 0 ${size} ${size}` },
-                h("path", { d: pathData }))));
+                    [CSS.mirrored]: dir === "rtl" && mirrored,
+                    svg: true,
+                }, xmlns: "http://www.w3.org/2000/svg", fill: "currentColor", height: size, width: size, viewBox: `0 0 ${size} ${size}` }, paths.map((path) => typeof path === "string" ? (h("path", { d: path })) : (h("path", { d: path.d, opacity: "opacity" in path ? path.opacity : 1 }))))));
     }
     //--------------------------------------------------------------------------
     //
@@ -68,11 +61,11 @@ export class CalciteIcon {
     //
     //--------------------------------------------------------------------------
     async loadIconPathData() {
-        const { filled, icon, scale, visible } = this;
+        const { icon, scale, visible } = this;
         if (!Build.isBrowser || !icon || !visible) {
             return;
         }
-        this.pathData = await fetchIcon({ icon, scale, filled });
+        this.pathData = await fetchIcon({ icon, scale });
     }
     waitUntilVisible(callback) {
         if (!Build.isBrowser ||
@@ -81,8 +74,8 @@ export class CalciteIcon {
             callback();
             return;
         }
-        this.intersectionObserver = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
+        this.intersectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
                 if (entry.isIntersecting) {
                     this.intersectionObserver.disconnect();
                     this.intersectionObserver = null;
@@ -102,24 +95,6 @@ export class CalciteIcon {
     }; }
     static get assetsDirs() { return ["assets"]; }
     static get properties() { return {
-        "filled": {
-            "type": "boolean",
-            "mutable": false,
-            "complexType": {
-                "original": "boolean",
-                "resolved": "boolean",
-                "references": {}
-            },
-            "required": false,
-            "optional": false,
-            "docs": {
-                "tags": [],
-                "text": "When true, the icon will be filled."
-            },
-            "attribute": "filled",
-            "reflect": true,
-            "defaultValue": "false"
-        },
         "icon": {
             "type": "string",
             "mutable": false,
@@ -216,8 +191,7 @@ export class CalciteIcon {
                 "text": "Icon theme. Can be \"light\" or \"dark\"."
             },
             "attribute": "theme",
-            "reflect": true,
-            "defaultValue": "\"light\""
+            "reflect": true
         }
     }; }
     static get states() { return {
@@ -229,10 +203,7 @@ export class CalciteIcon {
             "propName": "icon",
             "methodName": "loadIconPathData"
         }, {
-            "propName": "filled",
-            "methodName": "loadIconPathData"
-        }, {
-            "propName": "size",
+            "propName": "scale",
             "methodName": "loadIconPathData"
         }]; }
 }

@@ -1,7 +1,7 @@
-import { h, Host } from "@stencil/core";
+import { Component, Element, Event, h, Host, Prop, } from "@stencil/core";
 import { CSS } from "./resources";
-import { ENTER, SPACE } from "../../utils/keys";
 import { getElementDir } from "../../utils/dom";
+import { getKey } from "../../utils/key";
 /**
  * @slot thumbnail - A slot for adding a thumnail to the card.
  * @slot - A slot for adding subheader/description content.
@@ -12,7 +12,7 @@ import { getElementDir } from "../../utils/dom";
  */
 /** Cards do not include a grid or bounding container
  * - cards will expand to fit the width of their container
-*/
+ */
 export class CalciteCard {
     constructor() {
         //--------------------------------------------------------------------------
@@ -26,25 +26,18 @@ export class CalciteCard {
         this.selected = false;
         /** Indicates whether the card is selectable. */
         this.selectable = false;
-        /**  The theme of the card.*/
-        this.theme = "light";
     }
     // --------------------------------------------------------------------------
     //
     //  Lifecycle
     //
     // --------------------------------------------------------------------------
-    connectedCallback() {
-        let themes = ["dark", "light"];
-        if (!themes.includes(this.theme))
-            this.theme = "light";
-    }
     render() {
         const dir = getElementDir(this.el);
         return (h(Host, { dir: dir },
             h("div", { class: "calcite-card-container" },
                 this.loading ? (h("div", { class: "calcite-card-loader-container" },
-                    h("calcite-loader", { class: "calcite-card-loader", "is-active": true }))) : null,
+                    h("calcite-loader", { "is-active": true }))) : null,
                 h("section", { class: { [CSS.container]: true }, "aria-busy": this.loading },
                     this.selectable ? this.renderCheckbox() : null,
                     this.renderThumbnail(),
@@ -67,9 +60,9 @@ export class CalciteCard {
         this.selectCard();
     }
     cardSelectKeyDown(e) {
-        switch (e.keyCode) {
-            case SPACE:
-            case ENTER:
+        switch (getKey(e.key)) {
+            case " ":
+            case "Enter":
                 this.selectCard();
                 e.preventDefault();
                 break;
@@ -79,7 +72,7 @@ export class CalciteCard {
         this.selected = !this.selected;
         this.calciteCardSelected.emit({
             element: this.el,
-            selected: this.selected
+            selected: this.selected,
         });
     }
     renderThumbnail() {
@@ -88,7 +81,7 @@ export class CalciteCard {
             h("slot", { name: "thumbnail" /* thumbnail */ }))) : null;
     }
     renderCheckbox() {
-        return (h("div", { class: "card-checkbox-wrapper", onClick: () => this.cardSelectClick(), onKeyDown: e => this.cardSelectKeyDown(e) },
+        return (h("div", { class: CSS.checkboxWrapper, onClick: () => this.cardSelectClick(), onKeyDown: (e) => this.cardSelectKeyDown(e) },
             h("calcite-checkbox", { checked: this.selected })));
     }
     renderHeader() {
@@ -185,8 +178,7 @@ export class CalciteCard {
                 "text": "The theme of the card."
             },
             "attribute": "theme",
-            "reflect": true,
-            "defaultValue": "\"light\""
+            "reflect": true
         }
     }; }
     static get events() { return [{

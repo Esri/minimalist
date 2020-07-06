@@ -7,12 +7,12 @@ export declare const CSS: {
     content: string;
     info: string;
 };
-export declare const TEXT: {
-    close: string;
-};
 export declare const ICONS: {
     close: string;
 };
 export declare const SLOTS: {
     thumbnail: string;
+};
+export declare const TEXT: {
+    close: string;
 };

@@ -1,4 +1,4 @@
-import { Host, h } from "@stencil/core";
+import { Component, Element, Host, Method, Prop, h, Listen } from "@stencil/core";
 import { ICON_TYPES } from "../calcite-pick-list/resources";
 import guid from "../utils/guid";
 import { CSS } from "../calcite-pick-list-item/resources";
@@ -15,6 +15,8 @@ export class CalciteValueListItem {
         // --------------------------------------------------------------------------
         /**
          * Compact reduces the size of the item.
+         *
+         * @deprecated This property will be removed in a future release.
          */
         this.compact = false;
         /**
@@ -33,6 +35,10 @@ export class CalciteValueListItem {
          * Determines the icon SVG symbol that will be shown. Options are circle, square, grid or null.
          */
         this.icon = null;
+        /**
+         * Set this to true to display a remove action that removes the item from the list.
+         */
+        this.removable = false;
         /**
          * Set this to true to pre-select an item. Toggles when an item is checked/unchecked.
          */
@@ -65,6 +71,19 @@ export class CalciteValueListItem {
     async toggleSelected(coerce) {
         this.pickListItem.toggleSelected(coerce);
     }
+    async setFocus() {
+        var _a;
+        (_a = this.pickListItem) === null || _a === void 0 ? void 0 : _a.setFocus();
+    }
+    // --------------------------------------------------------------------------
+    //
+    //  Events
+    //
+    // --------------------------------------------------------------------------
+    calciteListItemChangeHandler(event) {
+        // adjust item payload from wrapped item before bubbling
+        event.detail.item = this.el;
+    }
     // --------------------------------------------------------------------------
     //
     //  Render Methods
@@ -80,7 +99,7 @@ export class CalciteValueListItem {
     render() {
         return (h(Host, { "data-id": this.guid },
             this.renderHandle(),
-            h("calcite-pick-list-item", { compact: this.compact, ref: this.getPickListRef, disabled: this.disabled, disableDeselect: this.disableDeselect, selected: this.selected, metadata: this.metadata, textLabel: this.textLabel, textDescription: this.textDescription, onCalciteListItemChange: this.handleSelectChange, value: this.value },
+            h("calcite-pick-list-item", { compact: this.compact, ref: this.getPickListRef, disabled: this.disabled, disableDeselect: this.disableDeselect, selected: this.selected, metadata: this.metadata, removable: this.removable, textLabel: this.textLabel, textDescription: this.textDescription, onCalciteListItemChange: this.handleSelectChange, value: this.value },
                 h("slot", { name: "secondary-action", slot: "secondary-action" }))));
     }
     static get is() { return "calcite-value-list-item"; }
@@ -103,7 +122,10 @@ export class CalciteValueListItem {
             "required": false,
             "optional": true,
             "docs": {
-                "tags": [],
+                "tags": [{
+                        "text": "This property will be removed in a future release.",
+                        "name": "deprecated"
+                    }],
                 "text": "Compact reduces the size of the item."
             },
             "attribute": "compact",
@@ -208,6 +230,24 @@ export class CalciteValueListItem {
                 "text": "Used to provide additional metadata to an item, primarily used when the parent list has a filter."
             }
         },
+        "removable": {
+            "type": "boolean",
+            "mutable": false,
+            "complexType": {
+                "original": "boolean",
+                "resolved": "boolean",
+                "references": {}
+            },
+            "required": false,
+            "optional": false,
+            "docs": {
+                "tags": [],
+                "text": "Set this to true to display a remove action that removes the item from the list."
+            },
+            "attribute": "removable",
+            "reflect": true,
+            "defaultValue": "false"
+        },
         "selected": {
             "type": "boolean",
             "mutable": true,
@@ -297,7 +337,30 @@ export class CalciteValueListItem {
                 "text": "",
                 "tags": []
             }
+        },
+        "setFocus": {
+            "complexType": {
+                "signature": "() => Promise<void>",
+                "parameters": [],
+                "references": {
+                    "Promise": {
+                        "location": "global"
+                    }
+                },
+                "return": "Promise<void>"
+            },
+            "docs": {
+                "text": "",
+                "tags": []
+            }
         }
     }; }
     static get elementRef() { return "el"; }
+    static get listeners() { return [{
+            "name": "calciteListItemChange",
+            "method": "calciteListItemChangeHandler",
+            "target": undefined,
+            "capture": false,
+            "passive": false
+        }]; }
 }

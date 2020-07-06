@@ -1,4 +1,4 @@
-import { EventEmitter } from "../../stencil.core";
+import { EventEmitter } from "../../stencil-public-runtime";
 export declare class CalciteRadioGroupItem {
     el: HTMLElement;
     /**
@@ -12,8 +12,10 @@ export declare class CalciteRadioGroupItem {
     value: any | null;
     connectedCallback(): void;
     disconnectedCallback(): void;
+    componentDidLoad(): void;
     render(): any;
     calciteRadioGroupItemChange: EventEmitter;
+    private useFallback;
     private inputProxy;
     private mutationObserver;
     private getMutationObserver;

@@ -1,3 +1,4 @@
+import { VNode } from "../stencil-public-runtime";
 import { CalciteTheme } from "../interfaces";
 /**
  * @slot shell-header - A slot for adding header content. This content will be positioned at the top of the shell.
@@ -13,9 +14,9 @@ export declare class CalciteShell {
      */
     theme: CalciteTheme;
     el: HTMLCalciteShellElement;
-    renderHeader(): any;
-    renderContent(): any;
-    renderFooter(): any;
-    renderMain(): any;
-    render(): any;
+    renderHeader(): VNode;
+    renderContent(): VNode;
+    renderFooter(): VNode;
+    renderMain(): VNode;
+    render(): VNode;
 }

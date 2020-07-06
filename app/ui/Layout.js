@@ -20,7 +20,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/core/tsSupport/decorateHelper", "esri/core/accessorSupport/decorators", "esri/widgets/support/widget", "./Header", "./Layout/LayoutViewModel", "esri/widgets/Widget", "esri/core/watchUtils"], function (require, exports, __extends, __decorate, decorators_1, widget_1, Header_1, LayoutViewModel_1, Widget_1, watchUtils_1) {
+define(["require", "exports", "esri/core/accessorSupport/decorators", "esri/widgets/support/widget", "./Header", "./Layout/LayoutViewModel", "esri/widgets/Widget", "esri/core/watchUtils"], function (require, exports, decorators_1, widget_1, Header_1, LayoutViewModel_1, Widget_1, watchUtils_1) {
     "use strict";
     Header_1 = __importDefault(Header_1);
     LayoutViewModel_1 = __importDefault(LayoutViewModel_1);
@@ -97,7 +97,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
                 "applicationConfig.disableScroll",
                 "applicationConfig.popupPanel",
                 "applicationConfig.layoutType",
-                "applicationConfig.legend", "applicationConfig.details"])
+                "applicationConfig.legendPanel", "applicationConfig.details"])
         ], Layout.prototype, "applicationConfig", void 0);
         __decorate([
             decorators_1.aliasOf("viewModel.applicationBase")
@@ -121,7 +121,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             decorators_1.subclass("Layout")
         ], Layout);
         return Layout;
-    }(decorators_1.declared(Widget_1.default)));
+    }((Widget_1.default)));
     return Layout;
 });
 //# sourceMappingURL=Layout.js.map

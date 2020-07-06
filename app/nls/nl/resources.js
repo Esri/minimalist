@@ -7,7 +7,8 @@ define({
     "popup": "Info"
   },
   "popupPanel": {
-    "noResultsMessage": "Klik op de kaart om objectinformatie te bekijken"
+    "noResultsMessage": "Klik op de kaart om de objectinformatie te bekijken",
+    "noResultsHoverMessage": "Beweeg over locaties op de kaart om de objectinformatie te bekijken"
   },
   "close": "sluiten",
   "toggle": "Paneelhoogte wisselen"

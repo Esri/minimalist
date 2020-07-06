@@ -3,6 +3,7 @@ import { VNode } from "../stencil-public-runtime";
 import { CalciteScale, CalciteTheme } from "../interfaces";
 /**
  * @slot menu-actions - A slot for adding `calcite-action`s to a menu under the `...` in the header. These actions are displayed when the menu is open.
+ * @slot fab - A slot for adding a `calcite-fab` (floating action button) to perform an action.
  * @slot footer-actions - A slot for adding `calcite-button`s to the footer.
  * @slot - A slot for adding content to the flow item.
  */
@@ -42,15 +43,30 @@ export declare class CalciteFlowItem {
     /**
      * 'Back' text string.
      */
-    textBack: string;
+    intlBack?: string;
+    /**
+     * 'Back' text string.
+     * @deprecated use "intlBack" instead.
+     */
+    textBack?: string;
+    /**
+     * 'Close' text string for the close button. The close button will only be shown when 'dismissible' is true.
+     */
+    intlClose?: string;
     /**
      * 'Close' text string for the menu.
+     * @deprecated use "intlClose" instead.
      */
-    textClose: string;
+    textClose?: string;
     /**
      * 'Open' text string for the menu.
      */
-    textOpen: string;
+    intlOpen?: string;
+    /**
+     * 'Open' text string for the menu.
+     * @deprecated use "intlOpen" instead.
+     */
+    textOpen?: string;
     /**
      * Used to set the component's color scheme.
      */
@@ -59,7 +75,12 @@ export declare class CalciteFlowItem {
      * Emitted when the back button has been clicked.
      */
     calciteFlowItemBackClick: EventEmitter;
+    /**
+     * Emitted when the content has been scrolled.
+     */
+    calciteFlowItemScroll: EventEmitter;
     el: HTMLCalciteFlowItemElement;
+    handleCalcitePanelScroll(event: CustomEvent): void;
     queryActions(): HTMLCalciteActionElement[];
     isValidKey(key: string, supportedKeys: string[]): boolean;
     toggleMenuOpen: () => void;
@@ -77,5 +98,6 @@ export declare class CalciteFlowItem {
     renderHeading(): VNode;
     renderSummary(): VNode;
     renderHeader(): VNode;
-    render(): any;
+    renderFab(): VNode;
+    render(): VNode;
 }

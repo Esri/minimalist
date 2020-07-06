@@ -1,12 +1,10 @@
-import { h, Host } from "@stencil/core";
+import { Component, Prop, Event, Listen, Element, Method, h, Host, State, } from "@stencil/core";
 import { guid } from "../../utils/guid";
-import { SPACE, ENTER, LEFT, RIGHT } from "../../utils/keys";
 import { getElementDir } from "../../utils/dom";
+import { getKey } from "../../utils/key";
 export class CalciteTabTitle {
     constructor() {
-        /**
-         * Show this tab title as selected
-         */
+        /** Show this tab title as selected */
         this.isActive = false;
         /**
          * @internal
@@ -21,9 +19,13 @@ export class CalciteTabTitle {
     componentWillLoad() {
         if (this.tab && this.isActive) {
             this.calciteTabsActivate.emit({
-                tab: this.tab
+                tab: this.tab,
             });
         }
+    }
+    componentWillRender() {
+        var _a;
+        this.layout = (_a = this.el.closest("calcite-tabs")) === null || _a === void 0 ? void 0 : _a.layout;
     }
     render() {
         const id = this.el.id || this.guid;
@@ -47,26 +49,26 @@ export class CalciteTabTitle {
             this.isActive = this.tab === event.detail.tab;
         }
         else {
-            this.getTabIndex().then(index => {
+            this.getTabIndex().then((index) => {
                 this.isActive = index === event.detail.tab;
             });
         }
     }
     onClick() {
         this.calciteTabsActivate.emit({
-            tab: this.tab
+            tab: this.tab,
         });
     }
     keyDownHandler(e) {
-        switch (e.keyCode) {
-            case SPACE:
-            case ENTER:
+        switch (getKey(e.key)) {
+            case " ":
+            case "Enter":
                 this.calciteTabsActivate.emit({
-                    tab: this.tab
+                    tab: this.tab,
                 });
                 e.preventDefault();
                 break;
-            case RIGHT:
+            case "ArrowRight":
                 if (getElementDir(this.el) === "ltr") {
                     this.calciteTabsFocusNext.emit();
                 }
@@ -74,7 +76,7 @@ export class CalciteTabTitle {
                     this.calciteTabsFocusPrevious.emit();
                 }
                 break;
-            case LEFT:
+            case "ArrowLeft":
                 if (getElementDir(this.el) === "ltr") {
                     this.calciteTabsFocusPrevious.emit();
                 }
@@ -151,6 +153,26 @@ export class CalciteTabTitle {
             "attribute": "is-active",
             "reflect": true,
             "defaultValue": "false"
+        },
+        "layout": {
+            "type": "string",
+            "mutable": true,
+            "complexType": {
+                "original": "\"center\" | \"inline\"",
+                "resolved": "\"center\" | \"inline\"",
+                "references": {}
+            },
+            "required": false,
+            "optional": false,
+            "docs": {
+                "tags": [{
+                        "text": "Parent tabs component layout value",
+                        "name": "internal"
+                    }],
+                "text": ""
+            },
+            "attribute": "layout",
+            "reflect": true
         }
     }; }
     static get states() { return {

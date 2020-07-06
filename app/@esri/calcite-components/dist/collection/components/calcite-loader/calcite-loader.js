@@ -1,6 +1,5 @@
-import { h, Host } from "@stencil/core";
+import { Component, Element, h, Host, Prop } from "@stencil/core";
 import { guid } from "../../utils/guid";
-import { getElementDir } from "../../utils/dom";
 export class CalciteLoader {
     constructor() {
         //--------------------------------------------------------------------------
@@ -8,50 +7,20 @@ export class CalciteLoader {
         //  Properties
         //
         //--------------------------------------------------------------------------
-        /**
-         * Show the loader
-         */
+        /** Show the loader */
         this.isActive = false;
-        /**
-         * Inline loaders are smaller and will appear to the left of the text
-         */
+        /** Inline loaders are smaller and will appear to the left of the text */
         this.inline = false;
-        /**
-         * Use indeterminate if finding actual progress value is impossible
-         */
-        this.type = "indeterminate";
-        /**
-         * Percent complete of 100, only valid for determinate indicators
-         */
+        /** Percent complete of 100, only valid for determinate indicators */
         this.value = 0;
-        /**
-         * Text which should appear under the loading indicator (optional)
-         */
+        /** Text which should appear under the loading indicator (optional) */
         this.text = "";
         //--------------------------------------------------------------------------
         //
         //  Private State/Props
         //
         //--------------------------------------------------------------------------
-        /**
-         * @internal
-         */
-        this.loaderBarOffsets = [0, 0, 0];
-        /**
-         * @internal
-         */
-        this.loaderBarRates = [1, 2.25, 3.5];
-        /**
-         * @internal
-         */
-        this.isEdge = false;
-        /**
-         * @internal
-         */
-        this.animationID = null;
-        /**
-         * @internal
-         */
+        /** @internal */
         this.guid = `calcite-loader-${guid()}`;
     }
     //--------------------------------------------------------------------------
@@ -59,71 +28,34 @@ export class CalciteLoader {
     //  Lifecycle
     //
     //--------------------------------------------------------------------------
-    componentWillLoad() {
-        this.isEdge = /Edge/.test(navigator.userAgent);
-        if (this.isEdge) {
-            this.updateOffset();
-        }
-    }
-    componentDidUnload() {
-        if (this.animationID) {
-            window.cancelAnimationFrame(this.animationID);
-        }
-    }
     render() {
-        const dir = getElementDir(this.el);
         const id = this.el.id || this.guid;
-        const ariaAttributes = {
-            "aria-valuenow": this.value,
-            "aria-valuemin": 0,
-            "aria-valuemax": 100
-        };
-        const size = this.inline ? 16 : 56;
-        const viewbox = this.inline ? "0 0 16 16" : "0 0 56 56";
+        const size = this.inline ? 20 : 56;
+        const radius = this.inline ? 9 : 25;
+        const viewbox = `0 0 ${size} ${size}`;
         const isDeterminate = this.type === "determinate";
-        const styleProperties = {};
-        if (this.isEdge) {
-            styleProperties["--calcite-loader-offset"] = `${this.loaderBarOffsets[0]}%`;
-            styleProperties["--calcite-loader-offset2"] = `${this.loaderBarOffsets[1]}%`;
-            styleProperties["--calcite-loader-offset3"] = `${this.loaderBarOffsets[2]}%`;
-        }
-        const progress = {
-            "--calcite-loader-progress": `${-400 - this.value * 4}%`
+        const circumference = 2 * radius * Math.PI;
+        const progress = (this.value / 100) * circumference;
+        const remaining = circumference - progress;
+        const value = Math.floor(this.value);
+        const hostAttributes = {
+            "aria-valuenow": value,
+            "aria-valuemin": 0,
+            "aria-valuemax": 100,
+            complete: value === 100
         };
-        return (h(Host, Object.assign({ id: id, dir: dir, role: "progressbar" }, (this.type === "determinate" ? ariaAttributes : {}), { style: styleProperties }),
-            h("svg", { viewBox: viewbox, class: "loader__square" },
-                h("rect", { width: size, height: size })),
-            h("svg", { viewBox: viewbox, class: "loader__square loader__square--2" },
-                h("rect", { width: size, height: size })),
-            h("svg", { viewBox: viewbox, class: "loader__square loader__square--3", style: isDeterminate ? progress : {} },
-                h("rect", { width: size, height: size })),
-            this.text ? h("div", { class: "loader__text" }, this.text) : "",
-            this.value ? (h("div", { class: "loader__percentage" }, Math.floor(this.value))) : ("")));
-    }
-    //--------------------------------------------------------------------------
-    //
-    //  Private Methods
-    //
-    //--------------------------------------------------------------------------
-    /**
-     * @internal
-     */
-    updateOffset() {
-        this.loaderBarOffsets = this.rotateLoaderBars(this.loaderBarOffsets);
-        this.animationID = window.requestAnimationFrame(() => this.updateOffset());
-    }
-    /**
-     * @internal
-     */
-    rotateLoaderBars(barOffsets) {
-        return barOffsets.map((offset, i) => {
-            if (offset > -400) {
-                return offset - this.loaderBarRates[i];
-            }
-            else {
-                return 0;
-            }
-        });
+        const svgAttributes = { r: radius, cx: size / 2, cy: size / 2 };
+        const determinateStyle = { "stroke-dasharray": `${progress} ${remaining}` };
+        return (h(Host, Object.assign({ id: id, role: "progressbar" }, (isDeterminate ? hostAttributes : {})),
+            h("div", { class: "loader__svgs" },
+                h("svg", { viewBox: viewbox, class: "loader__svg loader__svg--1" },
+                    h("circle", Object.assign({}, svgAttributes))),
+                h("svg", { viewBox: viewbox, class: "loader__svg loader__svg--2" },
+                    h("circle", Object.assign({}, svgAttributes))),
+                h("svg", Object.assign({ viewBox: viewbox, class: "loader__svg loader__svg--3" }, (isDeterminate ? { style: determinateStyle } : {})),
+                    h("circle", Object.assign({}, svgAttributes)))),
+            this.text && h("div", { class: "loader__text" }, this.text),
+            isDeterminate && h("div", { class: "loader__percentage" }, value)));
     }
     static get is() { return "calcite-loader"; }
     static get encapsulation() { return "shadow"; }
@@ -136,7 +68,7 @@ export class CalciteLoader {
     static get properties() { return {
         "isActive": {
             "type": "boolean",
-            "mutable": true,
+            "mutable": false,
             "complexType": {
                 "original": "boolean",
                 "resolved": "boolean",
@@ -154,7 +86,7 @@ export class CalciteLoader {
         },
         "inline": {
             "type": "boolean",
-            "mutable": true,
+            "mutable": false,
             "complexType": {
                 "original": "boolean",
                 "resolved": "boolean",
@@ -172,7 +104,7 @@ export class CalciteLoader {
         },
         "type": {
             "type": "string",
-            "mutable": true,
+            "mutable": false,
             "complexType": {
                 "original": "\"indeterminate\" | \"determinate\"",
                 "resolved": "\"determinate\" | \"indeterminate\"",
@@ -185,8 +117,7 @@ export class CalciteLoader {
                 "text": "Use indeterminate if finding actual progress value is impossible"
             },
             "attribute": "type",
-            "reflect": true,
-            "defaultValue": "\"indeterminate\""
+            "reflect": true
         },
         "value": {
             "type": "number",
@@ -241,10 +172,6 @@ export class CalciteLoader {
             "attribute": "no-padding",
             "reflect": false
         }
-    }; }
-    static get states() { return {
-        "loaderBarOffsets": {},
-        "isEdge": {}
     }; }
     static get elementRef() { return "el"; }
 }

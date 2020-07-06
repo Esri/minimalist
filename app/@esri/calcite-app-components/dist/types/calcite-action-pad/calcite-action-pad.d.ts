@@ -1,4 +1,4 @@
-import { EventEmitter } from "../stencil-public-runtime";
+import { EventEmitter, VNode } from "../stencil-public-runtime";
 import { CalciteLayout, CalcitePosition, CalciteTheme } from "../interfaces";
 /**
  * @slot - A slot for adding `calcite-action`s to the action pad.
@@ -15,16 +15,31 @@ export declare class CalciteActionPad {
     expanded: boolean;
     expandedHandler(expanded: boolean): void;
     /**
+     * Used to set the tooltip for the expand toggle.
+     */
+    tooltipExpand?: HTMLCalciteTooltipElement;
+    /**
+     * Updates the label of the expand icon when the component is not expanded.
+     * @deprecated use "intlExpand" instead.
+     */
+    textExpand?: string;
+    /**
      * Updates the label of the expand icon when the component is not expanded.
      */
-    textExpand: string;
+    intlExpand?: string;
+    /**
+     * Updates the label of the collapse icon when the component is expanded.
+     * @deprecated use "intlCollapse" instead.
+     */
+    textCollapse?: string;
     /**
      * Updates the label of the collapse icon when the component is expanded.
      */
-    textCollapse: string;
+    intlCollapse?: string;
     /**
-     * @deprecated since 5.3 - use "position" instead.
      * Arrangement of the component.
+     *
+     * @deprecated use "position" instead.
      */
     layout: CalciteLayout;
     /**
@@ -42,6 +57,6 @@ export declare class CalciteActionPad {
     el: HTMLCalciteActionBarElement;
     componentWillLoad(): void;
     toggleExpand: () => void;
-    renderBottomActionGroup(): any;
-    render(): any;
+    renderBottomActionGroup(): VNode;
+    render(): VNode;
 }

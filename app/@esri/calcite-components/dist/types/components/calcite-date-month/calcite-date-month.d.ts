@@ -1,45 +1,18 @@
-import { EventEmitter } from "../../stencil.core";
+import { EventEmitter } from "../../stencil-public-runtime";
 export declare class CalciteDateMonth {
     el: HTMLElement;
-    /**
-     * Month number starting 0 as January for which the calendar is shown.
-     */
-    month: number;
-    /**
-     * Year for which the calendar is shown.
-     */
-    year: number;
-    /**
-     * Already selected date.
-     */
+    /** Already selected date.*/
     selectedDate: Date;
-    /**
-     * Date currently active.
-     */
+    /** Date currently active.*/
     activeDate: Date;
-    /**
-     * Minimum date of the calendar below which is disabled.
-     */
+    /** Minimum date of the calendar below which is disabled.*/
     min: Date;
-    /**
-     * Maximum date of the calendar above which is disabled.
-     */
+    /** Maximum date of the calendar above which is disabled.*/
     max: Date;
-    /**
-     * Sun by default
-     * 0: Sunday
-     * 1: Monday
-     * 2: Tuesday
-     * 3: Wednesday
-     * 4: Thursday
-     * 5: Friday
-     * 6: Saturday
-     */
-    startOfWeek: number;
-    /**
-     * pass the locale in which user wants to show the date.
-     */
+    /** User's language and region as BCP 47 formatted string. */
     locale: string;
+    /** specify the scale of the date picker */
+    scale: "s" | "m" | "l";
     /**
      * Event emitted when user selects the date.
      */
@@ -48,16 +21,32 @@ export declare class CalciteDateMonth {
      * Active date for the user keyboard access.
      */
     calciteActiveDateChange: EventEmitter;
-    componentWillUpdate(): void;
-    render(): any;
     keyDownHandler(e: KeyboardEvent): void;
-    mouseoverHandler(e: any): void;
-    private addMonthToActiveDate;
-    private addDaysToActiveDate;
-    private onSelectDate;
-    private isSelectedDate;
-    private validateDate;
+    /**
+     * Once user is not interacting via keyboard,
+     * disable auto focusing of active date
+     */
+    disableActiveFocus(): void;
+    render(): any;
+    private activeFocus;
+    /**
+     * Add n months to the current month
+     */
+    private addMonths;
+    /**
+     * Add n days to the current date
+     */
+    private addDays;
+    /**
+     * Get dates for last days of the previous month
+     */
     private getPrevMonthdays;
-    private getNextMonthdays;
-    private getLocalizedWeekday;
+    /**
+     * Get dates for the current month
+     */
+    private getCurrentMonthDays;
+    /**
+     * Get dates for first days of the next month
+     */
+    private getNextMonthDays;
 }

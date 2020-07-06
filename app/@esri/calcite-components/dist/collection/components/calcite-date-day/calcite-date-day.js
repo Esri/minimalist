@@ -1,40 +1,15 @@
-import { Host, h } from "@stencil/core";
-import { SPACE, ENTER } from "../../utils/keys";
+import { Component, Element, Prop, Host, Event, Listen, h, } from "@stencil/core";
+import { getKey } from "../../utils/key";
 export class CalciteDateDay {
     constructor() {
-        //--------------------------------------------------------------------------
-        //
-        //  Properties
-        //
-        //--------------------------------------------------------------------------
-        /**
-         * day of the month to be shown.
-         */
-        this.day = 0;
-        /**
-         * Enables tells whether day enabled for the user click.
-         */
-        this.enable = true;
-        /**
-         * Selected tells whether day is selected.
-         */
+        /** Date is outside of range and can't be selected */
+        this.disabled = false;
+        /** Date is in the current month. */
+        this.currentMonth = false;
+        /** Date is the current selected date of the picker */
         this.selected = false;
-        /**
-         * Active tells whether day is Actively in focus.
-         */
+        /** Date is actively in focus for keyboard navigation */
         this.active = false;
-    }
-    //--------------------------------------------------------------------------
-    //
-    //  Lifecycle
-    //
-    //--------------------------------------------------------------------------
-    componentWillUpdate() { }
-    render() {
-        return (h(Host, { class: `${this.active ? "active" : ""}
-        ${this.enable ? "enabled" : "disabled"}
-        ${this.selected ? "selected-day" : ""}`, role: "gridcell", tabindex: (this.selected || this.active) ? 0 : -1 },
-            h("span", { class: "day" }, this.day)));
     }
     //--------------------------------------------------------------------------
     //
@@ -42,12 +17,23 @@ export class CalciteDateDay {
     //
     //--------------------------------------------------------------------------
     onClick() {
-        this.enable && (this.selected = true) && this.calciteDaySelect.emit();
+        !this.disabled && this.calciteDaySelect.emit();
     }
     keyDownHandler(e) {
-        if (e.keyCode === SPACE || e.keyCode === ENTER) {
-            this.enable && (this.selected = true) && this.calciteDaySelect.emit();
+        const key = getKey(e.key);
+        if (key === " " || key === "Enter") {
+            !this.disabled && this.calciteDaySelect.emit();
         }
+    }
+    //--------------------------------------------------------------------------
+    //
+    //  Lifecycle
+    //
+    //--------------------------------------------------------------------------
+    render() {
+        const intl = new Intl.NumberFormat(this.locale);
+        return (h(Host, { role: "gridcell", tabindex: this.selected || this.active ? 0 : -1 },
+            h("span", { class: "day" }, intl.format(this.day))));
     }
     static get is() { return "calcite-date-day"; }
     static get encapsulation() { return "shadow"; }
@@ -70,13 +56,12 @@ export class CalciteDateDay {
             "optional": false,
             "docs": {
                 "tags": [],
-                "text": "day of the month to be shown."
+                "text": "Day of the month to be shown."
             },
             "attribute": "day",
-            "reflect": false,
-            "defaultValue": "0"
+            "reflect": false
         },
-        "enable": {
+        "disabled": {
             "type": "boolean",
             "mutable": false,
             "complexType": {
@@ -88,11 +73,29 @@ export class CalciteDateDay {
             "optional": false,
             "docs": {
                 "tags": [],
-                "text": "Enables tells whether day enabled for the user click."
+                "text": "Date is outside of range and can't be selected"
             },
-            "attribute": "enable",
-            "reflect": false,
-            "defaultValue": "true"
+            "attribute": "disabled",
+            "reflect": true,
+            "defaultValue": "false"
+        },
+        "currentMonth": {
+            "type": "boolean",
+            "mutable": false,
+            "complexType": {
+                "original": "boolean",
+                "resolved": "boolean",
+                "references": {}
+            },
+            "required": false,
+            "optional": false,
+            "docs": {
+                "tags": [],
+                "text": "Date is in the current month."
+            },
+            "attribute": "current-month",
+            "reflect": true,
+            "defaultValue": "false"
         },
         "selected": {
             "type": "boolean",
@@ -106,10 +109,10 @@ export class CalciteDateDay {
             "optional": false,
             "docs": {
                 "tags": [],
-                "text": "Selected tells whether day is selected."
+                "text": "Date is the current selected date of the picker"
             },
             "attribute": "selected",
-            "reflect": false,
+            "reflect": true,
             "defaultValue": "false"
         },
         "active": {
@@ -124,11 +127,45 @@ export class CalciteDateDay {
             "optional": false,
             "docs": {
                 "tags": [],
-                "text": "Active tells whether day is Actively in focus."
+                "text": "Date is actively in focus for keyboard navigation"
             },
             "attribute": "active",
-            "reflect": false,
+            "reflect": true,
             "defaultValue": "false"
+        },
+        "locale": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": false,
+            "docs": {
+                "tags": [],
+                "text": "Locale to display the day in"
+            },
+            "attribute": "locale",
+            "reflect": false
+        },
+        "scale": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "\"s\" | \"m\" | \"l\"",
+                "resolved": "\"l\" | \"m\" | \"s\"",
+                "references": {}
+            },
+            "required": false,
+            "optional": false,
+            "docs": {
+                "tags": [],
+                "text": "specify the scale of the date picker"
+            },
+            "attribute": "scale",
+            "reflect": true
         }
     }; }
     static get events() { return [{
@@ -139,7 +176,7 @@ export class CalciteDateDay {
             "composed": true,
             "docs": {
                 "tags": [],
-                "text": "When user selects day it emits the event."
+                "text": "Emitted when user selects day"
             },
             "complexType": {
                 "original": "any",

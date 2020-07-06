@@ -1,7 +1,7 @@
-import { h, Host } from "@stencil/core";
-import { UP, DOWN, TAB, ENTER, ESCAPE, HOME, END, SPACE } from "../../utils/keys";
+import { Component, Element, Event, h, Host, Listen, Method, Prop, } from "@stencil/core";
 import { getElementDir, getElementProp } from "../../utils/dom";
 import { guid } from "../../utils/guid";
+import { getKey } from "../../utils/key";
 export class CalciteDropdownItem {
     constructor() {
         //--------------------------------------------------------------------------
@@ -21,24 +21,36 @@ export class CalciteDropdownItem {
     }
     //--------------------------------------------------------------------------
     //
+    //  Public Methods
+    //
+    //--------------------------------------------------------------------------
+    /** Focuses the selected item. */
+    async setFocus() {
+        this.el.focus();
+    }
+    //--------------------------------------------------------------------------
+    //
     //  Lifecycle
     //
     //--------------------------------------------------------------------------
     componentDidLoad() {
         this.itemPosition = this.getItemPosition();
         this.registerCalciteDropdownItem.emit({
-            position: this.itemPosition
+            position: this.itemPosition,
         });
     }
     render() {
+        const attributes = this.getAttributes();
         const dir = getElementDir(this.el);
         const scale = getElementProp(this.el, "scale", "m");
         const iconScale = scale === "s" || scale === "m" ? "s" : "m";
         const iconStartEl = (h("calcite-icon", { class: "dropdown-item-icon-start", icon: this.iconStart, scale: iconScale }));
         const iconEndEl = (h("calcite-icon", { class: "dropdown-item-icon-end", icon: this.iconEnd, scale: iconScale }));
         const slottedContent = this.iconStart && this.iconEnd ? ([iconStartEl, h("slot", null), iconEndEl]) : this.iconStart ? ([iconStartEl, h("slot", null)]) : this.iconEnd ? ([h("slot", null), iconEndEl]) : (h("slot", null));
-        const contentEl = !this.href ? (slottedContent) : (h("a", { href: this.href, title: this.linkTitle }, slottedContent));
-        return (h(Host, { dir: dir, tabindex: "0", role: "menuitem", "aria-selected": this.active.toString(), isLink: this.href }, contentEl));
+        const contentEl = !this.href ? (slottedContent) : (h("a", Object.assign({}, attributes), slottedContent));
+        return (h(Host, { dir: dir, tabindex: "0", role: "menuitem", "selection-mode": this.selectionMode, "aria-selected": this.active.toString(), isLink: this.href },
+            this.selectionMode === "multi" ? (h("calcite-icon", { class: "dropdown-item-check-icon", scale: "s", icon: "check" })) : null,
+            contentEl));
     }
     //--------------------------------------------------------------------------
     //
@@ -48,25 +60,22 @@ export class CalciteDropdownItem {
     onClick() {
         this.emitRequestedItem();
     }
-    onMouseover(e) {
-        this.calciteDropdownItemMouseover.emit(e);
-    }
     keyDownHandler(e) {
-        switch (e.keyCode) {
-            case SPACE:
-            case ENTER:
+        switch (getKey(e.key)) {
+            case " ":
+            case "Enter":
                 this.emitRequestedItem();
                 if (e.path && e.path[0].nodeName === "A")
                     e.click();
                 break;
-            case ESCAPE:
+            case "Escape":
                 this.closeCalciteDropdown.emit();
                 break;
-            case TAB:
-            case UP:
-            case DOWN:
-            case HOME:
-            case END:
+            case "Tab":
+            case "ArrowUp":
+            case "ArrowDown":
+            case "Home":
+            case "End":
                 this.calciteDropdownItemKeyEvent.emit({ item: e });
                 break;
         }
@@ -105,9 +114,25 @@ export class CalciteDropdownItem {
     emitRequestedItem() {
         this.calciteDropdownItemSelected.emit({
             requestedDropdownItem: this.dropdownItemId,
-            requestedDropdownGroup: this.currentDropdownGroup
+            requestedDropdownGroup: this.currentDropdownGroup,
         });
         this.closeCalciteDropdown.emit();
+    }
+    getAttributes() {
+        // spread attributes from the component to rendered child, filtering out props
+        let props = [
+            "icon-start",
+            "icon-end",
+            "active",
+            "hasText",
+            "isLink",
+            "dir",
+            "id",
+            "theme",
+        ];
+        return Array.from(this.el.attributes)
+            .filter((a) => a && !props.includes(a.name))
+            .reduce((acc, { name, value }) => (Object.assign(Object.assign({}, acc), { [name]: value })), {});
     }
     getItemPosition() {
         const group = this.el.closest("calcite-dropdown-group");
@@ -139,40 +164,6 @@ export class CalciteDropdownItem {
             "attribute": "active",
             "reflect": true,
             "defaultValue": "false"
-        },
-        "href": {
-            "type": "string",
-            "mutable": false,
-            "complexType": {
-                "original": "string",
-                "resolved": "string",
-                "references": {}
-            },
-            "required": false,
-            "optional": true,
-            "docs": {
-                "tags": [],
-                "text": "pass an optional href to render an anchor around the link items"
-            },
-            "attribute": "href",
-            "reflect": false
-        },
-        "linkTitle": {
-            "type": "string",
-            "mutable": false,
-            "complexType": {
-                "original": "string",
-                "resolved": "string",
-                "references": {}
-            },
-            "required": false,
-            "optional": true,
-            "docs": {
-                "tags": [],
-                "text": "pass an optional title for rendered href"
-            },
-            "attribute": "link-title",
-            "reflect": false
         },
         "iconStart": {
             "type": "string",
@@ -207,26 +198,28 @@ export class CalciteDropdownItem {
             },
             "attribute": "icon-end",
             "reflect": true
+        },
+        "href": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": true,
+            "docs": {
+                "tags": [],
+                "text": "optionally pass a href - used to determine if the component should render as anchor"
+            },
+            "attribute": "href",
+            "reflect": true
         }
     }; }
     static get events() { return [{
             "method": "calciteDropdownItemKeyEvent",
             "name": "calciteDropdownItemKeyEvent",
-            "bubbles": true,
-            "cancelable": true,
-            "composed": true,
-            "docs": {
-                "tags": [],
-                "text": ""
-            },
-            "complexType": {
-                "original": "any",
-                "resolved": "any",
-                "references": {}
-            }
-        }, {
-            "method": "calciteDropdownItemMouseover",
-            "name": "calciteDropdownItemMouseover",
             "bubbles": true,
             "cancelable": true,
             "composed": true,
@@ -280,11 +273,34 @@ export class CalciteDropdownItem {
                 "text": ""
             },
             "complexType": {
-                "original": "any",
-                "resolved": "any",
-                "references": {}
+                "original": "ItemRegistration",
+                "resolved": "ItemRegistration",
+                "references": {
+                    "ItemRegistration": {
+                        "location": "import",
+                        "path": "../../interfaces/Dropdown"
+                    }
+                }
             }
         }]; }
+    static get methods() { return {
+        "setFocus": {
+            "complexType": {
+                "signature": "() => Promise<void>",
+                "parameters": [],
+                "references": {
+                    "Promise": {
+                        "location": "global"
+                    }
+                },
+                "return": "Promise<void>"
+            },
+            "docs": {
+                "text": "Focuses the selected item.",
+                "tags": []
+            }
+        }
+    }; }
     static get elementRef() { return "el"; }
     static get listeners() { return [{
             "name": "click",
@@ -292,12 +308,6 @@ export class CalciteDropdownItem {
             "target": undefined,
             "capture": false,
             "passive": false
-        }, {
-            "name": "mouseover",
-            "method": "onMouseover",
-            "target": undefined,
-            "capture": false,
-            "passive": true
         }, {
             "name": "keydown",
             "method": "keyDownHandler",

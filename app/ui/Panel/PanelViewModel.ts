@@ -1,33 +1,18 @@
 
-/// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
-/// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
-/*
-  Copyright 2020 Esri
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-    http://www.apache.org/licenses/LICENSE-2.0
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.​
-*/
 import Accessor = require("esri/core/Accessor");
 import i18n = require("dojo/i18n!../../nls/resources");
 import {
-    declared,
     property,
     subclass
 } from "esri/core/accessorSupport/decorators";
 
 import { PanelProps, ActionProps } from "../../interfaces/interfaces";
-import ApplicationBase from "ApplicationBase/ApplicationBase";
+import ApplicationBase from "./../../application-base-js/ApplicationBase";
 import AppConfig from "../../ConfigurationSettings";
 import FeatureList from '../FeatureList';
 
 @subclass("esri.demo.PanelViewModel")
-class PanelViewModel extends declared(Accessor) {
+class PanelViewModel extends (Accessor) {
 
     constructor(props?: PanelProps) {
         super(props);
@@ -88,15 +73,15 @@ class PanelViewModel extends declared(Accessor) {
     }
 
     createActions() {
-        const { legend, details, activePanel, popupPanel } = this.applicationConfig;
+        const { legendPanel, details, activePanel, popupPanel } = this.applicationConfig;
         const actions = [];
-        if (legend) {
+        if (legendPanel) {
             actions.push({
-                key: "legend",
+                key: "legendPanel",
                 icon: "legend",
                 name: i18n.tools.legend,
                 label: i18n.tools.legend,
-                active: activePanel === "legend" ? true : false
+                active: activePanel === "legendPanel" ? true : false
             });
         }
         // if legend is already active don't make details active
@@ -116,7 +101,7 @@ class PanelViewModel extends declared(Accessor) {
                 icon: "popup",
                 name: i18n.tools.popup,
                 label: i18n.tools.popup,
-                active: activePanel === "popup" ? true : false
+                active: activePanel === "popupPanel" ? true : false
             })
         }
         this.actions = actions;
@@ -126,20 +111,27 @@ class PanelViewModel extends declared(Accessor) {
         // the panels are empty 
         const activeAction = e?.target as any;
         const name = activeAction?.dataset?.actionItem;
+
         this.actions.forEach((action) => {
             if (name === action.key) {
                 action.active = !activeAction.active;
-                // if the pressed action isn't active we can close the panel 
-                if (this.calcitePanel) { this.calcitePanel.collapsed = action.active ? false : true };
             } else { // hide others 
                 action.active = false;
             }
         });
+
+        // Collapse the panel if there aren't any active tools
+        const isActive = this.actions.some(a => {
+            return a.active;
+        });
+
+        this.calcitePanel.collapsed = isActive ? false : true;
+
     }
     createActionClickFunction(action) {
         let clickFunction = null;
         switch (action.key) {
-            case "legend":
+            case "legendPanel":
                 clickFunction = this.createLegend;
                 break;
             case "details":

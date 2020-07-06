@@ -1,19 +1,4 @@
-/// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
-/// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
-/*
-  Copyright 2020 Esri
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-    http://www.apache.org/licenses/LICENSE-2.0
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.​
-*/
 import {
-    declared,
     property,
     subclass
 } from "esri/core/accessorSupport/decorators";
@@ -22,13 +7,14 @@ import { renderable, tsx } from "esri/widgets/support/widget";
 
 import AppConfig from "../ConfigurationSettings";
 import Feature from "esri/widgets/Feature";
+import { debounce } from "esri/core/promiseUtils";
 import { PanelProps } from '../interfaces/interfaces';
 import Widget from "esri/widgets/Widget";
 
 import i18n = require("dojo/i18n!../nls/resources");
 
 @subclass("FeatureList")
-class FeatureList extends declared(Widget) {
+class FeatureList extends (Widget) {
 
     @property()
     @renderable(["applicationConfig.popupPanel"])
@@ -49,32 +35,46 @@ class FeatureList extends declared(Widget) {
         super(props);
     }
     initialize() {
-        this.own([init(this, ["applicationConfig.popupPanel", "view.widthBreakpoint"], () => {
-            if (this.applicationConfig.popupPanel || this?.view?.widthBreakpoint === "xsmall") {
+        this.own([init(this, ["applicationConfig.popupPanel", "applicationConfig.popupHover", "view.widthBreakpoint"], () => {
+            const { popupPanel, popupHover } = this.applicationConfig;
+            if (popupPanel || this?.view?.widthBreakpoint === "xsmall") {
                 this.view.popup.autoOpenEnabled = false;
                 this.view.popup.highlightEnabled = false;
 
                 if (!this._clickHandle) {
+                    // If popup hover is enabled use pointer-move otherwise click
+                    let timeoutAmt = 0;
+                    let clickType = "click";
+                    if (popupHover) {
+                        clickType = "pointer-move";
+                        timeoutAmt = 85;
+                    }
+                    let lastHitTest;
                     whenOnce(this, "view.ready", () => {
-                        this._clickHandle = this.view.on("click", async (event: any) => {
-                            this.features = null;
-                            this.clearHighlight();
-                            // TODO: as any is until jsapi doc is updated 
-                            const response = await this.view.popup.fetchFeatures(event.screenPoint) as any;
-                            const results = await response.allGraphicsPromise;
-                            this.displayResults(results);
-                        });
+                        if (lastHitTest) clearTimeout(lastHitTest);
+                        lastHitTest = setTimeout(() => {
+                            this._clickHandle = this.view.on(clickType, debounce(async (event: any) => {
+
+                                this.features = null;
+                                this.clearHighlight();;
+
+                                const point = event?.screenPoint ? event.screenPoint : { x: event.x, y: event.y };
+
+                                const response = await this.view.popup.fetchFeatures(point);
+                                let results = await response.allGraphicsPromise;
+                                if (clickType === "pointer-move") {
+                                    if (results && results.length && results.length > 0) {
+                                        results = [results[0]]
+                                    }
+                                }
+                                this.displayResults(results);
+
+                            }));
+                        }, timeoutAmt);
                     });
                 }
             } else {
                 this._cleanUp();
-                /*if (this._clickHandle) {
-                    try {
-                        this._clickHandle.remove();
-                    } catch (error) {
-
-                    }
-                }*/
             }
         }), init(this, "selectedItem", () => {
             this.clearHighlight();
@@ -108,17 +108,26 @@ class FeatureList extends declared(Widget) {
             return;
         }
         const notActive = (this.view.widthBreakpoint === "xsmall") ? !action.hasAttribute("checked") : !action.hasAttribute("active");
+
         if (this.features?.length > 0 && action && notActive) { action.click() };
         // highlight feature 
         if (this.features?.length > 0) this.selectedItem = this.features[0];
     }
     render() {
         const featureList = this.features?.length > 0 ? this.renderFeatures() : null;
-        const noResultsMessage = this.features?.length === 0 ? i18n.popupPanel.noResultsMessage : null;
+        const noResultsMessage = this.features?.length === 0 ? true : false;
+        let message = null;
+        if (noResultsMessage) {
+            if (this.applicationConfig.popupPanel && this.applicationConfig.popupHover) {
+                message = i18n.popupPanel.noResultsHoverMessage;
+            } else {
+                message = i18n.popupPanel.noResultsMessage;
+            }
+        }
         return (
             <div>
                 {featureList}
-                {noResultsMessage}
+                {message}
             </div>
         );
     }
@@ -180,8 +189,11 @@ class FeatureList extends declared(Widget) {
 
         // add title 
         once(feature, "title", () => {
-            const title = feature.get("title");
-            container.summary = title;
+            const title = feature.get("title") as string;
+            if (title) {
+                container.summary = title.replace(/<[^>]+>/g, '');
+            }
+
         });
     }
     activateItem(container) {

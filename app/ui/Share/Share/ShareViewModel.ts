@@ -1,7 +1,5 @@
-/// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
-/// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
 
-// Copyright 2020 Esri
+// Copyright 2019 Esri
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -21,7 +19,6 @@ import watchUtils = require("esri/core/watchUtils");
 // esri.core.accessorSupport
 import {
   subclass,
-  declared,
   property
 } from "esri/core/accessorSupport/decorators";
 
@@ -80,7 +77,7 @@ const SHORTEN_API = "https://arcg.is/prod/shorten";
 type State = "ready" | "loading" | "shortening" | "projecting" | "disabled";
 
 @subclass("ShareViewModel")
-class ShareViewModel extends declared(Accessor) {
+class ShareViewModel extends (Accessor) {
   private _handles: Handles = new Handles();
 
   //----------------------------------

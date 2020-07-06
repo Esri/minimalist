@@ -1,5 +1,5 @@
-import { d as getAssetPath, r as registerInstance, h, H as Host, g as getElement } from './core-30c05663.js';
-import { g as getElementDir } from './dom-0361c8d2.js';
+import { d as getAssetPath, r as registerInstance, h, H as Host, g as getElement } from './index-d518aa55.js';
+import { g as getElementDir } from './dom-d0864422.js';
 
 const CSS = {
     icon: "icon",
@@ -23,18 +23,26 @@ const scaleToPx = {
     m: 24,
     l: 32
 };
-async function fetchIcon({ icon, scale, filled }) {
+async function fetchIcon({ icon, scale }) {
     const size = scaleToPx[scale];
-    const id = `${normalizeIconName(icon)}${size}${filled ? "F" : ""}`;
+    const name = normalizeIconName(icon);
+    const filled = name.charAt(name.length - 1) === "F";
+    const iconName = filled ? name.substring(0, name.length - 1) : name;
+    const id = `${iconName}${size}${filled ? "F" : ""}`;
     if (iconCache[id]) {
         return iconCache[id];
     }
-    const request = requestCache[id] ||
-        (requestCache[id] = import(getAssetPath(`./assets/${id}.js`)));
-    const module = await request;
-    const pathData = module[id];
-    iconCache[id] = pathData;
-    return pathData;
+    if (!requestCache[id]) {
+        requestCache[id] = fetch(getAssetPath(`./assets/${id}.json`))
+            .then(resp => resp.json())
+            .catch(() => {
+            console.error(`"${id}" is not a valid calcite-ui-icon name`);
+            return "";
+        });
+    }
+    const path = await requestCache[id];
+    iconCache[id] = path;
+    return path;
 }
 /**
  * Normalize the icon name to match the path data module exports.
@@ -57,6 +65,8 @@ function normalizeIconName(name) {
         .join("");
 }
 
+const calciteIconCss = ":host([hidden]){display:none}:host{display:-ms-inline-flexbox;display:inline-flex}.mirrored{-webkit-transform:scaleX(-1);transform:scaleX(-1)}.svg{display:block}";
+
 const CalciteIcon = class {
     constructor(hostRef) {
         registerInstance(this, hostRef);
@@ -65,10 +75,6 @@ const CalciteIcon = class {
         //  Properties
         //
         //--------------------------------------------------------------------------
-        /**
-         * When true, the icon will be filled.
-         */
-        this.filled = false;
         /**
          * The name of the icon to display. The value of this property must match the icon name from https://esri.github.io/calcite-ui-icons/.
          */
@@ -81,10 +87,6 @@ const CalciteIcon = class {
          * Icon scale. Can be "s" | "m" | "l".
          */
         this.scale = "m";
-        /**
-         * Icon theme. Can be "light" or "dark".
-         */
-        this.theme = "light";
         this.visible = false;
     }
     //--------------------------------------------------------------------------
@@ -112,9 +114,11 @@ const CalciteIcon = class {
         const dir = getElementDir(el);
         const size = scaleToPx[scale];
         const semantic = !!textLabel;
+        const paths = [].concat(pathData || "");
         return (h(Host, { "aria-label": semantic ? textLabel : null, role: semantic ? "img" : null }, h("svg", { class: {
-                [CSS.mirrored]: dir === "rtl" && mirrored
-            }, xmlns: "http://www.w3.org/2000/svg", fill: "currentColor", height: size, width: size, viewBox: `0 0 ${size} ${size}` }, h("path", { d: pathData }))));
+                [CSS.mirrored]: dir === "rtl" && mirrored,
+                svg: true,
+            }, xmlns: "http://www.w3.org/2000/svg", fill: "currentColor", height: size, width: size, viewBox: `0 0 ${size} ${size}` }, paths.map((path) => typeof path === "string" ? (h("path", { d: path })) : (h("path", { d: path.d, opacity: "opacity" in path ? path.opacity : 1 }))))));
     }
     //--------------------------------------------------------------------------
     //
@@ -122,11 +126,11 @@ const CalciteIcon = class {
     //
     //--------------------------------------------------------------------------
     async loadIconPathData() {
-        const { filled, icon, scale, visible } = this;
+        const { icon, scale, visible } = this;
         if ( !icon || !visible) {
             return;
         }
-        this.pathData = await fetchIcon({ icon, scale, filled });
+        this.pathData = await fetchIcon({ icon, scale });
     }
     waitUntilVisible(callback) {
         if (
@@ -135,8 +139,8 @@ const CalciteIcon = class {
             callback();
             return;
         }
-        this.intersectionObserver = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
+        this.intersectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
                 if (entry.isIntersecting) {
                     this.intersectionObserver.disconnect();
                     this.intersectionObserver = null;
@@ -150,10 +154,9 @@ const CalciteIcon = class {
     get el() { return getElement(this); }
     static get watchers() { return {
         "icon": ["loadIconPathData"],
-        "filled": ["loadIconPathData"],
-        "size": ["loadIconPathData"]
+        "scale": ["loadIconPathData"]
     }; }
-    static get style() { return ":root{--calcite-ui-blue:#007ac2;--calcite-ui-blue-hover:#2890ce;--calcite-ui-blue-press:#00619b;--calcite-ui-green:#35ac46;--calcite-ui-green-hover:#50ba5f;--calcite-ui-green-press:#288835;--calcite-ui-yellow:#edd317;--calcite-ui-yellow-hover:#f9e54e;--calcite-ui-yellow-press:#d9bc00;--calcite-ui-red:#d83020;--calcite-ui-red-hover:#e65240;--calcite-ui-red-press:#a82b1e;--calcite-ui-background:#f8f8f8;--calcite-ui-foreground:#fff;--calcite-ui-foreground-hover:#f3f3f3;--calcite-ui-foreground-press:#eaeaea;--calcite-ui-text-1:#151515;--calcite-ui-text-2:#4a4a4a;--calcite-ui-text-3:#6a6a6a;--calcite-ui-border-1:#cacaca;--calcite-ui-border-2:#dfdfdf;--calcite-ui-border-3:#eaeaea;--calcite-ui-border-hover:#9f9f9f;--calcite-ui-border-press:#757575}:host([theme=dark]){--calcite-ui-blue:#00a0ff;--calcite-ui-blue-hover:#0087d7;--calcite-ui-blue-press:#47bbff;--calcite-ui-green:#36da43;--calcite-ui-green-hover:#11ad1d;--calcite-ui-green-press:#44ed51;--calcite-ui-yellow:#ffc900;--calcite-ui-yellow-hover:#f4b000;--calcite-ui-yellow-press:#ffe24d;--calcite-ui-red:#fe583e;--calcite-ui-red-hover:#f3381b;--calcite-ui-red-press:#ff7465;--calcite-ui-background:#202020;--calcite-ui-foreground:#2b2b2b;--calcite-ui-foreground-hover:#353535;--calcite-ui-foreground-press:#404040;--calcite-ui-text-1:#fff;--calcite-ui-text-2:#bfbfbf;--calcite-ui-text-3:#9f9f9f;--calcite-ui-border-1:#4a4a4a;--calcite-ui-border-2:#404040;--calcite-ui-border-3:#353535;--calcite-ui-border-hover:#757575;--calcite-ui-border-press:#9f9f9f}:root{--calcite-border-radius:3px}:host([hidden]){display:none}body{font-family:Avenir Next W01,Avenir Next W00,Avenir Next,Avenir,Helvetica Neue,sans-serif}.overflow-hidden{overflow:hidden}calcite-tab{display:none}calcite-tab[is-active]{display:block}a{color:#007ac2}.hydrated--invisible{visibility:hidden}:host{display:-ms-inline-flexbox;display:inline-flex}.mirror{-webkit-transform:scaleX(-1);transform:scaleX(-1)}"; }
 };
+CalciteIcon.style = calciteIconCss;
 
 export { CalciteIcon as calcite_icon };

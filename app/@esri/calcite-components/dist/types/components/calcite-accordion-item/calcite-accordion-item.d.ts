@@ -1,4 +1,4 @@
-import { EventEmitter } from "../../stencil.core";
+import { EventEmitter } from "../../stencil-public-runtime";
 export declare class CalciteAccordionItem {
     el: HTMLElement;
     active: boolean;
@@ -6,6 +6,8 @@ export declare class CalciteAccordionItem {
     itemTitle?: string;
     /** pass a title for the accordion item */
     itemSubtitle?: string;
+    /** optionally pass an icon to display - accepts Calcite UI icon names  */
+    icon?: string;
     calciteAccordionItemKeyEvent: EventEmitter;
     calciteAccordionItemSelected: EventEmitter;
     closeCalciteAccordionItem: EventEmitter;
@@ -24,8 +26,10 @@ export declare class CalciteAccordionItem {
     private selectionMode;
     /** what icon type does the parent accordion specify */
     private iconType;
+    /** the scale of the parent accordion */
+    private scale;
     /** handle clicks on item header */
-    private itemHeaderClickHander;
+    private itemHeaderClickHandler;
     private determineActiveItem;
     private emitRequestedItem;
     private getItemPosition;

@@ -34,8 +34,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { d as getAssetPath, r as registerInstance, h, H as Host, g as getElement } from './core-30c05663.js';
-import { g as getElementDir } from './dom-0361c8d2.js';
+import { d as getAssetPath, r as registerInstance, h, H as Host, g as getElement } from './index-d518aa55.js';
+import { g as getElementDir } from './dom-d0864422.js';
 var CSS = {
     icon: "icon",
     mirrored: "mirrored"
@@ -58,25 +58,33 @@ var scaleToPx = {
     l: 32
 };
 function fetchIcon(_a) {
-    var icon = _a.icon, scale = _a.scale, filled = _a.filled;
+    var icon = _a.icon, scale = _a.scale;
     return __awaiter(this, void 0, void 0, function () {
-        var size, id, request, module, pathData;
+        var size, name, filled, iconName, id, path;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
                     size = scaleToPx[scale];
-                    id = "" + normalizeIconName(icon) + size + (filled ? "F" : "");
+                    name = normalizeIconName(icon);
+                    filled = name.charAt(name.length - 1) === "F";
+                    iconName = filled ? name.substring(0, name.length - 1) : name;
+                    id = "" + iconName + size + (filled ? "F" : "");
                     if (iconCache[id]) {
                         return [2 /*return*/, iconCache[id]];
                     }
-                    request = requestCache[id] ||
-                        (requestCache[id] = import(getAssetPath("./assets/" + id + ".js")));
-                    return [4 /*yield*/, request];
+                    if (!requestCache[id]) {
+                        requestCache[id] = fetch(getAssetPath("./assets/" + id + ".json"))
+                            .then(function (resp) { return resp.json(); })
+                            .catch(function () {
+                            console.error("\"" + id + "\" is not a valid calcite-ui-icon name");
+                            return "";
+                        });
+                    }
+                    return [4 /*yield*/, requestCache[id]];
                 case 1:
-                    module = _b.sent();
-                    pathData = module[id];
-                    iconCache[id] = pathData;
-                    return [2 /*return*/, pathData];
+                    path = _b.sent();
+                    iconCache[id] = path;
+                    return [2 /*return*/, path];
             }
         });
     });
@@ -101,6 +109,7 @@ function normalizeIconName(name) {
     })
         .join("");
 }
+var calciteIconCss = ":host([hidden]){display:none}:host{display:-ms-inline-flexbox;display:inline-flex}.mirrored{-webkit-transform:scaleX(-1);transform:scaleX(-1)}.svg{display:block}";
 var CalciteIcon = /** @class */ (function () {
     function class_1(hostRef) {
         registerInstance(this, hostRef);
@@ -109,10 +118,6 @@ var CalciteIcon = /** @class */ (function () {
         //  Properties
         //
         //--------------------------------------------------------------------------
-        /**
-         * When true, the icon will be filled.
-         */
-        this.filled = false;
         /**
          * The name of the icon to display. The value of this property must match the icon name from https://esri.github.io/calcite-ui-icons/.
          */
@@ -125,10 +130,6 @@ var CalciteIcon = /** @class */ (function () {
          * Icon scale. Can be "s" | "m" | "l".
          */
         this.scale = "m";
-        /**
-         * Icon theme. Can be "light" or "dark".
-         */
-        this.theme = "light";
         this.visible = false;
     }
     //--------------------------------------------------------------------------
@@ -163,9 +164,11 @@ var CalciteIcon = /** @class */ (function () {
         var dir = getElementDir(el);
         var size = scaleToPx[scale];
         var semantic = !!textLabel;
+        var paths = [].concat(pathData || "");
         return (h(Host, { "aria-label": semantic ? textLabel : null, role: semantic ? "img" : null }, h("svg", { class: (_a = {},
                 _a[CSS.mirrored] = dir === "rtl" && mirrored,
-                _a), xmlns: "http://www.w3.org/2000/svg", fill: "currentColor", height: size, width: size, viewBox: "0 0 " + size + " " + size }, h("path", { d: pathData }))));
+                _a.svg = true,
+                _a), xmlns: "http://www.w3.org/2000/svg", fill: "currentColor", height: size, width: size, viewBox: "0 0 " + size + " " + size }, paths.map(function (path) { return typeof path === "string" ? (h("path", { d: path })) : (h("path", { d: path.d, opacity: "opacity" in path ? path.opacity : 1 })); }))));
     };
     //--------------------------------------------------------------------------
     //
@@ -174,16 +177,16 @@ var CalciteIcon = /** @class */ (function () {
     //--------------------------------------------------------------------------
     class_1.prototype.loadIconPathData = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, filled, icon, scale, visible, _b;
+            var _a, icon, scale, visible, _b;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        _a = this, filled = _a.filled, icon = _a.icon, scale = _a.scale, visible = _a.visible;
+                        _a = this, icon = _a.icon, scale = _a.scale, visible = _a.visible;
                         if (!icon || !visible) {
                             return [2 /*return*/];
                         }
                         _b = this;
-                        return [4 /*yield*/, fetchIcon({ icon: icon, scale: scale, filled: filled })];
+                        return [4 /*yield*/, fetchIcon({ icon: icon, scale: scale })];
                     case 1:
                         _b.pathData = _c.sent();
                         return [2 /*return*/];
@@ -223,18 +226,13 @@ var CalciteIcon = /** @class */ (function () {
         get: function () {
             return {
                 "icon": ["loadIconPathData"],
-                "filled": ["loadIconPathData"],
-                "size": ["loadIconPathData"]
+                "scale": ["loadIconPathData"]
             };
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(class_1, "style", {
-        get: function () { return ":root{--calcite-ui-blue:#007ac2;--calcite-ui-blue-hover:#2890ce;--calcite-ui-blue-press:#00619b;--calcite-ui-green:#35ac46;--calcite-ui-green-hover:#50ba5f;--calcite-ui-green-press:#288835;--calcite-ui-yellow:#edd317;--calcite-ui-yellow-hover:#f9e54e;--calcite-ui-yellow-press:#d9bc00;--calcite-ui-red:#d83020;--calcite-ui-red-hover:#e65240;--calcite-ui-red-press:#a82b1e;--calcite-ui-background:#f8f8f8;--calcite-ui-foreground:#fff;--calcite-ui-foreground-hover:#f3f3f3;--calcite-ui-foreground-press:#eaeaea;--calcite-ui-text-1:#151515;--calcite-ui-text-2:#4a4a4a;--calcite-ui-text-3:#6a6a6a;--calcite-ui-border-1:#cacaca;--calcite-ui-border-2:#dfdfdf;--calcite-ui-border-3:#eaeaea;--calcite-ui-border-hover:#9f9f9f;--calcite-ui-border-press:#757575}:host([theme=dark]){--calcite-ui-blue:#00a0ff;--calcite-ui-blue-hover:#0087d7;--calcite-ui-blue-press:#47bbff;--calcite-ui-green:#36da43;--calcite-ui-green-hover:#11ad1d;--calcite-ui-green-press:#44ed51;--calcite-ui-yellow:#ffc900;--calcite-ui-yellow-hover:#f4b000;--calcite-ui-yellow-press:#ffe24d;--calcite-ui-red:#fe583e;--calcite-ui-red-hover:#f3381b;--calcite-ui-red-press:#ff7465;--calcite-ui-background:#202020;--calcite-ui-foreground:#2b2b2b;--calcite-ui-foreground-hover:#353535;--calcite-ui-foreground-press:#404040;--calcite-ui-text-1:#fff;--calcite-ui-text-2:#bfbfbf;--calcite-ui-text-3:#9f9f9f;--calcite-ui-border-1:#4a4a4a;--calcite-ui-border-2:#404040;--calcite-ui-border-3:#353535;--calcite-ui-border-hover:#757575;--calcite-ui-border-press:#9f9f9f}:root{--calcite-border-radius:3px}:host([hidden]){display:none}body{font-family:Avenir Next W01,Avenir Next W00,Avenir Next,Avenir,Helvetica Neue,sans-serif}.overflow-hidden{overflow:hidden}calcite-tab{display:none}calcite-tab[is-active]{display:block}a{color:#007ac2}.hydrated--invisible{visibility:hidden}:host{display:-ms-inline-flexbox;display:inline-flex}.mirror{-webkit-transform:scaleX(-1);transform:scaleX(-1)}"; },
-        enumerable: true,
-        configurable: true
-    });
     return class_1;
 }());
+CalciteIcon.style = calciteIconCss;
 export { CalciteIcon as calcite_icon };

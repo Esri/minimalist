@@ -56,7 +56,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/core/tsSupport/decorateHelper", "esri/core/accessorSupport/decorators", "esri/core/watchUtils", "esri/widgets/support/widget", "esri/widgets/Feature", "esri/widgets/Widget", "dojo/i18n!../nls/resources"], function (require, exports, __extends, __decorate, decorators_1, watchUtils_1, widget_1, Feature_1, Widget_1, i18n) {
+define(["require", "exports", "esri/core/accessorSupport/decorators", "esri/core/watchUtils", "esri/widgets/support/widget", "esri/widgets/Feature", "esri/core/promiseUtils", "esri/widgets/Widget", "dojo/i18n!../nls/resources"], function (require, exports, decorators_1, watchUtils_1, widget_1, Feature_1, promiseUtils_1, Widget_1, i18n) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     Feature_1 = __importDefault(Feature_1);
@@ -71,43 +71,56 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
         }
         FeatureList.prototype.initialize = function () {
             var _this = this;
-            this.own([watchUtils_1.init(this, ["applicationConfig.popupPanel", "view.widthBreakpoint"], function () {
+            this.own([watchUtils_1.init(this, ["applicationConfig.popupPanel", "applicationConfig.popupHover", "view.widthBreakpoint"], function () {
                     var _a;
-                    if (_this.applicationConfig.popupPanel || ((_a = _this === null || _this === void 0 ? void 0 : _this.view) === null || _a === void 0 ? void 0 : _a.widthBreakpoint) === "xsmall") {
+                    var _b = _this.applicationConfig, popupPanel = _b.popupPanel, popupHover = _b.popupHover;
+                    if (popupPanel || ((_a = _this === null || _this === void 0 ? void 0 : _this.view) === null || _a === void 0 ? void 0 : _a.widthBreakpoint) === "xsmall") {
                         _this.view.popup.autoOpenEnabled = false;
                         _this.view.popup.highlightEnabled = false;
                         if (!_this._clickHandle) {
+                            // If popup hover is enabled use pointer-move otherwise click
+                            var timeoutAmt_1 = 0;
+                            var clickType_1 = "click";
+                            if (popupHover) {
+                                clickType_1 = "pointer-move";
+                                timeoutAmt_1 = 85;
+                            }
+                            var lastHitTest_1;
                             watchUtils_1.whenOnce(_this, "view.ready", function () {
-                                _this._clickHandle = _this.view.on("click", function (event) { return __awaiter(_this, void 0, void 0, function () {
-                                    var response, results;
-                                    return __generator(this, function (_a) {
-                                        switch (_a.label) {
-                                            case 0:
-                                                this.features = null;
-                                                this.clearHighlight();
-                                                return [4 /*yield*/, this.view.popup.fetchFeatures(event.screenPoint)];
-                                            case 1:
-                                                response = _a.sent();
-                                                return [4 /*yield*/, response.allGraphicsPromise];
-                                            case 2:
-                                                results = _a.sent();
-                                                this.displayResults(results);
-                                                return [2 /*return*/];
-                                        }
-                                    });
-                                }); });
+                                if (lastHitTest_1)
+                                    clearTimeout(lastHitTest_1);
+                                lastHitTest_1 = setTimeout(function () {
+                                    _this._clickHandle = _this.view.on(clickType_1, promiseUtils_1.debounce(function (event) { return __awaiter(_this, void 0, void 0, function () {
+                                        var point, response, results;
+                                        return __generator(this, function (_a) {
+                                            switch (_a.label) {
+                                                case 0:
+                                                    this.features = null;
+                                                    this.clearHighlight();
+                                                    ;
+                                                    point = (event === null || event === void 0 ? void 0 : event.screenPoint) ? event.screenPoint : { x: event.x, y: event.y };
+                                                    return [4 /*yield*/, this.view.popup.fetchFeatures(point)];
+                                                case 1:
+                                                    response = _a.sent();
+                                                    return [4 /*yield*/, response.allGraphicsPromise];
+                                                case 2:
+                                                    results = _a.sent();
+                                                    if (clickType_1 === "pointer-move") {
+                                                        if (results && results.length && results.length > 0) {
+                                                            results = [results[0]];
+                                                        }
+                                                    }
+                                                    this.displayResults(results);
+                                                    return [2 /*return*/];
+                                            }
+                                        });
+                                    }); }));
+                                }, timeoutAmt_1);
                             });
                         }
                     }
                     else {
                         _this._cleanUp();
-                        /*if (this._clickHandle) {
-                            try {
-                                this._clickHandle.remove();
-                            } catch (error) {
-        
-                            }
-                        }*/
                     }
                 }), watchUtils_1.init(this, "selectedItem", function () {
                     _this.clearHighlight();
@@ -152,10 +165,19 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
         FeatureList.prototype.render = function () {
             var _a, _b;
             var featureList = ((_a = this.features) === null || _a === void 0 ? void 0 : _a.length) > 0 ? this.renderFeatures() : null;
-            var noResultsMessage = ((_b = this.features) === null || _b === void 0 ? void 0 : _b.length) === 0 ? i18n.popupPanel.noResultsMessage : null;
+            var noResultsMessage = ((_b = this.features) === null || _b === void 0 ? void 0 : _b.length) === 0 ? true : false;
+            var message = null;
+            if (noResultsMessage) {
+                if (this.applicationConfig.popupPanel && this.applicationConfig.popupHover) {
+                    message = i18n.popupPanel.noResultsHoverMessage;
+                }
+                else {
+                    message = i18n.popupPanel.noResultsMessage;
+                }
+            }
             return (widget_1.tsx("div", null,
                 featureList,
-                noResultsMessage));
+                message));
         };
         FeatureList.prototype.renderFeatures = function () {
             var _this = this;
@@ -207,7 +229,9 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             // add title 
             watchUtils_1.once(feature, "title", function () {
                 var title = feature.get("title");
-                container.summary = title;
+                if (title) {
+                    container.summary = title.replace(/<[^>]+>/g, '');
+                }
             });
         };
         FeatureList.prototype.activateItem = function (container) {
@@ -257,7 +281,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             decorators_1.subclass("FeatureList")
         ], FeatureList);
         return FeatureList;
-    }(decorators_1.declared(Widget_1.default)));
+    }((Widget_1.default)));
     exports.default = FeatureList;
 });
 //# sourceMappingURL=FeatureList.js.map

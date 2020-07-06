@@ -1,3 +1,4 @@
+import { VNode } from "../stencil-public-runtime";
 export declare class CalciteActionGroup {
-    render(): any;
+    render(): VNode;
 }

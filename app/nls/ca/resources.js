@@ -7,7 +7,8 @@ define({
     "popup": "Informació"
   },
   "popupPanel": {
-    "noResultsMessage": "Feu clic al mapa per veure informació de les entitats"
+    "noResultsMessage": "Feu clic al mapa per veure informació de les entitats",
+    "noResultsHoverMessage": "Passeu el cursor del ratolí pel damunt de les ubicacions del mapa per veure informació de les entitats"
   },
   "close": "tanca",
   "toggle": "canvia l\\\\'alçada de la subfinestra"

@@ -1,5 +1,6 @@
-import { h, Host } from "@stencil/core";
+import { Component, Element, Event, h, Host, Method, Listen, Prop, } from "@stencil/core";
 import { getElementDir } from "../../utils/dom";
+import { guid } from "../../utils/guid";
 /** Alerts are meant to provide a way to communicate urgent or important information to users, frequently as a result of an action they took in your app. Alerts are positioned
  * at the bottom of the page. Multiple opened alerts will be added to a queue, allowing users to dismiss them in the order they are provided. You can keep alerts in your DOM or create/open, close/destroy
  * as needed.
@@ -24,8 +25,6 @@ export class CalciteAlert {
         this.autoDismissDuration = this.autoDismiss ? "medium" : null;
         /** Color for the alert (will apply to top border and icon) */
         this.color = "blue";
-        /** Select theme (light or dark) */
-        this.theme = "light";
         /** specify the scale of the button, defaults to m */
         this.scale = "m";
         /** specify if the alert should display an icon */
@@ -38,18 +37,18 @@ export class CalciteAlert {
         /** a managed list of alerts */
         this.alertQueue = [];
         /** Unique ID for this alert */
-        this.alertId = this.el.id;
+        this.alertId = this.el.id || `calcite-alert-${guid()}`;
         /** map dismissal durations */
         this.autoDismissDurations = {
             slow: 14000,
             medium: 10000,
-            fast: 6000
+            fast: 6000,
         };
         this.iconDefaults = {
             green: "checkCircle",
             yellow: "exclamationMarkTriangle",
             red: "exclamationMarkTriangle",
-            blue: "lightbulb"
+            blue: "lightbulb",
         };
     }
     // listen for emitted open event from other calcite alerts and determine active state
@@ -63,7 +62,7 @@ export class CalciteAlert {
     // listen for emitted close event from other calcite alerts and determine active state
     alertClose(event) {
         if (this.alertQueue.includes(event.detail.requestedAlert)) {
-            this.alertQueue = this.alertQueue.filter(e => e !== event.detail.requestedAlert);
+            this.alertQueue = this.alertQueue.filter((e) => e !== event.detail.requestedAlert);
         }
         if (this.alertId === event.detail.requestedAlert)
             this.active = false;
@@ -85,9 +84,6 @@ export class CalciteAlert {
         let colors = ["blue", "red", "green", "yellow"];
         if (!colors.includes(this.color))
             this.color = "blue";
-        let themes = ["dark", "light"];
-        if (!themes.includes(this.theme))
-            this.theme = "light";
         let scale = ["s", "m", "l"];
         if (!scale.includes(this.scale))
             this.scale = "m";
@@ -98,12 +94,12 @@ export class CalciteAlert {
         }
     }
     componentDidLoad() {
-        this.alertLinkEl = this.el.querySelectorAll("calcite-button")[0];
+        this.alertLinkEl = this.el.querySelectorAll("calcite-link")[0];
     }
     render() {
         const dir = getElementDir(this.el);
-        const closeButton = (h("button", { class: "alert-close", "aria-label": "close", onClick: () => this.close(), ref: el => (this.closeButton = el) },
-            h("calcite-icon", { icon: "x", scale: "s" })));
+        const closeButton = (h("button", { class: "alert-close", "aria-label": "close", onClick: () => this.close(), ref: (el) => (this.closeButton = el) },
+            h("calcite-icon", { icon: "x", scale: "m" })));
         const count = (h("div", { class: `${this.alertQueue.length > 1 ? "active " : ""}alert-count` },
             "+",
             this.alertQueue.length > 2 ? this.alertQueue.length - 1 : 1));
@@ -113,7 +109,7 @@ export class CalciteAlert {
             : this.autoDismiss
                 ? "alert"
                 : "alertdialog";
-        return (h(Host, { active: this.active, dir: dir, role: role },
+        return (h(Host, { active: this.active, role: role, dir: dir },
             this.icon ? this.setIcon() : null,
             h("div", { class: "alert-content" },
                 h("slot", { name: "alert-title" }),
@@ -132,14 +128,14 @@ export class CalciteAlert {
     async open() {
         this.calciteAlertOpen.emit({
             requestedAlert: this.alertId,
-            alertQueue: this.alertQueue
+            alertQueue: this.alertQueue,
         });
     }
     /** close alert and emit the closed alert */
     async close() {
         this.calciteAlertClose.emit({
             requestedAlert: this.alertId,
-            alertQueue: this.alertQueue
+            alertQueue: this.alertQueue,
         });
     }
     /** focus the close button, if present and requested */
@@ -167,7 +163,7 @@ export class CalciteAlert {
     setIcon() {
         var path = this.iconDefaults[this.color];
         return (h("div", { class: "alert-icon" },
-            h("calcite-icon", { icon: path, filled: true, scale: "s" })));
+            h("calcite-icon", { icon: path, scale: "m" })));
     }
     static get is() { return "calcite-alert"; }
     static get encapsulation() { return "shadow"; }
@@ -265,8 +261,7 @@ export class CalciteAlert {
                 "text": "Select theme (light or dark)"
             },
             "attribute": "theme",
-            "reflect": true,
-            "defaultValue": "\"light\""
+            "reflect": true
         },
         "scale": {
             "type": "string",

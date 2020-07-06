@@ -1,6 +1,6 @@
 {
   "environment": {
-    "isEsri": true,
+    "isEsri": false,
     "webTierSecurity": false
   },
   "localStorage": {
@@ -21,6 +21,8 @@
     "find",
     "group",
     "level",
+    "legend",
+    "locale",
     "marker",
     "oauthappid",
     "portalUrl",

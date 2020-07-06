@@ -1,4 +1,4 @@
-import { EventEmitter } from "../../stencil.core";
+import { EventEmitter } from "../../stencil-public-runtime";
 export declare class CalciteSwitch {
     el: HTMLElement;
     /** True if the switch is initially on */
@@ -9,11 +9,12 @@ export declare class CalciteSwitch {
     value?: string;
     /** What color the switch should be */
     color: "red" | "blue";
-    /** The scale of the button */
+    /** The scale of the switch */
     scale: "s" | "m" | "l";
     /** The component's theme. */
     theme: "light" | "dark";
     calciteSwitchChange: EventEmitter;
+    change: EventEmitter;
     private observer;
     onClick(e: any): void;
     keyDownHandler(e: KeyboardEvent): void;
@@ -27,4 +28,5 @@ export declare class CalciteSwitch {
     private setupProxyInput;
     private syncThisToProxyInput;
     private syncProxyInputToThis;
+    private updateSwitch;
 }

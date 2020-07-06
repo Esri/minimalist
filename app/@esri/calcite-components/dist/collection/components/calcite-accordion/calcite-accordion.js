@@ -1,22 +1,14 @@
-import { h, Host } from "@stencil/core";
-import { UP, DOWN, HOME, END } from "../../utils/keys";
-import { getElementDir } from "../../utils/dom";
+import { Component, Element, Event, h, Host, Listen, Prop, } from "@stencil/core";
+import { getKey } from "../../utils/key";
 export class CalciteAccordion {
     constructor() {
-        //--------------------------------------------------------------------------
-        //
-        //  Public Properties
-        //
-        //--------------------------------------------------------------------------
-        /** specify the theme of accordion, defaults to light */
-        this.theme = "light";
         /** specify the scale of accordion, defaults to m */
         this.scale = "m";
         /** specify the appearance - default (containing border), or minimal (no containing border), defaults to default */
         this.appearance = "default";
         /** specify the placement of the icon in the header, defaults to end */
         this.iconPosition = "end";
-        /** specify the placement of the icon in the header, defaults to end */
+        /** specify the type of the icon in the header, defaults to chevron */
         this.iconType = "chevron";
         /** specify the selection mode - multi (allow any number of open items), single (allow one open item),
          * or single-persist (allow and require one open item), defaults to multi */
@@ -32,7 +24,7 @@ export class CalciteAccordion {
         this.sorted = false;
         /** keep track of the requested item for multi mode */
         this.requestedAccordionItem = "";
-        this.sortItems = (items) => items.sort((a, b) => a.position - b.position).map(a => a.item);
+        this.sortItems = (items) => items.sort((a, b) => a.position - b.position).map((a) => a.item);
     }
     //--------------------------------------------------------------------------
     //
@@ -50,9 +42,6 @@ export class CalciteAccordion {
         let iconType = ["chevron", "caret", "plus-minus"];
         if (!iconType.includes(this.iconType))
             this.iconType = "chevron";
-        let theme = ["light", "dark"];
-        if (!theme.includes(this.theme))
-            this.theme = "light";
         let scale = ["s", "m", "l"];
         if (!scale.includes(this.scale))
             this.scale = "m";
@@ -67,8 +56,7 @@ export class CalciteAccordion {
         }
     }
     render() {
-        const dir = getElementDir(this.el);
-        return (h(Host, { dir: dir },
+        return (h(Host, null,
             h("slot", null)));
     }
     //--------------------------------------------------------------------------
@@ -77,27 +65,28 @@ export class CalciteAccordion {
     //
     //--------------------------------------------------------------------------
     calciteAccordionItemKeyEvent(e) {
-        let item = e.detail.item;
+        const item = e.detail.item;
+        const key = getKey(item.key);
         let itemToFocus = e.target;
         let isFirstItem = this.itemIndex(itemToFocus) === 0;
         let isLastItem = this.itemIndex(itemToFocus) === this.items.length - 1;
-        switch (item.keyCode) {
-            case DOWN:
+        switch (key) {
+            case "ArrowDown":
                 if (isLastItem)
                     this.focusFirstItem();
                 else
                     this.focusNextItem(itemToFocus);
                 break;
-            case UP:
+            case "ArrowUp":
                 if (isFirstItem)
                     this.focusLastItem();
                 else
                     this.focusPrevItem(itemToFocus);
                 break;
-            case HOME:
+            case "Home":
                 this.focusFirstItem();
                 break;
-            case END:
+            case "End":
                 this.focusLastItem();
                 break;
         }
@@ -105,14 +94,14 @@ export class CalciteAccordion {
     registerCalciteAccordionItem(e) {
         const item = {
             item: e.target,
-            position: e.detail.position
+            position: e.detail.position,
         };
         this.items.push(item);
     }
     updateActiveItemOnChange(event) {
         this.requestedAccordionItem = event.detail.requestedAccordionItem;
         this.calciteAccordionItemHasChanged.emit({
-            requestedAccordionItem: this.requestedAccordionItem
+            requestedAccordionItem: this.requestedAccordionItem,
         });
     }
     //--------------------------------------------------------------------------
@@ -169,8 +158,7 @@ export class CalciteAccordion {
                 "text": "specify the theme of accordion, defaults to light"
             },
             "attribute": "theme",
-            "reflect": true,
-            "defaultValue": "\"light\""
+            "reflect": true
         },
         "scale": {
             "type": "string",
@@ -194,7 +182,7 @@ export class CalciteAccordion {
             "type": "string",
             "mutable": true,
             "complexType": {
-                "original": "\"default\" | \"minimal\" | \"transparent\"",
+                "original": "| \"default\"\n    | \"minimal\"\n    | \"transparent\"",
                 "resolved": "\"default\" | \"minimal\" | \"transparent\"",
                 "references": {}
             },
@@ -238,7 +226,7 @@ export class CalciteAccordion {
             "optional": false,
             "docs": {
                 "tags": [],
-                "text": "specify the placement of the icon in the header, defaults to end"
+                "text": "specify the type of the icon in the header, defaults to chevron"
             },
             "attribute": "icon-type",
             "reflect": true,

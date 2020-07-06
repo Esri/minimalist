@@ -9,6 +9,25 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -45,16 +64,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 define(["require", "exports", "esri/core/promiseUtils"], function (require, exports, promiseUtils_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
+    exports.addShare = exports.addSearch = exports.addBookmarks = exports.addScaleBar = exports.addZoom = exports.addHome = exports.addOverlay = exports.addBasemap = void 0;
     function addBasemap(props) {
         return __awaiter(this, void 0, void 0, function () {
             var view, config, propertyName, nextBasemap, basemapTogglePosition, basemapToggle, BasemapToggle, node, bmToggle, _a;
@@ -259,6 +272,49 @@ define(["require", "exports", "esri/core/promiseUtils"], function (require, expo
         });
     }
     exports.addScaleBar = addScaleBar;
+    function addBookmarks(props) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function () {
+            var view, config, propertyName, bookmarks, bookmarksPosition, modules, _b, Bookmarks, Expand, node, map, mapContainsBookmarks, content, bookmarksExpand;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        view = props.view, config = props.config, propertyName = props.propertyName;
+                        bookmarks = config.bookmarks, bookmarksPosition = config.bookmarksPosition;
+                        return [4 /*yield*/, promiseUtils_1.eachAlways([new Promise(function (resolve_7, reject_7) { require(["esri/widgets/Bookmarks"], resolve_7, reject_7); }).then(__importStar), new Promise(function (resolve_8, reject_8) { require(["esri/widgets/Expand"], resolve_8, reject_8); }).then(__importStar)])];
+                    case 1:
+                        modules = _c.sent();
+                        _b = modules.map(function (module) { return module.value; }), Bookmarks = _b[0], Expand = _b[1];
+                        node = view.ui.find("bookmarksExpand");
+                        map = view.map;
+                        mapContainsBookmarks = ((_a = map === null || map === void 0 ? void 0 : map.bookmarks) === null || _a === void 0 ? void 0 : _a.length) > 0 ? true : false;
+                        if (!bookmarks || !mapContainsBookmarks) {
+                            if (node)
+                                view.ui.remove(node);
+                            return [2 /*return*/];
+                        }
+                        // move the node if it exists 
+                        if (propertyName === "bookmarksPosition" && node) {
+                            view.ui.move(node, bookmarksPosition);
+                        }
+                        else if (propertyName === "bookmarks") {
+                            content = new Bookmarks.default({
+                                view: view
+                            });
+                            bookmarksExpand = new Expand.default({
+                                id: "bookmarksExpand",
+                                content: content,
+                                mode: "floating",
+                                view: view
+                            });
+                            view.ui.add(bookmarksExpand, bookmarksPosition);
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        });
+    }
+    exports.addBookmarks = addBookmarks;
     function addSearch(props) {
         return __awaiter(this, void 0, void 0, function () {
             var view, portal, config, propertyName, search, searchPosition, searchConfiguration, searchOpenAtStart, modules, _a, Search, FeatureLayer, Expand, node, sources, content, searchExpand;
@@ -267,7 +323,7 @@ define(["require", "exports", "esri/core/promiseUtils"], function (require, expo
                     case 0:
                         view = props.view, portal = props.portal, config = props.config, propertyName = props.propertyName;
                         search = config.search, searchPosition = config.searchPosition, searchConfiguration = config.searchConfiguration, searchOpenAtStart = config.searchOpenAtStart;
-                        return [4 /*yield*/, promiseUtils_1.eachAlways([new Promise(function (resolve_7, reject_7) { require(["esri/widgets/Search"], resolve_7, reject_7); }).then(__importStar), new Promise(function (resolve_8, reject_8) { require(["esri/layers/FeatureLayer"], resolve_8, reject_8); }).then(__importStar), new Promise(function (resolve_9, reject_9) { require(["esri/widgets/Expand"], resolve_9, reject_9); }).then(__importStar)])];
+                        return [4 /*yield*/, promiseUtils_1.eachAlways([new Promise(function (resolve_9, reject_9) { require(["esri/widgets/Search"], resolve_9, reject_9); }).then(__importStar), new Promise(function (resolve_10, reject_10) { require(["esri/layers/FeatureLayer"], resolve_10, reject_10); }).then(__importStar), new Promise(function (resolve_11, reject_11) { require(["esri/widgets/Expand"], resolve_11, reject_11); }).then(__importStar)])];
                     case 1:
                         modules = _b.sent();
                         _a = modules.map(function (module) { return module.value; }), Search = _a[0], FeatureLayer = _a[1], Expand = _a[2];
@@ -324,7 +380,7 @@ define(["require", "exports", "esri/core/promiseUtils"], function (require, expo
                     case 0:
                         view = props.view, config = props.config, propertyName = props.propertyName;
                         share = config.share, shareIncludeSocial = config.shareIncludeSocial, header = config.header, theme = config.theme;
-                        return [4 /*yield*/, promiseUtils_1.eachAlways([new Promise(function (resolve_10, reject_10) { require(["../ui/Share/Share"], resolve_10, reject_10); }).then(__importStar), new Promise(function (resolve_11, reject_11) { require(["../ui/Share/Share/ShareFeatures"], resolve_11, reject_11); }).then(__importStar)])];
+                        return [4 /*yield*/, promiseUtils_1.eachAlways([new Promise(function (resolve_12, reject_12) { require(["../ui/Share/Share"], resolve_12, reject_12); }).then(__importStar), new Promise(function (resolve_13, reject_13) { require(["../ui/Share/Share/ShareFeatures"], resolve_13, reject_13); }).then(__importStar)])];
                     case 1:
                         modules = _b.sent();
                         _a = modules.map(function (module) { return module.value; }), Share = _a[0], ShareFeatures = _a[1];

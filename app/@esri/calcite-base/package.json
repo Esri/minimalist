@@ -22,7 +22,7 @@
   "_resolved": "https://registry.npmjs.org/@esri/calcite-base/-/calcite-base-1.2.0.tgz",
   "_shasum": "1297609899f9eab04d809d11dbeebfad15e951bd",
   "_spec": "@esri/calcite-base@1.2.0",
-  "_where": "/Users/kell3008/Sites/GitHub/arcgis-portal-app-templates/EmbedMinimal/node_modules/@esri/calcite-app-components",
+  "_where": "/Users/kell3008/Sites/GitHub/arcgis-portal-app-templates/instant/minimalist/node_modules/@esri/calcite-app-components",
   "author": {
     "name": "Esri"
   },

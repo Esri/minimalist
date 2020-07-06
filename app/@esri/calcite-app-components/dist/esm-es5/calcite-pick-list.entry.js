@@ -34,12 +34,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { r as registerInstance, c as createEvent, h, g as getElement } from './index-1a2740c5.js';
-import './CalciteScrim-16fe359e.js';
-import { T as TEXT, I as ICON_TYPES } from './resources-1839192e.js';
-import './lodash-7109ef43.js';
-import { s as sharedListMethods, L as List } from './shared-list-render-78f20d8a.js';
-var mutationObserverCallback = sharedListMethods.mutationObserverCallback, initialize = sharedListMethods.initialize, initializeObserver = sharedListMethods.initializeObserver, cleanUpObserver = sharedListMethods.cleanUpObserver, calciteListItemChangeHandler = sharedListMethods.calciteListItemChangeHandler, calciteListItemValueChangeHandler = sharedListMethods.calciteListItemValueChangeHandler, setUpItems = sharedListMethods.setUpItems, deselectSiblingItems = sharedListMethods.deselectSiblingItems, selectSiblings = sharedListMethods.selectSiblings, handleFilter = sharedListMethods.handleFilter, getItemData = sharedListMethods.getItemData;
+import { r as registerInstance, c as createEvent, h, g as getElement } from './index-03e9a7ba.js';
+import './CalciteScrim-72de5de3.js';
+import './dom-7d75fa2b.js';
+import './array-dbbc14b3.js';
+import { T as TEXT, I as ICON_TYPES } from './resources-3de36c7f.js';
+import './lodash-f605e937.js';
+import { m as mutationObserverCallback, d as deselectSiblingItems, s as selectSiblings, h as handleFilter, g as getItemData, k as keyDownHandler, i as initialize, a as initializeObserver, c as cleanUpObserver, b as calciteListItemChangeHandler, e as calciteListItemValueChangeHandler, f as setUpItems, j as setFocus, L as List } from './shared-list-render-615607f5.js';
+var calcitePickListCss = ":host{-webkit-box-sizing:border-box;box-sizing:border-box;color:var(--calcite-app-foreground);font-family:var(--calcite-app-font-family);font-size:var(--calcite-app-font-size-0);line-height:var(--calcite-app-line-height);background-color:var(--calcite-app-background)}:host *{-webkit-box-sizing:border-box;box-sizing:border-box}:host{-ms-flex-align:stretch;align-items:stretch;display:-ms-flexbox;display:flex;-ms-flex:1 0 auto;flex:1 0 auto;-ms-flex-flow:column;flex-flow:column;padding-bottom:var(--calcite-app-cap-spacing);position:relative}:host([hidden]){display:none}:host([theme=dark]){--calcite-app-background:#404040;--calcite-app-foreground:#dfdfdf;--calcite-app-background-hover:#2b2b2b;--calcite-app-foreground-hover:#f3f3f3;--calcite-app-background-active:#151515;--calcite-app-foreground-active:#59d6ff;--calcite-app-foreground-subtle:#eaeaea;--calcite-app-background-content:#2b2b2b;--calcite-app-border:#2b2b2b;--calcite-app-border-hover:#2b2b2b;--calcite-app-border-subtle:#2b2b2b;--calcite-app-scrim:rgba(64, 64, 64, 0.8)}:host([theme=light]){--calcite-app-background:#ffffff;--calcite-app-foreground:#404040;--calcite-app-background-hover:#eaeaea;--calcite-app-foreground-hover:#2b2b2b;--calcite-app-background-active:#c7eaff;--calcite-app-foreground-active:#00619b;--calcite-app-foreground-subtle:#757575;--calcite-app-foreground-link:#007ac2;--calcite-app-background-content:#f3f3f3;--calcite-app-background-clear:transparent;--calcite-app-border:#eaeaea;--calcite-app-border-hover:#dfdfdf;--calcite-app-border-subtle:#f3f3f3;--calcite-app-border-active:#007ac2;--calcite-app-disabled-opacity:0.25;--calcite-app-scrim:rgba(255, 255, 255, 0.8)}header{background-color:var(--calcite-app-background);display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end;-ms-flex-align:center;align-items:center;margin-bottom:var(--calcite-app-cap-spacing-half);-webkit-box-shadow:0 -1px 0 var(--calcite-app-border) inset;box-shadow:0 -1px 0 var(--calcite-app-border) inset}header.sticky{position:-webkit-sticky;position:sticky;top:0;z-index:1}calcite-filter{margin-bottom:1px}slot[name=menu-actions]::slotted(calcite-action){padding:0 var(--calcite-app-side-spacing-half)}:host([loading][disabled]){min-height:2rem}";
 var CalcitePickList = /** @class */ (function () {
     function class_1(hostRef) {
         registerInstance(this, hostRef);
@@ -51,6 +53,8 @@ var CalcitePickList = /** @class */ (function () {
         /**
          * Compact removes the selection icon (radio or checkbox) and adds a compact attribute.
          * This allows for a more compact version of the `calcite-pick-list-item`.
+         *
+         * @deprecated This property will be removed in a future release.
          */
         this.compact = false;
         /**
@@ -89,6 +93,7 @@ var CalcitePickList = /** @class */ (function () {
         this.selectSiblings = selectSiblings.bind(this);
         this.handleFilter = handleFilter.bind(this);
         this.getItemData = getItemData.bind(this);
+        this.keyDownHandler = keyDownHandler.bind(this);
         this.calciteListChange = createEvent(this, "calciteListChange", 7);
     }
     // --------------------------------------------------------------------------
@@ -98,8 +103,6 @@ var CalcitePickList = /** @class */ (function () {
     // --------------------------------------------------------------------------
     class_1.prototype.connectedCallback = function () {
         initialize.call(this);
-    };
-    class_1.prototype.componentDidLoad = function () {
         initializeObserver.call(this);
     };
     class_1.prototype.componentDidUnload = function () {
@@ -140,31 +143,30 @@ var CalcitePickList = /** @class */ (function () {
             });
         });
     };
+    class_1.prototype.setFocus = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, setFocus.call(this)];
+            });
+        });
+    };
     // --------------------------------------------------------------------------
     //
     //  Render Methods
     //
     // --------------------------------------------------------------------------
     class_1.prototype.getIconType = function () {
-        var type = ICON_TYPES.circle;
-        if (this.multiple) {
-            type = ICON_TYPES.square;
-        }
-        return type;
+        return this.multiple ? ICON_TYPES.square : ICON_TYPES.circle;
     };
     class_1.prototype.render = function () {
-        return h(List, { props: this });
+        return h(List, { props: this, onKeyDown: this.keyDownHandler });
     };
     Object.defineProperty(class_1.prototype, "el", {
         get: function () { return getElement(this); },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(class_1, "style", {
-        get: function () { return ":host{-webkit-box-sizing:border-box;box-sizing:border-box;color:var(--calcite-app-foreground);font-family:var(--calcite-app-font-family);font-size:var(--calcite-app-font-size-0);line-height:var(--calcite-app-line-height);background-color:var(--calcite-app-background)}:host *{-webkit-box-sizing:border-box;box-sizing:border-box}:host{-ms-flex-align:stretch;align-items:stretch;display:-ms-flexbox;display:flex;-ms-flex:1 0 auto;flex:1 0 auto;-ms-flex-flow:column;flex-flow:column;padding-bottom:var(--calcite-app-cap-spacing);position:relative}:host([hidden]){display:none}:host([theme=dark]){--calcite-app-background:#404040;--calcite-app-foreground:#dfdfdf;--calcite-app-background-hover:#2b2b2b;--calcite-app-foreground-hover:#f3f3f3;--calcite-app-background-active:#151515;--calcite-app-foreground-active:#59d6ff;--calcite-app-foreground-subtle:#eaeaea;--calcite-app-background-content:#2b2b2b;--calcite-app-border:#2b2b2b;--calcite-app-border-hover:#2b2b2b;--calcite-app-border-subtle:#2b2b2b;--calcite-app-scrim:rgba(64, 64, 64, 0.8)}:host([theme=light]){--calcite-app-background:#ffffff;--calcite-app-foreground:#404040;--calcite-app-background-hover:#eaeaea;--calcite-app-foreground-hover:#2b2b2b;--calcite-app-background-active:#c7eaff;--calcite-app-foreground-active:#00619b;--calcite-app-foreground-subtle:#757575;--calcite-app-foreground-link:#007ac2;--calcite-app-background-content:#f3f3f3;--calcite-app-background-clear:transparent;--calcite-app-border:#eaeaea;--calcite-app-border-hover:#dfdfdf;--calcite-app-border-subtle:#f3f3f3;--calcite-app-border-active:#007ac2;--calcite-app-disabled-opacity:0.25;--calcite-app-scrim:rgba(255, 255, 255, 0.8)}header{background-color:var(--calcite-app-background);display:-ms-flexbox;display:flex;-ms-flex-pack:end;justify-content:flex-end;-ms-flex-align:center;align-items:center;margin-bottom:var(--calcite-app-cap-spacing-half);-webkit-box-shadow:0 -1px 0 var(--calcite-app-border) inset;box-shadow:0 -1px 0 var(--calcite-app-border) inset}header.sticky{position:-webkit-sticky;position:sticky;top:0;z-index:1}calcite-filter{margin-bottom:1px}slot[name=menu-actions]::slotted(calcite-action){padding:0 var(--calcite-app-side-spacing-half)}:host([loading][disabled]){min-height:2rem}"; },
-        enumerable: true,
-        configurable: true
-    });
     return class_1;
 }());
+CalcitePickList.style = calcitePickListCss;
 export { CalcitePickList as calcite_pick_list };

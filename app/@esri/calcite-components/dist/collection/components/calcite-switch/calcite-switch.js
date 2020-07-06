@@ -1,6 +1,5 @@
-import { h, Host, Build } from "@stencil/core";
-import { SPACE, ENTER } from "../../utils/keys";
-import { getElementDir } from "../../utils/dom";
+import { Component, h, Prop, Event, Element, Host, Listen, Watch, Build, } from "@stencil/core";
+import { getKey } from "../../utils/key";
 export class CalciteSwitch {
     constructor() {
         /** True if the switch is initially on */
@@ -11,7 +10,7 @@ export class CalciteSwitch {
         this.value = "";
         /** What color the switch should be */
         this.color = "blue";
-        /** The scale of the button */
+        /** The scale of the switch */
         this.scale = "m";
         /** The component's theme. */
         this.theme = "light";
@@ -33,32 +32,31 @@ export class CalciteSwitch {
         // when the component is wrapped in a label and checkbox is clicked
         if ((this.el.closest("label") && e.target === this.inputProxy) ||
             (!this.el.closest("label") && e.target === this.el)) {
-            this.switched = !this.switched;
+            this.updateSwitch(e);
         }
     }
     keyDownHandler(e) {
-        if (e.keyCode === SPACE || e.keyCode === ENTER) {
-            e.preventDefault();
-            this.switched = !this.switched;
+        const key = getKey(e.key);
+        if (key === " " || key === "Enter") {
+            this.updateSwitch(e);
         }
     }
     switchWatcher() {
-        this.calciteSwitchChange.emit();
         this.switched
             ? this.inputProxy.setAttribute("checked", "")
             : this.inputProxy.removeAttribute("checked");
     }
     connectedCallback() {
         // prop validations
+        let theme = ["light", "dark"];
+        if (!theme.includes(this.theme))
+            this.theme = "light";
         let color = ["blue", "red"];
         if (!color.includes(this.color))
             this.color = "blue";
         let scale = ["s", "m", "l"];
         if (!scale.includes(this.scale))
             this.scale = "m";
-        let theme = ["dark", "light"];
-        if (!theme.includes(this.theme))
-            this.theme = "light";
         this.setupProxyInput();
     }
     disconnectedCallback() {
@@ -68,11 +66,9 @@ export class CalciteSwitch {
         this.syncProxyInputToThis();
     }
     render() {
-        const dir = getElementDir(this.el);
-        return (h(Host, { role: "checkbox", dir: dir, "aria-checked": this.switched.toString(), tabIndex: this.tabIndex },
+        return (h(Host, { role: "checkbox", "aria-checked": this.switched.toString(), tabIndex: this.tabIndex },
             h("div", { class: "track" },
-                h("div", { class: "handle" })),
-            h("slot", null)));
+                h("div", { class: "handle" }))));
     }
     get tabIndex() {
         const hasTabIndex = this.el.hasAttribute("tabindex");
@@ -96,6 +92,12 @@ export class CalciteSwitch {
             this.observer = new MutationObserver(this.syncThisToProxyInput);
             this.observer.observe(this.inputProxy, { attributes: true });
         }
+    }
+    updateSwitch(e) {
+        e.preventDefault();
+        this.switched = !this.switched;
+        this.change.emit();
+        this.calciteSwitchChange.emit();
     }
     static get is() { return "calcite-switch"; }
     static get encapsulation() { return "shadow"; }
@@ -190,7 +192,7 @@ export class CalciteSwitch {
             "optional": false,
             "docs": {
                 "tags": [],
-                "text": "The scale of the button"
+                "text": "The scale of the switch"
             },
             "attribute": "scale",
             "reflect": true,
@@ -218,6 +220,21 @@ export class CalciteSwitch {
     static get events() { return [{
             "method": "calciteSwitchChange",
             "name": "calciteSwitchChange",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "docs": {
+                "tags": [],
+                "text": ""
+            },
+            "complexType": {
+                "original": "any",
+                "resolved": "any",
+                "references": {}
+            }
+        }, {
+            "method": "change",
+            "name": "change",
             "bubbles": true,
             "cancelable": true,
             "composed": true,

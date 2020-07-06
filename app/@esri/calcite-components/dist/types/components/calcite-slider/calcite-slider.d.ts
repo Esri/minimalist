@@ -1,4 +1,4 @@
-import { EventEmitter } from "../../stencil.core";
+import { EventEmitter } from "../../stencil-public-runtime";
 export declare class CalciteSlider {
     el: HTMLElement;
     /** Select theme (light or dark) */
@@ -44,37 +44,22 @@ export declare class CalciteSlider {
      * locking up the main thread.
      */
     calciteSliderUpdate: EventEmitter;
-    /**
-     * @internal
-     */
+    setFocus(): Promise<void>;
+    /** @internal */
     private guid;
-    /**
-     * @internal
-     */
+    /** @internal */
     private isRange;
-    /**
-     * @internal
-     */
+    /** @internal */
     private dragProp;
-    /**
-     * @internal
-     */
+    /** @internal */
     private minHandle;
-    /**
-     * @internal
-     */
+    /** @internal */
     private maxHandle;
-    /**
-     * @internal
-     */
+    /** @internal */
     private dragListener;
-    /**
-     * @internal
-     */
+    /** @internal */
     private tickValues;
-    /**
-     * @internal
-     */
+    /** @internal */
     private activeProp;
     private generateTickValues;
     private dragStart;

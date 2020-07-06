@@ -24,7 +24,12 @@ export declare class CalciteTip {
     /**
      * Alternate text for closing the tip.
      */
-    textClose: string;
+    intlClose?: string;
+    /**
+     * Alternate text for closing the tip.
+     * @deprecated use "intlClose" instead.
+     */
+    textClose?: string;
     /**
      * Used to set the component's color scheme.
      */
@@ -38,6 +43,6 @@ export declare class CalciteTip {
     renderHeader(): VNode;
     renderImageFrame(): VNode;
     renderInfoNode(): VNode;
-    renderContent(): any;
-    render(): any;
+    renderContent(): VNode;
+    render(): VNode;
 }

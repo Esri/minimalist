@@ -1,4 +1,4 @@
-import { EventEmitter } from "../stencil-public-runtime";
+import { EventEmitter, VNode } from "../stencil-public-runtime";
 import { CalciteTheme } from "../interfaces";
 /**
  * @slot icon - A slot for adding a trailing header icon.
@@ -23,25 +23,37 @@ export declare class CalciteBlock {
      */
     heading: string;
     /**
-     * When true, the block's content will be displayed.
+     * Tooltip used for the toggle when expanded.
      */
-    open: boolean;
+    intlCollapse?: string;
+    /**
+     * Tooltip used for the toggle when collapsed.
+     */
+    intlExpand?: string;
     /**
      * When true, content is waiting to be loaded. This state shows a busy indicator.
      */
     loading: boolean;
     /**
+     * When true, the block's content will be displayed.
+     */
+    open: boolean;
+    /**
      * Block summary.
      */
     summary: string;
     /**
-     * Tooltip used for the toggle when collapsed.
-     */
-    textExpand: string;
-    /**
      * Tooltip used for the toggle when expanded.
+     *
+     * @deprecated use "intlCollapse" instead.
      */
-    textCollapse: string;
+    textCollapse?: string;
+    /**
+     * Tooltip used for the toggle when collapsed.
+     *
+     * @deprecated use "intlExpand" instead.
+     */
+    textExpand?: string;
     /**
      * Used to set the component's color scheme.
      */
@@ -52,5 +64,5 @@ export declare class CalciteBlock {
      */
     calciteBlockToggle: EventEmitter;
     onHeaderClick: () => void;
-    render(): any;
+    render(): VNode;
 }

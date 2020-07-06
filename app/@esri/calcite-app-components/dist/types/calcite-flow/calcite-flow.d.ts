@@ -1,3 +1,4 @@
+import { VNode } from "../stencil-public-runtime";
 import { CalciteTheme, FlowDirection } from "../interfaces";
 /**
  * @slot - A slot for adding `calcite-flow-item`s to the flow.
@@ -15,12 +16,11 @@ export declare class CalciteFlow {
     flowCount: number;
     flowDirection: FlowDirection;
     flows: HTMLCalciteFlowItemElement[];
-    componentWillLoad(): void;
-    componentDidLoad(): void;
+    connectedCallback(): void;
     componentDidUnload(): void;
     handleCalciteFlowItemBackClick(): void;
     getFlowDirection: (oldFlowCount: number, newFlowCount: number) => FlowDirection;
     updateFlowProps: () => void;
     flowItemObserver: MutationObserver;
-    render(): any;
+    render(): VNode;
 }

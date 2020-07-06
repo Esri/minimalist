@@ -39,7 +39,7 @@
     "deploy": "npm run build:sass & npm run build:ts"
   },
   "dependencies": {
-    "@esri/application-base-js": "^0.0.2",
+    "@esri/application-base-js": "0.0.9",
     "@esri/calcite-app-components": "^5.3.2",
     "@esri/calcite-components": "^1.0.0-beta.20",
     "@esri/calcite-ui-icons": "^2.7.1",

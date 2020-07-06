@@ -7,7 +7,8 @@ define({
     "popup": "מידע"
   },
   "popupPanel": {
-    "noResultsMessage": "לחץ על המפה כדי להציג פרטי ישות"
+    "noResultsMessage": "לחץ על המפה כדי לראות את פרטי הישות",
+    "noResultsHoverMessage": "העבר את העכבר מעל למיקומים במפה כדי לראות את פרטי הישויות"
   },
   "close": "סגור",
   "toggle": "שנה מצב גובה לוח"

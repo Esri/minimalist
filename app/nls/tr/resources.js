@@ -7,7 +7,8 @@ define({
     "popup": "Bilgi"
   },
   "popupPanel": {
-    "noResultsMessage": "Detay bilgisini görüntülemek için haritaya tıklayın"
+    "noResultsMessage": "Detay bilgisini görüntülemek için haritaya tıklayın",
+    "noResultsHoverMessage": "Detay bilgisini görüntülemek için haritada konumların üzerine gelin"
   },
   "close": "kapat",
   "toggle": "panel yüksekliğini aç/kapat"

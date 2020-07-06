@@ -7,7 +7,8 @@ define({
     "popup": "Info"
   },
   "popupPanel": {
-    "noResultsMessage": "Klikk på kartet for å vise geoobjektinformasjon"
+    "noResultsMessage": "Klikk på kartet for å vise geoobjektinformasjon",
+    "noResultsHoverMessage": "Før musepekeren over lokasjoner på kartet for å vise geoobjektinformasjon"
   },
   "close": "lukk",
   "toggle": "aktiver/deaktiver panelhøyde"

@@ -1,6 +1,6 @@
-import { Host, h } from "@stencil/core";
+import { Component, Element, Event, Host, Prop, Watch, h } from "@stencil/core";
 import { CalciteExpandToggle, toggleChildActionText } from "../utils/CalciteExpandToggle";
-import { CSS } from "./resources";
+import { CSS, TEXT } from "./resources";
 import { getCalcitePosition } from "../utils/dom";
 /**
  * @slot - A slot for adding `calcite-action`s to the action pad.
@@ -20,14 +20,6 @@ export class CalciteActionPad {
          * Indicates whether widget is expanded.
          */
         this.expanded = false;
-        /**
-         * Updates the label of the expand icon when the component is not expanded.
-         */
-        this.textExpand = "Expand";
-        /**
-         * Updates the label of the collapse icon when the component is expanded.
-         */
-        this.textCollapse = "Collapse";
         // --------------------------------------------------------------------------
         //
         //  Private Methods
@@ -65,8 +57,10 @@ export class CalciteActionPad {
     //
     // --------------------------------------------------------------------------
     renderBottomActionGroup() {
-        const { expanded, expand, textExpand, textCollapse, el, layout, position, toggleExpand } = this;
-        const expandToggleNode = expand ? (h(CalciteExpandToggle, { expanded: expanded, textExpand: textExpand, textCollapse: textCollapse, el: el, position: getCalcitePosition(position, layout), toggleExpand: toggleExpand })) : null;
+        const { expanded, expand, intlExpand, intlCollapse, textExpand, textCollapse, el, layout, position, toggleExpand, tooltipExpand } = this;
+        const expandLabel = intlExpand || textExpand || TEXT.expand;
+        const collapseLabel = intlCollapse || textCollapse || TEXT.collapse;
+        const expandToggleNode = expand ? (h(CalciteExpandToggle, { expanded: expanded, intlExpand: expandLabel, intlCollapse: collapseLabel, el: el, position: getCalcitePosition(position, layout), toggleExpand: toggleExpand, tooltipExpand: tooltipExpand })) : null;
         return expandToggleNode ? (h("calcite-action-group", { class: CSS.actionGroupBottom }, expandToggleNode)) : null;
     }
     render() {
@@ -119,6 +113,25 @@ export class CalciteActionPad {
             "reflect": true,
             "defaultValue": "false"
         },
+        "tooltipExpand": {
+            "type": "unknown",
+            "mutable": false,
+            "complexType": {
+                "original": "HTMLCalciteTooltipElement",
+                "resolved": "HTMLCalciteTooltipElement",
+                "references": {
+                    "HTMLCalciteTooltipElement": {
+                        "location": "global"
+                    }
+                }
+            },
+            "required": false,
+            "optional": true,
+            "docs": {
+                "tags": [],
+                "text": "Used to set the tooltip for the expand toggle."
+            }
+        },
         "textExpand": {
             "type": "string",
             "mutable": false,
@@ -128,14 +141,33 @@ export class CalciteActionPad {
                 "references": {}
             },
             "required": false,
-            "optional": false,
+            "optional": true,
+            "docs": {
+                "tags": [{
+                        "text": "use \"intlExpand\" instead.",
+                        "name": "deprecated"
+                    }],
+                "text": "Updates the label of the expand icon when the component is not expanded."
+            },
+            "attribute": "text-expand",
+            "reflect": false
+        },
+        "intlExpand": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": true,
             "docs": {
                 "tags": [],
                 "text": "Updates the label of the expand icon when the component is not expanded."
             },
-            "attribute": "text-expand",
-            "reflect": false,
-            "defaultValue": "\"Expand\""
+            "attribute": "intl-expand",
+            "reflect": false
         },
         "textCollapse": {
             "type": "string",
@@ -146,14 +178,33 @@ export class CalciteActionPad {
                 "references": {}
             },
             "required": false,
-            "optional": false,
+            "optional": true,
+            "docs": {
+                "tags": [{
+                        "text": "use \"intlCollapse\" instead.",
+                        "name": "deprecated"
+                    }],
+                "text": "Updates the label of the collapse icon when the component is expanded."
+            },
+            "attribute": "text-collapse",
+            "reflect": false
+        },
+        "intlCollapse": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": true,
             "docs": {
                 "tags": [],
                 "text": "Updates the label of the collapse icon when the component is expanded."
             },
-            "attribute": "text-collapse",
-            "reflect": false,
-            "defaultValue": "\"Collapse\""
+            "attribute": "intl-collapse",
+            "reflect": false
         },
         "layout": {
             "type": "string",
@@ -172,10 +223,10 @@ export class CalciteActionPad {
             "optional": false,
             "docs": {
                 "tags": [{
-                        "text": "since 5.3 - use \"position\" instead.\nArrangement of the component.",
+                        "text": "use \"position\" instead.",
                         "name": "deprecated"
                     }],
-                "text": ""
+                "text": "Arrangement of the component."
             },
             "attribute": "layout",
             "reflect": true

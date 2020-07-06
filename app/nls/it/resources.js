@@ -7,7 +7,8 @@ define({
     "popup": "Informazioni"
   },
   "popupPanel": {
-    "noResultsMessage": "Clicca sulla mappa per visualizzare le informazioni della feature"
+    "noResultsMessage": "Clicca sulla mappa per visualizzare le informazioni della feature",
+    "noResultsHoverMessage": "Passare il cursore sulle posizioni sulla mappa per visualizzare le informazioni sulla feature"
   },
   "close": "chiudi",
   "toggle": "attiva/disattiva altezza pannello"

@@ -29,7 +29,7 @@ import Portal from "esri/portal/Portal";
 import PortalItem from "esri/portal/PortalItem";
 import PortalQueryParams from "esri/portal/PortalQueryParams";
 import esriConfig from "esri/config";
-import kernel from "dojo/_base/kernel";
+import { getLocale, setLocale, prefersRTL } from "esri/intl";
 
 const defaultConfig = {
   portalUrl: "https://www.arcgis.com",
@@ -44,9 +44,7 @@ const defaultConfig = {
 const defaultSettings = {
   environment: {},
   group: {},
-  //localStorage: {},
   portal: {},
-  rightToLeftLocales: ["ar", "he"],
   urlParams: [],
   webMap: {},
   webScene: {}
@@ -86,6 +84,7 @@ class ApplicationBase {
 
     this.config = configMixin;
     this.settings = settingsMixin;
+
   }
 
   //--------------------------------------------------------------------------
@@ -122,12 +121,18 @@ class ApplicationBase {
   //----------------------------------
   //  locale
   //----------------------------------
-  locale: string = kernel.locale;
+  locale: string = getLocale();
+
+  //----------------------------------
+  //  Detect IE
+  //----------------------------------
+  isIE: boolean;
 
   //----------------------------------
   //  units
   //----------------------------------
   units: string = null;
+
 
   //--------------------------------------------------------------------------
   //
@@ -166,12 +171,13 @@ class ApplicationBase {
     const {
       environment: environmentSettings,
       group: groupSettings,
-      // localStorage: localStorageSettings,
       portal: portalSettings,
       webMap: webMapSettings,
       webScene: websceneSettings,
       urlParams: urlParamsSettings
     } = settings;
+
+
     const { isEsri } = environmentSettings;
     const urlParams = this._getUrlParamValues(urlParamsSettings);
     this.results.urlParams = urlParams;
@@ -191,8 +197,6 @@ class ApplicationBase {
 
     this._setPortalUrl(portalUrl);
     this._setProxyUrl(proxyUrl);
-    const rtlLocales = this.settings.rightToLeftLocales;
-    this.direction = this._getLanguageDirection(rtlLocales);
 
     this._registerOauthInfos(oauthappid, portalUrl);
     const sharingUrl = `${portalUrl}/sharing`;
@@ -238,10 +242,6 @@ class ApplicationBase {
           ? applicationDataResponse.value
           : null;
 
-        /*const localStorage = localStorageSettings.fetch
-          ? this._getLocalConfig(appid)
-          : null;*/
-
         const appAccess = checkAppAccessResponse
           ? checkAppAccessResponse.value
           : null;
@@ -263,7 +263,6 @@ class ApplicationBase {
           return reject(applicationItemResponse.error);
         }
 
-        // this.results.localStorage = localStorage;
         this.results.applicationItem = applicationItemResponse;
         this.results.applicationData = applicationDataResponse;
 
@@ -274,12 +273,19 @@ class ApplicationBase {
         const portal = portalResponse ? portalResponse.value : null;
         this.portal = portal;
 
+        // Detect IE 11 and older 
+        this.isIE = this._detectIE();
+        // Update the culture if there is a url param or portal culture
+        this.locale = this.config?.locale || getLocale();
+        setLocale(this.locale);
+
+        this.direction = prefersRTL(this.locale) ? "rtl" : "ltr";
+
         this.units = this._getUnits(portal);
 
         this.config = this._mixinAllConfigs({
           config: this.config,
           url: urlParams,
-          // local: localStorage,
           application: applicationConfig
         });
 
@@ -392,7 +398,6 @@ class ApplicationBase {
 
   private _mixinSettingsDefaults(settings: ApplicationBaseSettings): void {
     const userEnvironmentSettings = settings.environment;
-    // const userLocalStorageSettings = settings.localStorage;
     const userGroupSettings = settings.group;
     const userPortalSettings = settings.portal;
     const userWebmapSettings = settings.webMap;
@@ -403,11 +408,6 @@ class ApplicationBase {
       webTierSecurity: false,
       ...userEnvironmentSettings
     };
-
-    /*settings.localStorage = {
-      fetch: true,
-      ...userLocalStorageSettings
-    };*/
 
     const itemParams = {
       sortField: "modified",
@@ -507,7 +507,7 @@ class ApplicationBase {
       (userRegion && responseRegion === USRegion) ||
       (userRegion && !responseRegion) ||
       (!user && ipCountryCode === USRegion) ||
-      (!user && !ipCountryCode && kernel.locale === USLocale);
+      (!user && !ipCountryCode && this.locale === USLocale);
     const units = userUnits
       ? userUnits
       : responseUnits
@@ -516,6 +516,11 @@ class ApplicationBase {
           ? "english"
           : "metric";
     return units;
+  }
+
+  private _detectIE() {
+    return /*@cc_on!@*/false || !!document['documentMode'];
+
   }
 
   private async _queryGroupInfo(
@@ -528,26 +533,12 @@ class ApplicationBase {
     return (await portal.queryGroups(params)) as __esri.PortalQueryResult;
   }
 
-  private _loadItem(id: string): IPromise<any> {
+  private _loadItem(id: string): IPromise<PortalItem> {
     const item = new PortalItem({
       id
     });
     return item.load();
   }
-
-  /*private _getLocalConfig(appid: string): ApplicationConfig {
-    if (!window.localStorage) {
-      return;
-    }
-
-    const lsItemId = appid
-      ? `application_base_config_${appid}`
-      : "application_base_config";
-    const lsItem = localStorage.getItem(lsItemId);
-    const localConfig = lsItem && JSON.parse(lsItem);
-
-    return localConfig;
-  }*/
 
   private _overwriteItemsExtent(
     responses: ApplicationBaseResult[],
@@ -584,16 +575,6 @@ class ApplicationBase {
       (!trimmedId || trimmedId === defaultUrlParam) && defaultId;
 
     return useDefaultId ? defaultId : id;
-  }
-
-  private _getLanguageDirection(
-    rtlLocales: string[] = ["ar", "he"]
-  ): Direction {
-    const isRTL = rtlLocales.some(language => {
-      return kernel.locale.indexOf(language) !== -1;
-    });
-
-    return isRTL ? "rtl" : "ltr";
   }
 
   private _mixinAllConfigs(params: ApplicationConfigs): ApplicationConfig {

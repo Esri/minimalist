@@ -1,6 +1,6 @@
 
-import { ApplicationConfig } from "ApplicationBase/interfaces";
-import ApplicationBase from "ApplicationBase/ApplicationBase";
+import { ApplicationConfig } from "../application-base-js/interfaces";
+import ApplicationBase from "../application-base-js/ApplicationBase";
 
 export type VNode = {};
 export type State = "ready" | "loading" | "error";

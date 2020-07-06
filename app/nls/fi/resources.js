@@ -7,7 +7,8 @@ define({
     "popup": "Tiedot"
   },
   "popupPanel": {
-    "noResultsMessage": "Tarkastele kohteen tietoja napsauttamalla karttaa"
+    "noResultsMessage": "Tarkastele kohteen tietoja napsauttamalla karttaa",
+    "noResultsHoverMessage": "Tarkastele kohteen tietoja viemällä hiiren osoitin kartan eri sijaintien kohdalle"
   },
   "close": "sulje",
   "toggle": "vaihda paneelin korkeutta"

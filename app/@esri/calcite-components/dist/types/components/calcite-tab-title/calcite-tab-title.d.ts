@@ -1,4 +1,4 @@
-import { EventEmitter } from "../../stencil.core";
+import { EventEmitter } from "../../stencil-public-runtime";
 import { TabChangeEventDetail } from "../../interfaces/TabChange";
 export declare class CalciteTabTitle {
     el: HTMLElement;
@@ -7,11 +7,12 @@ export declare class CalciteTabTitle {
      * be sure to also set this name on the associated tab.
      */
     tab?: string;
-    /**
-     * Show this tab title as selected
-     */
+    /** Show this tab title as selected */
     isActive: boolean;
+    /** @internal Parent tabs component layout value */
+    layout: "center" | "inline";
     componentWillLoad(): void;
+    componentWillRender(): void;
     render(): any;
     componentDidLoad(): void;
     componentDidUnload(): void;

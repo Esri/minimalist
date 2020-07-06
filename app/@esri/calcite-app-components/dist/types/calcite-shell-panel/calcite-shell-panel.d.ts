@@ -1,4 +1,4 @@
-import { EventEmitter } from "../stencil-public-runtime";
+import { EventEmitter, VNode } from "../stencil-public-runtime";
 import { CalciteLayout, CalcitePosition, CalciteScale } from "../interfaces";
 /**
  * @slot action-bar - A slot for adding a `calcite-action-bar` to the panel.
@@ -19,8 +19,9 @@ export declare class CalciteShellPanel {
      */
     detachedScale: CalciteScale;
     /**
-     * @deprecated since 5.3 - use "position" instead.
      * Arrangement of the component.
+     *
+     * @deprecated use "position" instead.
      */
     layout: CalciteLayout;
     /**
@@ -31,5 +32,5 @@ export declare class CalciteShellPanel {
      * Emitted when collapse has been toggled.
      */
     calciteShellPanelToggle: EventEmitter;
-    render(): any;
+    render(): VNode;
 }

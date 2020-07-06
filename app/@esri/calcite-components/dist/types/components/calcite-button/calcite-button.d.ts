@@ -2,8 +2,8 @@ export declare class CalciteButton {
     el: HTMLElement;
     /** specify the color of the button, defaults to blue */
     color: "blue" | "dark" | "light" | "red";
-    /** specify the appearance style of the button, defaults to solid. Specifying "inline" will render the component as an anchor */
-    appearance: "solid" | "outline" | "clear" | "inline";
+    /** specify the appearance style of the button, defaults to solid. */
+    appearance: "solid" | "outline" | "clear" | "transparent";
     /** Select theme (light or dark) */
     theme: "light" | "dark";
     /** specify the scale of the button, defaults to m */
@@ -25,9 +25,12 @@ export declare class CalciteButton {
     /** is the button disabled  */
     disabled?: boolean;
     connectedCallback(): void;
+    disconnectedCallback(): void;
     componentWillLoad(): void;
     render(): any;
     setFocus(): Promise<void>;
+    /** watches for changing text content **/
+    private observer;
     /** if button type is present, assign as prop */
     private type?;
     /** the rendered child element */
@@ -35,7 +38,9 @@ export declare class CalciteButton {
     /** the node type of the rendered child element */
     private childElType?;
     /** determine if there is slotted text for styling purposes */
-    private hasText;
+    private hasText?;
+    private updateHasText;
+    private setupTextContentObserver;
     private getAttributes;
     private handleClick;
 }

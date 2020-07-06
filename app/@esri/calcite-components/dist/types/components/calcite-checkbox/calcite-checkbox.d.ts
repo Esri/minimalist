@@ -1,4 +1,4 @@
-import { EventEmitter } from "../../stencil.core";
+import { EventEmitter } from "../../stencil-public-runtime";
 export declare class CalciteCheckbox {
     el: HTMLElement;
     /** True if the checkbox is initially checked */

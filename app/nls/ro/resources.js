@@ -7,7 +7,8 @@ define({
     "popup": "Informaţii"
   },
   "popupPanel": {
-    "noResultsMessage": "Faceți clic pe hartă pentru a vizualiza informațiile obiectului spațial"
+    "noResultsMessage": "Faceți clic pe hartă pentru a vizualiza informațiile obiectului spațial",
+    "noResultsHoverMessage": "Treceți cursorul peste locuri de pe hartă pentru a vizualiza informațiile obiectului spațial"
   },
   "close": "închidere",
   "toggle": "înălțime panou comutare"

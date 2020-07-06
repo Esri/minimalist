@@ -1,38 +1,26 @@
-import { h, Host } from "@stencil/core";
-import { getElementTheme } from "../../utils/dom";
+import { Component, Element, h, Host, Prop } from "@stencil/core";
 export class CalciteProgress {
     constructor() {
-        /**
-         * Use indeterminate if finding actual progress value is impossible
-         */
+        /** Use indeterminate if finding actual progress value is impossible */
         this.type = "determinate";
-        /**
-         * Percent complete of 100
-         */
+        /** Percent complete of 100 */
         this.value = 0;
-        /**
-         * Text label for the progress indicator
-         */
+        /** Text label for the progress indicator */
         this.text = null;
-        /**
-         * Fill bar in the opposite direction
-         */
+        /** Fill bar in the opposite direction */
         this.reversed = false;
-        /** Select theme (light or dark) */
-        this.theme = "light";
     }
     render() {
-        const theme = getElementTheme(this.el);
-        return (h(Host, { class: "calcite-progress", type: this.type, reversed: this.reversed, style: {
-                "--percentage-value": `${this.value * 100}%`
-            }, theme: theme },
-            h("div", { class: "calcite-progress--track" }),
-            h("div", { class: {
-                    "calcite-progress--bar": true,
-                    "--indeterminate": this.type === "indeterminate",
-                    "--determinate": this.type === "determinate"
-                } }),
-            this.text ? (h("div", { class: "calcite-progress--text" }, this.text)) : null));
+        const isDeterminate = this.type === "determinate";
+        const barStyles = isDeterminate ? { width: `${this.value * 100}%` } : {};
+        return (h(Host, null,
+            h("div", { class: "track" },
+                h("div", { class: {
+                        bar: true,
+                        indeterminate: this.type === "indeterminate",
+                        reversed: this.reversed,
+                    }, style: barStyles })),
+            this.text ? h("div", { class: "text" }, this.text) : null));
     }
     static get is() { return "calcite-progress"; }
     static get encapsulation() { return "shadow"; }
@@ -130,8 +118,7 @@ export class CalciteProgress {
                 "text": "Select theme (light or dark)"
             },
             "attribute": "theme",
-            "reflect": true,
-            "defaultValue": "\"light\""
+            "reflect": true
         }
     }; }
     static get elementRef() { return "el"; }

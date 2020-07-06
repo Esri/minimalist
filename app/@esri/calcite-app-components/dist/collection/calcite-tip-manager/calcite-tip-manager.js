@@ -1,4 +1,4 @@
-import { Host, h } from "@stencil/core";
+import { Component, Element, Event, Host, Method, Prop, State, Watch, h } from "@stencil/core";
 import classnames from "classnames";
 import { CSS, ICONS, TEXT } from "./resources";
 import { getElementDir } from "../utils/dom";
@@ -16,27 +16,6 @@ export class CalciteTipManager {
          * Alternate text for closing the `calcite-tip-manager`.
          */
         this.closed = false;
-        /**
-         * Alternate text for closing the `calcite-tip-manager`.
-         */
-        this.textClose = TEXT.close;
-        /**
-         * The default group title for the `calcite-tip-manager`.
-         */
-        this.textDefaultTitle = TEXT.defaultGroupTitle;
-        /**
-         * Alternate text for navigating to the next tip.
-         */
-        this.textNext = TEXT.next;
-        /**
-         * Label that appears on hover of pagination icon.
-         */
-        this.textPaginationLabel = TEXT.defaultPaginationLabel;
-        /**
-         * Alternate text for navigating to the previous tip.
-         */
-        this.textPrevious = TEXT.previous;
-        this.groupTitle = this.textDefaultTitle;
         this.observer = new MutationObserver(() => this.setUpTips());
         this.hideTipManager = () => {
             this.closed = true;
@@ -90,8 +69,6 @@ export class CalciteTipManager {
     // --------------------------------------------------------------------------
     connectedCallback() {
         this.setUpTips();
-    }
-    componentDidLoad() {
         this.observer.observe(this.el, { childList: true, subtree: true });
     }
     componentDidUnload() {
@@ -142,7 +119,11 @@ export class CalciteTipManager {
     updateGroupTitle() {
         const selectedTip = this.tips[this.selectedIndex];
         const tipParent = selectedTip.closest("calcite-tip-group");
-        this.groupTitle = (tipParent && tipParent.textGroupTitle) || this.textDefaultTitle;
+        this.groupTitle =
+            (tipParent === null || tipParent === void 0 ? void 0 : tipParent.textGroupTitle) ||
+                this.intlDefaultTitle ||
+                this.textDefaultTitle ||
+                TEXT.defaultGroupTitle;
     }
     // --------------------------------------------------------------------------
     //
@@ -151,16 +132,18 @@ export class CalciteTipManager {
     // --------------------------------------------------------------------------
     renderPagination() {
         const dir = getElementDir(this.el);
-        const { selectedIndex, tips, total } = this;
+        const { selectedIndex, tips, total, intlNext, textNext, intlPrevious, textPrevious, intlPaginationLabel, textPaginationLabel } = this;
+        const nextLabel = intlNext || textNext || TEXT.next;
+        const previousLabel = intlPrevious || textPrevious || TEXT.previous;
+        const paginationLabel = intlPaginationLabel || textPaginationLabel || TEXT.defaultPaginationLabel;
         return tips.length > 1 ? (h("footer", { class: CSS.pagination },
-            h("calcite-action", { text: this.textPrevious, onClick: this.previousClicked, class: CSS.pagePrevious },
-                h("calcite-icon", { scale: "s", icon: dir === "ltr" ? ICONS.chevronLeft : ICONS.chevronRight })),
-            h("span", { class: CSS.pagePosition }, `${this.textPaginationLabel} ${selectedIndex + 1}/${total}`),
-            h("calcite-action", { text: this.textNext, onClick: this.nextClicked, class: CSS.pageNext },
-                h("calcite-icon", { scale: "s", icon: dir === "ltr" ? ICONS.chevronRight : ICONS.chevronLeft })))) : null;
+            h("calcite-action", { text: previousLabel, onClick: this.previousClicked, class: CSS.pagePrevious, icon: dir === "ltr" ? ICONS.chevronLeft : ICONS.chevronRight }),
+            h("span", { class: CSS.pagePosition }, `${paginationLabel} ${selectedIndex + 1}/${total}`),
+            h("calcite-action", { text: nextLabel, onClick: this.nextClicked, class: CSS.pageNext, icon: dir === "ltr" ? ICONS.chevronRight : ICONS.chevronLeft }))) : null;
     }
     render() {
-        const { closed, direction, groupTitle, selectedIndex, textClose, total } = this;
+        const { closed, direction, groupTitle, selectedIndex, intlClose, textClose, total } = this;
+        const closeLabel = intlClose || textClose || TEXT.close;
         if (total === 0) {
             return h(Host, null);
         }
@@ -168,8 +151,7 @@ export class CalciteTipManager {
             h("div", { class: CSS.container, hidden: closed, "aria-hidden": closed.toString(), tabIndex: 0, onKeyUp: this.tipManagerKeyUpHandler, ref: this.storeContainerRef },
                 h("header", { class: CSS.header },
                     h("h2", { key: selectedIndex, class: CSS.heading }, groupTitle),
-                    h("calcite-action", { text: textClose, onClick: this.hideTipManager, class: CSS.close },
-                        h("calcite-icon", { scale: "s", icon: ICONS.close }))),
+                    h("calcite-action", { text: closeLabel, onClick: this.hideTipManager, class: CSS.close, icon: ICONS.close })),
                 h("div", { tabIndex: 0, class: classnames(CSS.tipContainer, {
                         [CSS.tipContainerAdvancing]: !closed && direction === "advancing",
                         [CSS.tipContainerRetreating]: !closed && direction === "retreating"
@@ -204,6 +186,23 @@ export class CalciteTipManager {
             "reflect": true,
             "defaultValue": "false"
         },
+        "intlClose": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": true,
+            "docs": {
+                "tags": [],
+                "text": "Alternate text for closing the tip."
+            },
+            "attribute": "intl-close",
+            "reflect": false
+        },
         "textClose": {
             "type": "string",
             "mutable": false,
@@ -213,14 +212,33 @@ export class CalciteTipManager {
                 "references": {}
             },
             "required": false,
-            "optional": false,
+            "optional": true,
             "docs": {
-                "tags": [],
-                "text": "Alternate text for closing the `calcite-tip-manager`."
+                "tags": [{
+                        "text": "use \"intlClose\" instead.",
+                        "name": "deprecated"
+                    }],
+                "text": "Alternate text for closing the tip."
             },
             "attribute": "text-close",
-            "reflect": false,
-            "defaultValue": "TEXT.close"
+            "reflect": false
+        },
+        "intlDefaultTitle": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": true,
+            "docs": {
+                "tags": [],
+                "text": "The default group title for the `calcite-tip-manager`."
+            },
+            "attribute": "intl-default-title",
+            "reflect": false
         },
         "textDefaultTitle": {
             "type": "string",
@@ -231,14 +249,33 @@ export class CalciteTipManager {
                 "references": {}
             },
             "required": false,
-            "optional": false,
+            "optional": true,
             "docs": {
-                "tags": [],
+                "tags": [{
+                        "text": "use \"intlDefaultTitle\" instead.",
+                        "name": "deprecated"
+                    }],
                 "text": "The default group title for the `calcite-tip-manager`."
             },
             "attribute": "text-default-title",
-            "reflect": true,
-            "defaultValue": "TEXT.defaultGroupTitle"
+            "reflect": false
+        },
+        "intlNext": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": true,
+            "docs": {
+                "tags": [],
+                "text": "Alternate text for navigating to the next tip."
+            },
+            "attribute": "intl-next",
+            "reflect": false
         },
         "textNext": {
             "type": "string",
@@ -249,14 +286,33 @@ export class CalciteTipManager {
                 "references": {}
             },
             "required": false,
-            "optional": false,
+            "optional": true,
             "docs": {
-                "tags": [],
+                "tags": [{
+                        "text": "use \"intlNext\" instead.",
+                        "name": "deprecated"
+                    }],
                 "text": "Alternate text for navigating to the next tip."
             },
             "attribute": "text-next",
-            "reflect": false,
-            "defaultValue": "TEXT.next"
+            "reflect": false
+        },
+        "intlPaginationLabel": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": true,
+            "docs": {
+                "tags": [],
+                "text": "Label that appears on hover of pagination icon."
+            },
+            "attribute": "intl-pagination-label",
+            "reflect": false
         },
         "textPaginationLabel": {
             "type": "string",
@@ -267,14 +323,33 @@ export class CalciteTipManager {
                 "references": {}
             },
             "required": false,
-            "optional": false,
+            "optional": true,
             "docs": {
-                "tags": [],
+                "tags": [{
+                        "text": "use \"intlPaginationLabel\" instead.",
+                        "name": "deprecated"
+                    }],
                 "text": "Label that appears on hover of pagination icon."
             },
             "attribute": "text-pagination-label",
-            "reflect": true,
-            "defaultValue": "TEXT.defaultPaginationLabel"
+            "reflect": false
+        },
+        "intlPrevious": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": true,
+            "docs": {
+                "tags": [],
+                "text": "Alternate text for navigating to the previous tip."
+            },
+            "attribute": "intl-previous",
+            "reflect": false
         },
         "textPrevious": {
             "type": "string",
@@ -285,14 +360,16 @@ export class CalciteTipManager {
                 "references": {}
             },
             "required": false,
-            "optional": false,
+            "optional": true,
             "docs": {
-                "tags": [],
+                "tags": [{
+                        "text": "use \"intlPrevious\" instead.",
+                        "name": "deprecated"
+                    }],
                 "text": "Alternate text for navigating to the previous tip."
             },
             "attribute": "text-previous",
-            "reflect": false,
-            "defaultValue": "TEXT.previous"
+            "reflect": false
         },
         "theme": {
             "type": "string",

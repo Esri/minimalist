@@ -1,28 +1,25 @@
-import { EventEmitter } from "../../stencil.core";
+import { EventEmitter } from "../../stencil-public-runtime";
 export declare class CalciteDateDay {
     el: HTMLElement;
-    /**
-     * day of the month to be shown.
-     */
+    /** Day of the month to be shown. */
     day: number;
-    /**
-     * Enables tells whether day enabled for the user click.
-     */
-    enable: boolean;
-    /**
-     * Selected tells whether day is selected.
-     */
+    /** Date is outside of range and can't be selected */
+    disabled: boolean;
+    /** Date is in the current month. */
+    currentMonth: boolean;
+    /** Date is the current selected date of the picker */
     selected: boolean;
-    /**
-     * Active tells whether day is Actively in focus.
-     */
+    /** Date is actively in focus for keyboard navigation */
     active: boolean;
-    /**
-     * When user selects day it emits the event.
-     */
-    calciteDaySelect: EventEmitter;
-    componentWillUpdate(): void;
-    render(): any;
+    /** Locale to display the day in */
+    locale: string;
+    /** specify the scale of the date picker */
+    scale: "s" | "m" | "l";
     onClick(): void;
     keyDownHandler(e: KeyboardEvent): void;
+    /**
+     * Emitted when user selects day
+     */
+    calciteDaySelect: EventEmitter;
+    render(): any;
 }

@@ -1,3 +1,25 @@
+///<reference types="arcgis-js-api" />
+/*
+  Copyright 2019 Esri
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+
+  you may not use this file except in compliance with the License.
+
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+
+  distributed under the License is distributed on an "AS IS" BASIS,
+
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
+  See the License for the specific language governing permissions and
+
+  limitations under the License.​
+*/
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -48,7 +70,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-define(["require", "exports", "./utils/esriWidgetUtils", "ApplicationBase/support/itemUtils", "ApplicationBase/support/domHelper", "./ConfigurationSettings", "esri/core/Handles", "./ui/Layout", "./ui/MobilePanel", "./ui/Panel", "esri/core/promiseUtils", "esri/core/watchUtils"], function (require, exports, esriWidgetUtils_1, itemUtils_1, domHelper_1, ConfigurationSettings_1, Handles_1, Layout_1, MobilePanel_1, Panel_1, promiseUtils_1, watchUtils_1) {
+define(["require", "exports", "./utils/esriWidgetUtils", "./application-base-js/support/itemUtils", "./application-base-js/support/domHelper", "./ConfigurationSettings", "esri/core/Handles", "./ui/Layout", "./ui/MobilePanel", "./ui/Panel", "esri/core/promiseUtils", "esri/core/watchUtils"], function (require, exports, esriWidgetUtils_1, itemUtils_1, domHelper_1, ConfigurationSettings_1, Handles_1, Layout_1, MobilePanel_1, Panel_1, promiseUtils_1, watchUtils_1) {
     "use strict";
     ConfigurationSettings_1 = __importDefault(ConfigurationSettings_1);
     Handles_1 = __importDefault(Handles_1);
@@ -83,6 +105,9 @@ define(["require", "exports", "./utils/esriWidgetUtils", "ApplicationBase/suppor
                     config = base.config, results = base.results;
                     webMapItems = results.webMapItems;
                     this._appConfig = new ConfigurationSettings_1.default(config);
+                    if (config.legend && !this._appConfig.legendPanel) {
+                        this._appConfig.legendPanel = config.legend;
+                    }
                     this.handleThemeUpdates();
                     item = null;
                     webMapItems.forEach(function (response) {
@@ -109,7 +134,7 @@ define(["require", "exports", "./utils/esriWidgetUtils", "ApplicationBase/suppor
                     layout.watch("view", function () {
                         var view = layout.view;
                         var find = config.find, marker = config.marker;
-                        view.popup.autoCloseEnabled = true;
+                        _this._handlePopupBehavior(view);
                         _this.createPanel(view);
                         itemUtils_1.findQuery(find, view);
                         itemUtils_1.goToMarker(marker, view);
@@ -132,6 +157,10 @@ define(["require", "exports", "./utils/esriWidgetUtils", "ApplicationBase/suppor
                             watchUtils_1.init(_this._appConfig, "scalebar, scalebarPosition", function (newValue, oldValue, propertyName) {
                                 widgetProps.propertyName = propertyName;
                                 esriWidgetUtils_1.addScaleBar(widgetProps);
+                            }),
+                            watchUtils_1.init(_this._appConfig, "bookmarks,bookmarksEditable, bookmarksPosition", function (newValue, oldValue, propertyName) {
+                                widgetProps.propertyName = propertyName;
+                                esriWidgetUtils_1.addBookmarks(widgetProps);
                             }),
                             watchUtils_1.init(_this._appConfig, "search, searchOpenAtStart, searchPosition,searchConfiguration", function (newValue, oldValue, propertyName) {
                                 widgetProps.propertyName = propertyName;
@@ -156,6 +185,42 @@ define(["require", "exports", "./utils/esriWidgetUtils", "ApplicationBase/suppor
                     return [2 /*return*/];
                 });
             });
+        };
+        CalciteWebpackConfigApp.prototype._handlePopupBehavior = function (view) {
+            var _this = this;
+            view.popup.autoCloseEnabled = true;
+            var handle = null;
+            this._handles.add(watchUtils_1.init(this._appConfig, ["popupHover", "popupPanel"], function (value, oldVal, propertyName) {
+                var _a = _this._appConfig, popupHover = _a.popupHover, popupPanel = _a.popupPanel;
+                if (propertyName === "popupHover" && popupHover === true && popupPanel === false) {
+                    // setup popup on hover 
+                    handle && handle.remove();
+                    var lastHitTest_1;
+                    // create the handle 
+                    handle = view.on("pointer-move", promiseUtils_1.debounce(function (e) {
+                        if (lastHitTest_1)
+                            clearTimeout(lastHitTest_1);
+                        lastHitTest_1 = setTimeout(function () {
+                            view.popup.fetchFeatures(e).then(function (response) {
+                                var location = view.toMap(e);
+                                response.allGraphicsPromise.then(function (graphics) {
+                                    if (graphics && graphics.length && graphics.length > 0) {
+                                        view.popup.open({
+                                            location: location,
+                                            features: graphics,
+                                            updateLocationEnabled: false
+                                        });
+                                    }
+                                });
+                            });
+                        }, 85);
+                    }));
+                }
+                else if (popupPanel === true || popupHover === false) {
+                    // disconnect click 
+                    handle && handle.remove();
+                }
+            }), "configuration");
         };
         CalciteWebpackConfigApp.prototype.createPanel = function (view) {
             var props = {

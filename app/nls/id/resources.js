@@ -7,7 +7,8 @@ define({
     "popup": "Info"
   },
   "popupPanel": {
-    "noResultsMessage": "Klik peta untuk melihat informasi fitur"
+    "noResultsMessage": "Klik peta untuk melihat informasi fitur",
+    "noResultsHoverMessage": "Arahkan mouse ke lokasi pada peta untuk melihat informasi fitur"
   },
   "close": "tutup",
   "toggle": "sesuaikan tinggi panel"

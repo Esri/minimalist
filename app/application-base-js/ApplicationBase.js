@@ -60,7 +60,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-define(["require", "exports", "esri/core/promiseUtils", "esri/identity/IdentityManager", "esri/identity/OAuthInfo", "esri/portal/Portal", "esri/portal/PortalItem", "esri/portal/PortalQueryParams", "esri/config", "dojo/_base/kernel"], function (require, exports, promiseUtils_1, IdentityManager_1, OAuthInfo_1, Portal_1, PortalItem_1, PortalQueryParams_1, config_1, kernel_1) {
+define(["require", "exports", "esri/core/promiseUtils", "esri/identity/IdentityManager", "esri/identity/OAuthInfo", "esri/portal/Portal", "esri/portal/PortalItem", "esri/portal/PortalQueryParams", "esri/config", "esri/intl"], function (require, exports, promiseUtils_1, IdentityManager_1, OAuthInfo_1, Portal_1, PortalItem_1, PortalQueryParams_1, config_1, intl_1) {
     "use strict";
     IdentityManager_1 = __importDefault(IdentityManager_1);
     OAuthInfo_1 = __importDefault(OAuthInfo_1);
@@ -68,7 +68,6 @@ define(["require", "exports", "esri/core/promiseUtils", "esri/identity/IdentityM
     PortalItem_1 = __importDefault(PortalItem_1);
     PortalQueryParams_1 = __importDefault(PortalQueryParams_1);
     config_1 = __importDefault(config_1);
-    kernel_1 = __importDefault(kernel_1);
     var defaultConfig = {
         portalUrl: "https://www.arcgis.com",
         helperServices: {
@@ -81,9 +80,7 @@ define(["require", "exports", "esri/core/promiseUtils", "esri/identity/IdentityM
     var defaultSettings = {
         environment: {},
         group: {},
-        //localStorage: {},
         portal: {},
-        rightToLeftLocales: ["ar", "he"],
         urlParams: [],
         webMap: {},
         webScene: {}
@@ -123,7 +120,7 @@ define(["require", "exports", "esri/core/promiseUtils", "esri/identity/IdentityM
             //----------------------------------
             //  locale
             //----------------------------------
-            this.locale = kernel_1.default.locale;
+            this.locale = intl_1.getLocale();
             //----------------------------------
             //  units
             //----------------------------------
@@ -170,9 +167,7 @@ define(["require", "exports", "esri/core/promiseUtils", "esri/identity/IdentityM
         ApplicationBase.prototype.load = function () {
             var _this = this;
             var settings = this.settings;
-            var environmentSettings = settings.environment, groupSettings = settings.group, 
-            // localStorage: localStorageSettings,
-            portalSettings = settings.portal, webMapSettings = settings.webMap, websceneSettings = settings.webScene, urlParamsSettings = settings.urlParams;
+            var environmentSettings = settings.environment, groupSettings = settings.group, portalSettings = settings.portal, webMapSettings = settings.webMap, websceneSettings = settings.webScene, urlParamsSettings = settings.urlParams;
             var isEsri = environmentSettings.isEsri;
             var urlParams = this._getUrlParamValues(urlParamsSettings);
             this.results.urlParams = urlParams;
@@ -188,8 +183,6 @@ define(["require", "exports", "esri/core/promiseUtils", "esri/identity/IdentityM
             var _a = this.config, portalUrl = _a.portalUrl, proxyUrl = _a.proxyUrl, oauthappid = _a.oauthappid, appid = _a.appid;
             this._setPortalUrl(portalUrl);
             this._setProxyUrl(proxyUrl);
-            var rtlLocales = this.settings.rightToLeftLocales;
-            this.direction = this._getLanguageDirection(rtlLocales);
             this._registerOauthInfos(oauthappid, portalUrl);
             var sharingUrl = portalUrl + "/sharing";
             var loadApplicationItem = appid ? this._loadItem(appid) : promiseUtils_1.resolve();
@@ -214,6 +207,7 @@ define(["require", "exports", "esri/core/promiseUtils", "esri/identity/IdentityM
             ])
                 .catch(function (applicationArgs) { return applicationArgs; })
                 .then(function (applicationArgs) {
+                var _a;
                 var applicationItemResponse = applicationArgs[0], applicationDataResponse = applicationArgs[1], portalResponse = applicationArgs[2], checkAppAccessResponse = applicationArgs[3];
                 var applicationItem = applicationItemResponse
                     ? applicationItemResponse.value
@@ -221,9 +215,6 @@ define(["require", "exports", "esri/core/promiseUtils", "esri/identity/IdentityM
                 var applicationData = applicationDataResponse
                     ? applicationDataResponse.value
                     : null;
-                /*const localStorage = localStorageSettings.fetch
-                  ? this._getLocalConfig(appid)
-                  : null;*/
                 var appAccess = checkAppAccessResponse
                     ? checkAppAccessResponse.value
                     : null;
@@ -241,7 +232,6 @@ define(["require", "exports", "esri/core/promiseUtils", "esri/identity/IdentityM
                 else if (applicationItemResponse.error) {
                     return promiseUtils_1.reject(applicationItemResponse.error);
                 }
-                // this.results.localStorage = localStorage;
                 _this.results.applicationItem = applicationItemResponse;
                 _this.results.applicationData = applicationDataResponse;
                 var applicationConfig = applicationData
@@ -249,15 +239,20 @@ define(["require", "exports", "esri/core/promiseUtils", "esri/identity/IdentityM
                     : null;
                 var portal = portalResponse ? portalResponse.value : null;
                 _this.portal = portal;
+                // Detect IE 11 and older 
+                _this.isIE = _this._detectIE();
+                // Update the culture if there is a url param or portal culture
+                _this.locale = ((_a = _this.config) === null || _a === void 0 ? void 0 : _a.locale) || intl_1.getLocale();
+                intl_1.setLocale(_this.locale);
+                _this.direction = intl_1.prefersRTL(_this.locale) ? "rtl" : "ltr";
                 _this.units = _this._getUnits(portal);
                 _this.config = _this._mixinAllConfigs({
                     config: _this.config,
                     url: urlParams,
-                    // local: localStorage,
                     application: applicationConfig
                 });
                 _this._setGeometryService(_this.config, portal);
-                var _a = _this.config, webmap = _a.webmap, webscene = _a.webscene, group = _a.group, draft = _a.draft;
+                var _b = _this.config, webmap = _b.webmap, webscene = _b.webscene, group = _b.group, draft = _b.draft;
                 var webMapPromises = [];
                 var webScenePromises = [];
                 var groupInfoPromises = [];
@@ -339,16 +334,11 @@ define(["require", "exports", "esri/core/promiseUtils", "esri/identity/IdentityM
         //--------------------------------------------------------------------------
         ApplicationBase.prototype._mixinSettingsDefaults = function (settings) {
             var userEnvironmentSettings = settings.environment;
-            // const userLocalStorageSettings = settings.localStorage;
             var userGroupSettings = settings.group;
             var userPortalSettings = settings.portal;
             var userWebmapSettings = settings.webMap;
             var userWebsceneSettings = settings.webScene;
             settings.environment = __assign({ isEsri: false, webTierSecurity: false }, userEnvironmentSettings);
-            /*settings.localStorage = {
-              fetch: true,
-              ...userLocalStorageSettings
-            };*/
             var itemParams = {
                 sortField: "modified",
                 sortOrder: "desc",
@@ -412,7 +402,7 @@ define(["require", "exports", "esri/core/promiseUtils", "esri/identity/IdentityM
                 (userRegion && responseRegion === USRegion) ||
                 (userRegion && !responseRegion) ||
                 (!user && ipCountryCode === USRegion) ||
-                (!user && !ipCountryCode && kernel_1.default.locale === USLocale);
+                (!user && !ipCountryCode && this.locale === USLocale);
             var units = userUnits
                 ? userUnits
                 : responseUnits
@@ -421,6 +411,9 @@ define(["require", "exports", "esri/core/promiseUtils", "esri/identity/IdentityM
                         ? "english"
                         : "metric";
             return units;
+        };
+        ApplicationBase.prototype._detectIE = function () {
+            return /*@cc_on!@*/ false || !!document['documentMode'];
         };
         ApplicationBase.prototype._queryGroupInfo = function (groupId, portal) {
             return __awaiter(this, void 0, void 0, function () {
@@ -443,19 +436,6 @@ define(["require", "exports", "esri/core/promiseUtils", "esri/identity/IdentityM
             });
             return item.load();
         };
-        /*private _getLocalConfig(appid: string): ApplicationConfig {
-          if (!window.localStorage) {
-            return;
-          }
-      
-          const lsItemId = appid
-            ? `application_base_config_${appid}`
-            : "application_base_config";
-          const lsItem = localStorage.getItem(lsItemId);
-          const localConfig = lsItem && JSON.parse(lsItem);
-      
-          return localConfig;
-        }*/
         ApplicationBase.prototype._overwriteItemsExtent = function (responses, applicationItem) {
             var _this = this;
             if (!responses) {
@@ -480,13 +460,6 @@ define(["require", "exports", "esri/core/promiseUtils", "esri/identity/IdentityM
             var trimmedId = id ? id.trim() : "";
             var useDefaultId = (!trimmedId || trimmedId === defaultUrlParam) && defaultId;
             return useDefaultId ? defaultId : id;
-        };
-        ApplicationBase.prototype._getLanguageDirection = function (rtlLocales) {
-            if (rtlLocales === void 0) { rtlLocales = ["ar", "he"]; }
-            var isRTL = rtlLocales.some(function (language) {
-                return kernel_1.default.locale.indexOf(language) !== -1;
-            });
-            return isRTL ? "rtl" : "ltr";
         };
         ApplicationBase.prototype._mixinAllConfigs = function (params) {
             var config = params.config || null;

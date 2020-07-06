@@ -1,15 +1,3 @@
-/*
-  Copyright 2020 Esri
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-    http://www.apache.org/licenses/LICENSE-2.0
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.​
-*/
 import { eachAlways } from "esri/core/promiseUtils";
 import { esriWidgetProps } from "../interfaces/interfaces";
 import Share = require("app/ui/Share/Share");
@@ -109,6 +97,7 @@ export async function addHome(props: esriWidgetProps) {
     view.ui.add(new Home.default({ view }), homePosition);
   }
 }
+
 export async function addZoom(props: esriWidgetProps) {
   const { view, config, propertyName } = props;
   const { mapZoom, mapZoomPosition } = config;
@@ -147,13 +136,45 @@ export async function addScaleBar(props: esriWidgetProps) {
     }), scalebarPosition);
   }
 }
+export async function addBookmarks(props: esriWidgetProps) {
+
+  const { view, config, propertyName } = props;
+  const { bookmarks, bookmarksPosition } = config;
+
+  const modules = await eachAlways([import("esri/widgets/Bookmarks"), import("esri/widgets/Expand")]);
+  const [Bookmarks, Expand] = modules.map((module) => module.value);
+  const node = view.ui.find("bookmarksExpand") as __esri.Expand;
+  // check to see if the web map has bookmarks 
+  const map = view.map as __esri.WebMap;
+  const mapContainsBookmarks = map?.bookmarks?.length > 0 ? true : false;
+
+  if (!bookmarks || !mapContainsBookmarks) {
+    if (node) view.ui.remove(node);
+    return;
+  }
+  // move the node if it exists 
+  if (propertyName === "bookmarksPosition" && node) {
+    view.ui.move(node, bookmarksPosition);
+  } else if (propertyName === "bookmarks") {
+    const content = new Bookmarks.default({
+      view
+    });
+    const bookmarksExpand = new Expand.default({
+      id: "bookmarksExpand",
+      content,
+      mode: "floating",
+      view
+    });
+
+    view.ui.add(bookmarksExpand, bookmarksPosition);
+  }
+}
 export async function addSearch(props: esriWidgetProps) {
   const { view, portal, config, propertyName } = props;
   const { search, searchPosition, searchConfiguration, searchOpenAtStart } = config;
 
   const modules = await eachAlways([import("esri/widgets/Search"), import("esri/layers/FeatureLayer"), import("esri/widgets/Expand")]);
   const [Search, FeatureLayer, Expand] = modules.map((module) => module.value);
-  //const node = _findNode("esri-search");
   const node = view.ui.find("searchExpand") as __esri.Expand;
   if (!Search || !FeatureLayer || !Expand) return;
   if (!search) {

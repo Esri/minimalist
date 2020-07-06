@@ -1,10 +1,9 @@
 import Sortable from "sortablejs";
-import { h } from "@stencil/core";
+import { Component, Element, Event, Listen, Method, Prop, State, h } from "@stencil/core";
 import guid from "../utils/guid";
 import { CSS, ICON_TYPES, TEXT } from "./resources";
-import { sharedListMethods } from "../calcite-pick-list/shared-list-logic";
+import { calciteListItemChangeHandler, calciteListItemValueChangeHandler, cleanUpObserver, deselectSiblingItems, getItemData, handleFilter, initialize, initializeObserver, mutationObserverCallback, selectSiblings, setUpItems, keyDownHandler, setFocus } from "../calcite-pick-list/shared-list-logic";
 import List from "../calcite-pick-list/shared-list-render";
-const { mutationObserverCallback, initialize, initializeObserver, cleanUpObserver, calciteListItemChangeHandler, calciteListItemValueChangeHandler, setUpItems, deselectSiblingItems, selectSiblings, handleFilter, getItemData } = sharedListMethods;
 /**
  * @slot - A slot for adding `calcite-pick-list-item` elements or `calcite-pick-list-group` elements. Items are displayed as a vertical list.
  * @slot menu-actions - A slot for adding a button + menu combo for performing actions like sorting.
@@ -18,6 +17,8 @@ export class CalciteValueList {
         // --------------------------------------------------------------------------
         /**
          * Compact reduces the size of all items in the list.
+         *
+         * @deprecated This property will be removed in a future release.
          */
         this.compact = false;
         /**
@@ -63,16 +64,15 @@ export class CalciteValueList {
         this.handleFilter = handleFilter.bind(this);
         this.getItemData = getItemData.bind(this);
         this.keyDownHandler = (event) => {
-            const handleElement = event.composedPath().find((item) => {
-                var _a;
-                return (_a = item.dataset) === null || _a === void 0 ? void 0 : _a.jsHandle;
-            });
-            const valueListElement = event.composedPath().find((item) => {
-                var _a;
-                return ((_a = item.tagName) === null || _a === void 0 ? void 0 : _a.toLowerCase()) === "calcite-value-list-item";
-            });
+            const handleElement = event
+                .composedPath()
+                .find((item) => { var _a; return (_a = item.dataset) === null || _a === void 0 ? void 0 : _a.jsHandle; });
+            const valueListElement = event
+                .composedPath()
+                .find((item) => { var _a; return ((_a = item.tagName) === null || _a === void 0 ? void 0 : _a.toLowerCase()) === "calcite-value-list-item"; });
             // Only trigger keyboard sorting when the internal drag handle is focused and activated
             if (!handleElement || !valueListElement.handleActivated) {
+                keyDownHandler.call(this, event);
                 return;
             }
             const lastIndex = this.items.length - 1;
@@ -124,10 +124,10 @@ export class CalciteValueList {
     // --------------------------------------------------------------------------
     connectedCallback() {
         initialize.call(this);
+        initializeObserver.call(this);
     }
     componentDidLoad() {
         this.setUpDragAndDrop();
-        initializeObserver.call(this);
     }
     componentDidUnload() {
         cleanUpObserver.call(this);
@@ -188,6 +188,9 @@ export class CalciteValueList {
     async getSelectedItems() {
         return this.selectedValues;
     }
+    async setFocus() {
+        return setFocus.call(this);
+    }
     // --------------------------------------------------------------------------
     //
     //  Render Methods
@@ -223,7 +226,10 @@ export class CalciteValueList {
             "required": false,
             "optional": false,
             "docs": {
-                "tags": [],
+                "tags": [{
+                        "text": "This property will be removed in a future release.",
+                        "name": "deprecated"
+                    }],
                 "text": "Compact reduces the size of all items in the list."
             },
             "attribute": "compact",
@@ -329,7 +335,7 @@ export class CalciteValueList {
                 "references": {}
             },
             "required": false,
-            "optional": true,
+            "optional": false,
             "docs": {
                 "tags": [],
                 "text": "Placeholder text for the filter input field."
@@ -394,6 +400,22 @@ export class CalciteValueList {
                     }
                 },
                 "return": "Promise<Map<string, object>>"
+            },
+            "docs": {
+                "text": "",
+                "tags": []
+            }
+        },
+        "setFocus": {
+            "complexType": {
+                "signature": "() => Promise<void>",
+                "parameters": [],
+                "references": {
+                    "Promise": {
+                        "location": "global"
+                    }
+                },
+                "return": "Promise<void>"
             },
             "docs": {
                 "text": "",

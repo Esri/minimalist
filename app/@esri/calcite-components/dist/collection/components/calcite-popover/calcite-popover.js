@@ -1,6 +1,6 @@
-import { Host, h } from "@stencil/core";
-import { CSS } from "./resources";
-import { defaultOffsetDistance, createPopper, updatePopper } from "../../utils/popper";
+import { Component, Element, Event, Host, Method, Prop, State, Watch, h, } from "@stencil/core";
+import { CSS, ARIA_DESCRIBED_BY, POPOVER_REFERENCE } from "./resources";
+import { defaultOffsetDistance, createPopper, updatePopper, } from "../../utils/popper";
 import { guid } from "../../utils/guid";
 import { HOST_CSS } from "../../utils/dom";
 /**
@@ -13,10 +13,6 @@ export class CalcitePopover {
         //  Properties
         //
         // --------------------------------------------------------------------------
-        /**
-         * Adds a click handler to the referenceElement to toggle open the Popover.
-         */
-        this.addClickHandle = false;
         /**
          * Display a close button within the Popover.
          */
@@ -47,48 +43,37 @@ export class CalcitePopover {
         this.placement = "auto";
         /** Text for close button. */
         this.textClose = "Close";
-        /** Select theme (light or dark) */
-        this.theme = "light";
         this._referenceElement = this.getReferenceElement();
+        this.guid = `calcite-popover-${guid()}`;
         // --------------------------------------------------------------------------
         //
         //  Private Methods
         //
         // --------------------------------------------------------------------------
         this.getId = () => {
-            return this.el.id || `calcite-popover-${guid()}`;
+            return this.el.id || this.guid;
         };
-        this.addReferenceAria = () => {
-            const { _referenceElement } = this;
-            if (_referenceElement &&
-                !_referenceElement.hasAttribute("aria-describedby")) {
-                _referenceElement.setAttribute("aria-describedby", this.getId());
-            }
-        };
-        this.clickHandler = () => {
-            this.toggle();
-        };
-        this.addReferenceListener = () => {
-            const { _referenceElement, addClickHandle } = this;
-            if (!_referenceElement || !addClickHandle) {
-                return;
-            }
-            _referenceElement.addEventListener("click", this.clickHandler);
-        };
-        this.removeReferenceListener = () => {
+        this.addReferences = () => {
             const { _referenceElement } = this;
             if (!_referenceElement) {
                 return;
             }
-            _referenceElement.removeEventListener("click", this.clickHandler);
+            _referenceElement.setAttribute(POPOVER_REFERENCE, "");
+            if (!_referenceElement.hasAttribute(ARIA_DESCRIBED_BY)) {
+                _referenceElement.setAttribute(ARIA_DESCRIBED_BY, this.getId());
+            }
+        };
+        this.removeReferences = () => {
+            const { _referenceElement } = this;
+            if (!_referenceElement) {
+                return;
+            }
+            _referenceElement.removeAttribute(ARIA_DESCRIBED_BY);
+            _referenceElement.removeAttribute(POPOVER_REFERENCE);
         };
         this.hide = () => {
             this.open = false;
         };
-    }
-    interactionElementHandler() {
-        this.removeReferenceListener();
-        this.addReferenceListener();
     }
     offsetDistanceOffsetHandler() {
         this.reposition();
@@ -110,10 +95,9 @@ export class CalcitePopover {
         this.reposition();
     }
     referenceElementHandler() {
-        this.removeReferenceListener();
+        this.removeReferences();
         this._referenceElement = this.getReferenceElement();
-        this.addReferenceListener();
-        this.addReferenceAria();
+        this.addReferences();
         this.createPopper();
     }
     // --------------------------------------------------------------------------
@@ -123,11 +107,10 @@ export class CalcitePopover {
     // --------------------------------------------------------------------------
     componentDidLoad() {
         this.createPopper();
-        this.addReferenceListener();
-        this.addReferenceAria();
+        this.addReferences();
     }
     componentDidUnload() {
-        this.removeReferenceListener();
+        this.removeReferences();
         this.destroyPopper();
     }
     // --------------------------------------------------------------------------
@@ -143,7 +126,7 @@ export class CalcitePopover {
                 el,
                 modifiers,
                 placement,
-                popper
+                popper,
             })
             : this.createPopper();
     }
@@ -165,31 +148,31 @@ export class CalcitePopover {
             : referenceElement) || null);
     }
     getModifiers() {
-        const { arrowEl, flipPlacements, disableFlip, disablePointer, offsetDistance, offsetSkidding } = this;
+        const { arrowEl, flipPlacements, disableFlip, disablePointer, offsetDistance, offsetSkidding, } = this;
         const flipModifier = {
             name: "flip",
-            enabled: !disableFlip
+            enabled: !disableFlip,
         };
         if (flipPlacements) {
             flipModifier.options = {
-                fallbackPlacements: flipPlacements
+                fallbackPlacements: flipPlacements,
             };
         }
         const arrowModifier = {
             name: "arrow",
-            enabled: !disablePointer
+            enabled: !disablePointer,
         };
         if (arrowEl) {
             arrowModifier.options = {
-                element: arrowEl
+                element: arrowEl,
             };
         }
         const offsetModifier = {
             name: "offset",
             enabled: true,
             options: {
-                offset: [offsetSkidding, offsetDistance]
-            }
+                offset: [offsetSkidding, offsetDistance],
+            },
         };
         return [arrowModifier, flipModifier, offsetModifier];
     }
@@ -202,7 +185,7 @@ export class CalcitePopover {
             modifiers,
             open,
             placement,
-            referenceEl
+            referenceEl,
         });
     }
     destroyPopper() {
@@ -223,15 +206,15 @@ export class CalcitePopover {
     }
     renderCloseButton() {
         const { closeButton, textClose } = this;
-        return closeButton ? (h("button", { ref: closeButtonEl => (this.closeButtonEl = closeButtonEl), "aria-label": textClose, title: textClose, class: { [CSS.closeButton]: true }, onClick: this.hide },
-            h("calcite-icon", { icon: "x", scale: "s" }))) : null;
+        return closeButton ? (h("button", { ref: (closeButtonEl) => (this.closeButtonEl = closeButtonEl), "aria-label": textClose, title: textClose, class: { [CSS.closeButton]: true }, onClick: this.hide },
+            h("calcite-icon", { icon: "x", scale: "m" }))) : null;
     }
     render() {
         const { _referenceElement, open, disablePointer } = this;
         const displayed = _referenceElement && open;
-        const arrowNode = !disablePointer ? (h("div", { class: CSS.arrow, ref: arrowEl => (this.arrowEl = arrowEl) })) : null;
+        const arrowNode = !disablePointer ? (h("div", { class: CSS.arrow, ref: (arrowEl) => (this.arrowEl = arrowEl) })) : null;
         return (h(Host, { role: "dialog", class: {
-                [HOST_CSS.hydratedInvisible]: !displayed
+                [HOST_CSS.hydratedInvisible]: !displayed,
             }, "aria-hidden": !displayed ? "true" : "false", id: this.getId() },
             arrowNode,
             h("div", { class: CSS.container },
@@ -249,24 +232,6 @@ export class CalcitePopover {
         "$": ["calcite-popover.css"]
     }; }
     static get properties() { return {
-        "addClickHandle": {
-            "type": "boolean",
-            "mutable": false,
-            "complexType": {
-                "original": "boolean",
-                "resolved": "boolean",
-                "references": {}
-            },
-            "required": false,
-            "optional": false,
-            "docs": {
-                "tags": [],
-                "text": "Adds a click handler to the referenceElement to toggle open the Popover."
-            },
-            "attribute": "add-click-handle",
-            "reflect": true,
-            "defaultValue": "false"
-        },
         "closeButton": {
             "type": "boolean",
             "mutable": false,
@@ -472,8 +437,7 @@ export class CalcitePopover {
                 "text": "Select theme (light or dark)"
             },
             "attribute": "theme",
-            "reflect": true,
-            "defaultValue": "\"light\""
+            "reflect": true
         }
     }; }
     static get states() { return {
@@ -568,9 +532,6 @@ export class CalcitePopover {
     }; }
     static get elementRef() { return "el"; }
     static get watchers() { return [{
-            "propName": "addClickHandle",
-            "methodName": "interactionElementHandler"
-        }, {
             "propName": "offsetDistance",
             "methodName": "offsetDistanceOffsetHandler"
         }, {

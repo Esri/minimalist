@@ -53,8 +53,6 @@ define(["require", "exports", "esri/core/accessorSupport/decorators", "esri/core
                 Object.assign(this, e.data);
             }
         };
-        ConfigurationSettings.prototype.mixinConfig = function () {
-        };
         __decorate([
             decorators_1.property()
         ], ConfigurationSettings.prototype, "webmap", void 0);
@@ -102,7 +100,16 @@ define(["require", "exports", "esri/core/accessorSupport/decorators", "esri/core
         ], ConfigurationSettings.prototype, "popupPanel", void 0);
         __decorate([
             decorators_1.property()
-        ], ConfigurationSettings.prototype, "legend", void 0);
+        ], ConfigurationSettings.prototype, "popupHover", void 0);
+        __decorate([
+            decorators_1.property()
+        ], ConfigurationSettings.prototype, "legendPanel", void 0);
+        __decorate([
+            decorators_1.property()
+        ], ConfigurationSettings.prototype, "bookmarks", void 0);
+        __decorate([
+            decorators_1.property()
+        ], ConfigurationSettings.prototype, "bookmarksPosition", void 0);
         __decorate([
             decorators_1.property()
         ], ConfigurationSettings.prototype, "disableScroll", void 0);
@@ -155,7 +162,7 @@ define(["require", "exports", "esri/core/accessorSupport/decorators", "esri/core
             decorators_1.subclass("app.ConfigurationSettings")
         ], ConfigurationSettings);
         return ConfigurationSettings;
-    }(decorators_1.declared(Accessor_1.default)));
+    }((Accessor_1.default)));
     return ConfigurationSettings;
 });
 //# sourceMappingURL=ConfigurationSettings.js.map

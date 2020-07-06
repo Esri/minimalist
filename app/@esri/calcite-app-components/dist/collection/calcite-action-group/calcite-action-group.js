@@ -1,4 +1,4 @@
-import { Host, h } from "@stencil/core";
+import { Component, Host, h } from "@stencil/core";
 /**
  * @slot - A slot for adding a group of `calcite-action`s.
  */

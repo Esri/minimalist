@@ -1,5 +1,6 @@
-import { Host, h } from "@stencil/core";
+import { Component, Element, Event, Host, Prop, h } from "@stencil/core";
 import { CSS, ICONS, SLOTS, TEXT } from "./resources";
+import { getSlotted } from "../utils/dom";
 /**
  * @slot thumbnail - A slot for adding an HTML image element to the tip.
  */
@@ -18,10 +19,6 @@ export class CalciteTip {
          * Indicates whether the tip can be dismissed.
          */
         this.nonDismissible = false;
-        /**
-         * Alternate text for closing the tip.
-         */
-        this.textClose = TEXT.close;
         // --------------------------------------------------------------------------
         //
         //  Private Methods
@@ -38,9 +35,9 @@ export class CalciteTip {
     //
     // --------------------------------------------------------------------------
     renderHeader() {
-        const { nonDismissible, hideTip, textClose, heading } = this;
-        const dismissButtonNode = !nonDismissible ? (h("calcite-action", { text: textClose, onClick: hideTip, class: CSS.close },
-            h("calcite-icon", { scale: "s", icon: ICONS.close }))) : null;
+        const { nonDismissible, hideTip, intlClose, textClose, heading } = this;
+        const text = intlClose || textClose || TEXT.close;
+        const dismissButtonNode = !nonDismissible ? (h("calcite-action", { text: text, onClick: hideTip, class: CSS.close, icon: ICONS.close })) : null;
         const headingNode = heading ? h("h3", { class: CSS.heading }, heading) : null;
         return dismissButtonNode || headingNode ? (h("header", { class: CSS.header },
             headingNode,
@@ -48,7 +45,7 @@ export class CalciteTip {
     }
     renderImageFrame() {
         const { el } = this;
-        return el.querySelector(`[slot=${SLOTS.thumbnail}]`) ? (h("div", { class: CSS.imageFrame },
+        return getSlotted(el, SLOTS.thumbnail) ? (h("div", { class: CSS.imageFrame },
             h("slot", { name: SLOTS.thumbnail }))) : null;
     }
     renderInfoNode() {
@@ -145,6 +142,23 @@ export class CalciteTip {
             "attribute": "selected",
             "reflect": true
         },
+        "intlClose": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": true,
+            "docs": {
+                "tags": [],
+                "text": "Alternate text for closing the tip."
+            },
+            "attribute": "intl-close",
+            "reflect": false
+        },
         "textClose": {
             "type": "string",
             "mutable": false,
@@ -154,14 +168,16 @@ export class CalciteTip {
                 "references": {}
             },
             "required": false,
-            "optional": false,
+            "optional": true,
             "docs": {
-                "tags": [],
+                "tags": [{
+                        "text": "use \"intlClose\" instead.",
+                        "name": "deprecated"
+                    }],
                 "text": "Alternate text for closing the tip."
             },
             "attribute": "text-close",
-            "reflect": false,
-            "defaultValue": "TEXT.close"
+            "reflect": false
         },
         "theme": {
             "type": "string",

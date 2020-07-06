@@ -7,7 +7,8 @@ define({
     "popup": "Informacije"
   },
   "popupPanel": {
-    "noResultsMessage": "Kliknite na karto, da pregledate informacije o funkcionalnosti"
+    "noResultsMessage": "Kliknite na karto, da ogledate informacije geoobjekta",
+    "noResultsHoverMessage": "Pomaknite se čez lokacije na karti, da si ogledate informacije geoobjekta"
   },
   "close": "zapri",
   "toggle": "preklopi višino plošče"

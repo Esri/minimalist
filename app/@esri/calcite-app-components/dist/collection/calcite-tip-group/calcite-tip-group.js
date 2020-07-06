@@ -1,17 +1,5 @@
-import { h } from "@stencil/core";
-import { TEXT } from "../calcite-tip-manager/resources";
+import { Component, Prop, h } from "@stencil/core";
 export class CalciteTipGroup {
-    constructor() {
-        // --------------------------------------------------------------------------
-        //
-        //  Properties
-        //
-        // --------------------------------------------------------------------------
-        /**
-         * The title used for all nested tips.
-         */
-        this.textGroupTitle = TEXT.defaultGroupTitle;
-    }
     render() {
         return h("slot", null);
     }
@@ -33,14 +21,13 @@ export class CalciteTipGroup {
                 "references": {}
             },
             "required": false,
-            "optional": false,
+            "optional": true,
             "docs": {
                 "tags": [],
                 "text": "The title used for all nested tips."
             },
             "attribute": "text-group-title",
-            "reflect": true,
-            "defaultValue": "TEXT.defaultGroupTitle"
+            "reflect": false
         }
     }; }
 }

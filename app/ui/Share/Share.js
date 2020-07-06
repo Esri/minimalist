@@ -1,17 +1,13 @@
-/// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
-/// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
-/*
-  Copyright 2020 Esri
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-    http://www.apache.org/licenses/LICENSE-2.0
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.​
-*/
+// Copyright 2019 Esri
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//   http://www.apache.org/licenses/LICENSE-2.0
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.​
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -34,7 +30,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/core/tsSupport/decorateHelper", "dojo/i18n!./Share/nls/resources", "esri/core/watchUtils", "esri/widgets/support/widget", "esri/core/accessorSupport/decorators", "../icons/icons", "./utils/replace", "esri/widgets/Widget", "./Share/ShareViewModel", "esri/core/Handles"], function (require, exports, __extends, __decorate, i18n, watchUtils, widget_1, decorators_1, icons_1, replace_1, Widget, ShareViewModel, Handles) {
+define(["require", "exports", "dojo/i18n!./Share/nls/resources", "esri/core/watchUtils", "esri/widgets/support/widget", "esri/core/accessorSupport/decorators", "../icons/icons", "./utils/replace", "esri/widgets/Widget", "./Share/ShareViewModel", "esri/core/Handles"], function (require, exports, i18n, watchUtils, widget_1, decorators_1, icons_1, replace_1, Widget, ShareViewModel, Handles) {
     "use strict";
     icons_1 = __importDefault(icons_1);
     //----------------------------------
@@ -444,7 +440,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             decorators_1.subclass("Share")
         ], Share);
         return Share;
-    }(decorators_1.declared(Widget)));
+    }((Widget)));
     return Share;
 });
 //# sourceMappingURL=Share.js.map

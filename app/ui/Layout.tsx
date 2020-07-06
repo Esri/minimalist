@@ -1,28 +1,14 @@
-/// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
-/// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
-/*
-  Copyright 2020 Esri
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-    http://www.apache.org/licenses/LICENSE-2.0
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.​
-*/
+
 import { HeaderProps, LayoutProps, SharedTheme, State } from "../interfaces/interfaces";
 import {
   aliasOf,
-  declared,
   property,
   subclass
 } from "esri/core/accessorSupport/decorators";
 import { renderable, storeNode, tsx } from "esri/widgets/support/widget";
 
 import AppConfig from "../ConfigurationSettings";
-import ApplicationBase from 'ApplicationBase/ApplicationBase';
+import ApplicationBase from "../application-base-js/ApplicationBase";
 import Header from "./Header";
 import LayoutViewModel from "./Layout/LayoutViewModel";
 import Widget from "esri/widgets/Widget";
@@ -36,7 +22,7 @@ const CSS = {
 };
 
 @subclass("Layout")
-class Layout extends declared(Widget) {
+class Layout extends (Widget) {
   constructor(props: LayoutProps) {
     super(props);
   }
@@ -55,7 +41,7 @@ class Layout extends declared(Widget) {
     "applicationConfig.disableScroll",
     "applicationConfig.popupPanel",
     "applicationConfig.layoutType",
-    "applicationConfig.legend", "applicationConfig.details"])
+    "applicationConfig.legendPanel", "applicationConfig.details"])
   applicationConfig: AppConfig;
 
   @aliasOf("viewModel.applicationBase")

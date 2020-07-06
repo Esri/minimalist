@@ -7,7 +7,8 @@ define({
     "popup": "Informace"
   },
   "popupPanel": {
-    "noResultsMessage": "Kliknutím na mapu zobrazíte informace o prvku"
+    "noResultsMessage": "Kliknutím na mapu zobrazíte informace o prvku",
+    "noResultsHoverMessage": "Zastavením kurzoru na umístěních na mapě zobrazíte informace o prvku"
   },
   "close": "zavřít",
   "toggle": "přepnout výšku panelu"

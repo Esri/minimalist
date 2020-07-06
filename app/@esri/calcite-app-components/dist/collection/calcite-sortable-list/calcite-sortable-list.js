@@ -1,5 +1,5 @@
 import Sortable from "sortablejs";
-import { Host, h } from "@stencil/core";
+import { Component, Element, Event, Host, Listen, Prop, State, h } from "@stencil/core";
 /**
  * @slot - A slot for adding sortable items
  */
@@ -35,7 +35,7 @@ export class CalciteSortableList {
     //  Lifecycle
     //
     // --------------------------------------------------------------------------
-    componentDidLoad() {
+    connectedCallback() {
         this.items = Array.from(this.el.children);
         this.setUpDragAndDrop();
         this.beginObserving();

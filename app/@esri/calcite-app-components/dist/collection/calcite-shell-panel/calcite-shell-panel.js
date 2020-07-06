@@ -1,5 +1,5 @@
 import classnames from "classnames";
-import { Host, h } from "@stencil/core";
+import { Component, Event, Host, Prop, Watch, h } from "@stencil/core";
 import { CSS, SLOTS } from "./resources";
 import { getCalcitePosition } from "../utils/dom";
 /**
@@ -130,10 +130,10 @@ export class CalciteShellPanel {
             "optional": false,
             "docs": {
                 "tags": [{
-                        "text": "since 5.3 - use \"position\" instead.\nArrangement of the component.",
+                        "text": "use \"position\" instead.",
                         "name": "deprecated"
                     }],
-                "text": ""
+                "text": "Arrangement of the component."
             },
             "attribute": "layout",
             "reflect": true

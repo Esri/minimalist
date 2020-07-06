@@ -15,7 +15,3 @@ export const TEXT = {
     collapse: "Collapse",
     expand: "Expand"
 };
-export const ICONS = {
-    close: "chevron-up",
-    open: "chevron-down"
-};

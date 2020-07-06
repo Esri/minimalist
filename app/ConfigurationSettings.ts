@@ -1,25 +1,10 @@
-/*
-  Copyright 2020 Esri
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-    http://www.apache.org/licenses/LICENSE-2.0
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.​
-*/
 import {
-  declared,
   property,
   subclass
 } from "esri/core/accessorSupport/decorators";
 
-/// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
-/// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
 import Accessor from "esri/core/Accessor";
-import { ApplicationConfig } from "ApplicationBase/interfaces";
+import { ApplicationConfig } from "./application-base-js/interfaces";
 
 type UIPosition =
   | "top-left"
@@ -31,9 +16,9 @@ type UIPosition =
   | "bottom-leading"
   | "bottom-trailing";
 
-type PanelType = "details" | "legend" | "popup";
+type PanelType = "details" | "legendPanel" | "popupPanel";
 @subclass("app.ConfigurationSettings")
-class ConfigurationSettings extends declared(Accessor) {
+class ConfigurationSettings extends (Accessor) {
   @property()
   webmap: string;
 
@@ -79,10 +64,17 @@ class ConfigurationSettings extends declared(Accessor) {
   @property()
   popupPanel: boolean;
 
+  @property()
+  popupHover: boolean;
 
   @property()
-  legend: boolean;
+  legendPanel: boolean;
 
+  @property()
+  bookmarks: boolean;
+
+  @property()
+  bookmarksPosition: UIPosition;
 
   @property()
   disableScroll: boolean;
@@ -161,8 +153,6 @@ class ConfigurationSettings extends declared(Accessor) {
       Object.assign(this, e.data);
     }
   }
-  mixinConfig() {
 
-  }
 }
 export = ConfigurationSettings;

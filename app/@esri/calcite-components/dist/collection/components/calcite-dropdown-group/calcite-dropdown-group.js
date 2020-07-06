@@ -1,4 +1,4 @@
-import { h, Host } from "@stencil/core";
+import { Component, Element, Event, h, Host, Listen, Prop, } from "@stencil/core";
 import { guid } from "../../utils/guid";
 export class CalciteDropdownGroup {
     constructor() {
@@ -14,7 +14,8 @@ export class CalciteDropdownGroup {
         this.items = [];
         /** unique id for dropdown group */
         this.dropdownGroupId = `calcite-dropdown-group-${guid()}`;
-        this.sortItems = (items) => items.sort((a, b) => a.position - b.position).map(a => a.item);
+        this.titleEl = null;
+        this.sortItems = (items) => items.sort((a, b) => a.position - b.position).map((a) => a.item);
     }
     //--------------------------------------------------------------------------
     //
@@ -33,11 +34,12 @@ export class CalciteDropdownGroup {
         this.registerCalciteDropdownGroup.emit({
             items: this.items,
             position: this.groupPosition,
-            groupId: this.dropdownGroupId
+            groupId: this.dropdownGroupId,
+            titleEl: this.titleEl,
         });
     }
     render() {
-        const groupTitle = this.groupTitle ? (h("span", { class: "dropdown-title" }, this.groupTitle)) : null;
+        const groupTitle = this.groupTitle ? (h("span", { class: "dropdown-title", ref: (node) => (this.titleEl = node) }, this.groupTitle)) : null;
         return (h(Host, null,
             groupTitle,
             h("slot", null)));
@@ -50,17 +52,16 @@ export class CalciteDropdownGroup {
     registerCalciteDropdownItem(event) {
         const item = {
             item: event.target,
-            position: event.detail.position
+            position: event.detail.position,
         };
         this.items.push(item);
-        this.requestedDropdownItem = event.detail.requestedDropdownItem;
     }
     updateActiveItemOnChange(event) {
         this.requestedDropdownGroup = event.detail.requestedDropdownGroup;
         this.requestedDropdownItem = event.detail.requestedDropdownItem;
         this.calciteDropdownItemHasChanged.emit({
             requestedDropdownGroup: this.requestedDropdownGroup,
-            requestedDropdownItem: this.requestedDropdownItem
+            requestedDropdownItem: this.requestedDropdownItem,
         });
     }
     //--------------------------------------------------------------------------
@@ -142,9 +143,14 @@ export class CalciteDropdownGroup {
                 "text": ""
             },
             "complexType": {
-                "original": "any",
-                "resolved": "any",
-                "references": {}
+                "original": "GroupRegistration",
+                "resolved": "GroupRegistration",
+                "references": {
+                    "GroupRegistration": {
+                        "location": "import",
+                        "path": "../../interfaces/Dropdown"
+                    }
+                }
             }
         }]; }
     static get elementRef() { return "el"; }

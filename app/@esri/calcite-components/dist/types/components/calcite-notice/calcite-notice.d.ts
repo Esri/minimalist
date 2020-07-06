@@ -1,4 +1,4 @@
-import { EventEmitter } from "../../stencil.core";
+import { EventEmitter } from "../../stencil-public-runtime";
 /** Notices are intended to be used to present users with important-but-not-crucial contextual tips or copy. Because
  * notices are displayed inline, a common use case is displaying them on page-load to present users with short hints or contextual copy.
  * They are optionally dismissible - useful for keeping track of whether or not a user has dismissed the notice. You can also choose not
@@ -19,7 +19,7 @@ export declare class CalciteNotice {
     theme: "light" | "dark";
     /** specify the scale of the notice, defaults to m */
     scale: "s" | "m" | "l";
-    /** specify the scale of the button, defaults to m */
+    /** specify the width of the notice, defaults to m */
     width: "auto" | "half" | "full";
     /** Select theme (light or dark) */
     dismissible?: boolean;

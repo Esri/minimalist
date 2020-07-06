@@ -1,17 +1,16 @@
-import { EventEmitter } from "../../stencil.core";
+import { EventEmitter } from "../../stencil-public-runtime";
 import { TreeSelectionMode } from "../../interfaces/TreeSelectionMode";
 import { TreeItemSelectDetail } from "../../interfaces/TreeItemSelect";
 import { TreeSelectDetail } from "../../interfaces/TreeSelect";
 export declare class CalciteTree {
     el: HTMLElement;
-    /**
-     * Be sure to add a jsdoc comment describing your propery for the generated readme file.
-     * If your property should be hidden from documentation, you can use the `@internal` tag
-     */
+    /** Display indentation guide lines */
     lines: boolean;
-    root: boolean;
+    /** Select theme (light or dark) */
     theme: "light" | "dark";
-    size: "s" | "m";
+    /** Specify the scale of the tree, defaults to m */
+    scale: "s" | "m";
+    /** Customize how tree selection works (single, multi, children, multi-children) */
     selectionMode: TreeSelectionMode;
     componentWillUpdate(): void;
     componentWillRender(): void;
@@ -19,4 +18,6 @@ export declare class CalciteTree {
     onFocus(): void;
     onClick(e: CustomEvent<TreeItemSelectDetail>): void;
     calciteTreeSelect: EventEmitter<TreeSelectDetail>;
+    /** @internal If this tree is nested within another tree, set to false */
+    root: boolean;
 }

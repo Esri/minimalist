@@ -10,19 +10,21 @@ export const CSS = {
     menuContainer: "menu-container",
     menuButton: "menu-button",
     menu: "menu",
-    menuOpen: "menu--open"
-};
-export const TEXT = {
-    back: "Back",
-    open: "Open",
-    close: "Close"
+    menuOpen: "menu--open",
+    fabContainer: "fab-container"
 };
 export const SLOTS = {
     menuActions: "menu-actions",
+    fab: "fab",
     footerActions: "footer-actions"
 };
 export const ICONS = {
     menu: "ellipsis",
     backLeft: "chevron-left",
     backRight: "chevron-right"
+};
+export const TEXT = {
+    back: "Back",
+    open: "Open",
+    close: "Close"
 };

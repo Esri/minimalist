@@ -1,4 +1,4 @@
-import { EventEmitter } from "../../stencil.core";
+import { EventEmitter } from "../../stencil-public-runtime";
 import { TabChangeEventDetail } from "../../interfaces/TabChange";
 export declare class CalciteTab {
     el: HTMLElement;

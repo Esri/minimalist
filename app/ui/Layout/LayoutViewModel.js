@@ -67,7 +67,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/core/tsSupport/decorateHelper", "esri/core/Accessor", "esri/core/accessorSupport/decorators", "../Error", "ApplicationBase/support/itemUtils"], function (require, exports, __extends, __decorate, Accessor, decorators_1, Error_1, itemUtils_1) {
+define(["require", "exports", "esri/core/Accessor", "esri/core/accessorSupport/decorators", "../Error", "../../application-base-js/support/itemUtils"], function (require, exports, Accessor, decorators_1, Error_1, itemUtils_1) {
     "use strict";
     Error_1 = __importDefault(Error_1);
     var LayoutViewModel = /** @class */ (function (_super) {
@@ -93,7 +93,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
                     return ready && !loading ? "ready" : "loading";
                 }
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         LayoutViewModel.prototype.createMap = function (container) {
@@ -118,9 +118,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
                             mapContainer = {
                                 container: container
                             };
-                            components = this.applicationConfig.mapZoom
-                                ? ["attribution", "zoom"]
-                                : ["attribution"];
+                            components = ["attribution"];
                             viewProperties = __assign(__assign(__assign({}, defaultViewProperties), { ui: { components: components } }), mapContainer);
                             _b = this.applicationConfig, minScale = _b.minScale, maxScale = _b.maxScale;
                             if (minScale || maxScale) {
@@ -174,7 +172,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             decorators_1.subclass("esri.demo.LayoutViewModel")
         ], LayoutViewModel);
         return LayoutViewModel;
-    }(decorators_1.declared(Accessor)));
+    }((Accessor)));
     return LayoutViewModel;
 });
 //# sourceMappingURL=LayoutViewModel.js.map

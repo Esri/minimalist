@@ -1,20 +1,5 @@
-/// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
-/// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
-/*
-  Copyright 2020 Esri
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-    http://www.apache.org/licenses/LICENSE-2.0
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.​
-*/
 import { ActionProps, PanelProps } from "../interfaces/interfaces";
-
-import { aliasOf, declared, property, subclass } from "esri/core/accessorSupport/decorators";
+import { aliasOf, property, subclass } from "esri/core/accessorSupport/decorators";
 import { init, whenEqual } from "esri/core/watchUtils";
 import { renderable, tsx } from "esri/widgets/support/widget";
 
@@ -26,7 +11,7 @@ import icons from "./icons/icons";
 import i18n = require("dojo/i18n!../nls/resources");
 
 @subclass("MobilePanel")
-class MobilePanel extends declared(Widget) {
+class MobilePanel extends (Widget) {
     constructor(props: PanelProps) {
         super(props);
         this.viewModel = new PanelViewModel(props);
@@ -65,16 +50,15 @@ class MobilePanel extends declared(Widget) {
     render() {
         // always true on mobile
         const {
-            legend,
+            legendPanel,
             details,
-
             theme
         } = this.applicationConfig;
         const popupPanel = true;
         const blocks = this.renderBlocks();
         const actionBar = this.renderActionBar();
 
-        let hide = legend || details || popupPanel ? null : "hide";
+        let hide = legendPanel || details || popupPanel ? null : "hide";
         return (
             <div class={this.classes(["mobile-panel", hide, theme])}>
                 <div class="mobile-block-container">
@@ -95,6 +79,7 @@ class MobilePanel extends declared(Widget) {
                         checked={checked}
                         class="mobile"
                         value={name}
+                        title={label}
                         data-action-item={key}
                         text={name}
                         label={label}

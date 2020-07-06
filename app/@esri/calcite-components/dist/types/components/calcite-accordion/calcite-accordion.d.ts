@@ -1,4 +1,4 @@
-import { EventEmitter } from "../../stencil.core";
+import { EventEmitter } from "../../stencil-public-runtime";
 export declare class CalciteAccordion {
     el: HTMLElement;
     /** specify the theme of accordion, defaults to light */
@@ -9,7 +9,7 @@ export declare class CalciteAccordion {
     appearance: "default" | "minimal" | "transparent";
     /** specify the placement of the icon in the header, defaults to end */
     iconPosition: "start" | "end";
-    /** specify the placement of the icon in the header, defaults to end */
+    /** specify the type of the icon in the header, defaults to chevron */
     iconType: "chevron" | "caret" | "plus-minus";
     /** specify the selection mode - multi (allow any number of open items), single (allow one open item),
      * or single-persist (allow and require one open item), defaults to multi */

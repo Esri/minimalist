@@ -1,7 +1,6 @@
-import { h, Host } from "@stencil/core";
-import { UP, DOWN, TAB, ENTER, ESCAPE, HOME, END, SPACE } from "../../utils/keys";
-import { getElementDir } from "../../utils/dom";
-import { guid } from "../../utils/guid";
+import { Component, Element, h, Host, Listen, Prop } from "@stencil/core";
+import { focusElement } from "../../utils/dom";
+import { getKey } from "../../utils/key";
 export class CalciteDropdown {
     constructor() {
         //--------------------------------------------------------------------------
@@ -10,26 +9,27 @@ export class CalciteDropdown {
         //
         //--------------------------------------------------------------------------
         this.active = false;
-        /** specify the alignment of dropdrown, defaults to left */
-        this.alignment = "left";
-        /** specify the theme of the dropdown, defaults to light */
-        this.theme = "light";
-        /** specify the scale of dropdrown, defaults to m */
+        /** specify the alignment of dropdown, defaults to start */
+        this.alignment = "start";
+        /** specify the max items to display before showing the scroller, must be greater than 0 **/
+        this.maxItems = 0;
+        /** specify the scale of dropdown, defaults to m */
         this.scale = "m";
-        /** specify the width of dropdrown, defaults to m */
+        /** specify the width of dropdown, defaults to m */
         this.width = "m";
         /** specify whether the dropdown is opened by hover or click of the trigger element */
         this.type = "click";
+        //--------------------------------------------------------------------------
+        //
+        //  Private State/Props
+        //
+        //--------------------------------------------------------------------------
         /** created list of dropdown items */
         this.items = [];
+        /** specifies the item wrapper height; it is updated when maxItems is > 0  **/
+        this.maxScrollerHeight = 0;
         /** keep track of whether the groups have been sorted so we don't re-sort */
         this.sorted = false;
-        /** unique id for dropdown */
-        /** @internal */
-        this.dropdownId = `calcite-dropdown-${guid()}`;
-        this.sortItems = (items) => items
-            .sort((a, b) => a.position - b.position)
-            .concat.apply([], this.items.map(item => item.items));
     }
     //--------------------------------------------------------------------------
     //
@@ -38,12 +38,9 @@ export class CalciteDropdown {
     //--------------------------------------------------------------------------
     connectedCallback() {
         // validate props
-        let alignment = ["left", "right", "center"];
+        let alignment = ["start", "center", "end"];
         if (!alignment.includes(this.alignment))
-            this.alignment = "left";
-        let theme = ["light", "dark"];
-        if (!theme.includes(this.theme))
-            this.theme = "light";
+            this.alignment = "start";
         let scale = ["s", "m", "l"];
         if (!scale.includes(this.scale))
             this.scale = "m";
@@ -57,16 +54,19 @@ export class CalciteDropdown {
     componentDidLoad() {
         this.trigger = this.el.querySelector("[slot=dropdown-trigger]");
         if (!this.sorted) {
-            this.items = this.sortItems(this.items);
+            const groups = this.items.sort((a, b) => a.position - b.position);
+            this.maxScrollerHeight = this.getMaxScrollerHeight(groups);
+            this.items = groups.reduce((items, group) => [...items, ...group.items], []);
             this.sorted = true;
         }
     }
     render() {
-        const dir = getElementDir(this.el);
-        const expanded = this.active.toString();
-        return (h(Host, { dir: dir, active: this.active, id: this.dropdownId },
-            h("slot", { name: "dropdown-trigger", "aria-haspopup": "true", "aria-expanded": expanded }),
-            h("div", { class: "calcite-dropdown-wrapper", role: "menu" },
+        const { maxScrollerHeight } = this;
+        return (h(Host, null,
+            h("slot", { name: "dropdown-trigger", "aria-haspopup": "true", "aria-expanded": this.active.toString() }),
+            h("div", { class: "calcite-dropdown-wrapper", role: "menu", style: {
+                    maxHeight: maxScrollerHeight > 0 ? `${maxScrollerHeight}px` : "",
+                } },
                 h("slot", null))));
     }
     //--------------------------------------------------------------------------
@@ -76,39 +76,41 @@ export class CalciteDropdown {
     //--------------------------------------------------------------------------
     openDropdown(e) {
         if (e.target.getAttribute("slot") === "dropdown-trigger") {
-            this.openCalciteDropdown(e);
+            this.openCalciteDropdown();
             e.preventDefault();
+            e.stopPropagation();
         }
     }
     closeCalciteDropdownOnClick(e) {
-        if (this.active && e.target.offsetParent.id !== this.dropdownId)
+        if (this.active && e.target.offsetParent !== this.el)
             this.closeCalciteDropdown();
     }
     closeCalciteDropdownOnEvent() {
         this.closeCalciteDropdown();
     }
     keyDownHandler(e) {
+        const key = getKey(e.key);
         if (e.target.getAttribute("slot") === "dropdown-trigger") {
             if (e.target.nodeName !== "BUTTON" &&
                 e.target.nodeName !== "CALCITE-BUTTON") {
-                switch (e.keyCode) {
-                    case SPACE:
-                    case ENTER:
-                        this.openCalciteDropdown(e);
+                switch (key) {
+                    case " ":
+                    case "Enter":
+                        this.openCalciteDropdown();
                         break;
-                    case ESCAPE:
+                    case "Escape":
                         this.closeCalciteDropdown();
                         break;
                 }
             }
-            else if (e.keyCode === ESCAPE || (e.shiftKey && e.keyCode === TAB)) {
+            else if (key === "Escape" || (e.shiftKey && key === "Tab")) {
                 this.closeCalciteDropdown();
             }
         }
     }
-    mouseoverHandler(e) {
+    mouseoverHandler() {
         if (this.type === "hover") {
-            this.openCalciteDropdown(e);
+            this.openCalciteDropdown();
         }
     }
     mouseoffHandler() {
@@ -122,8 +124,8 @@ export class CalciteDropdown {
         let itemToFocus = e.target.nodeName !== "A" ? e.target : e.target.parentNode;
         let isFirstItem = this.itemIndex(itemToFocus) === 0;
         let isLastItem = this.itemIndex(itemToFocus) === this.items.length - 1;
-        switch (e.keyCode) {
-            case TAB:
+        switch (getKey(e.key)) {
+            case "Tab":
                 if (isLastItem && !e.shiftKey)
                     this.closeCalciteDropdown();
                 else if (isFirstItem && e.shiftKey)
@@ -133,39 +135,56 @@ export class CalciteDropdown {
                 else
                     this.focusNextItem(itemToFocus);
                 break;
-            case DOWN:
+            case "ArrowDown":
                 this.focusNextItem(itemToFocus);
                 break;
-            case UP:
+            case "ArrowUp":
                 this.focusPrevItem(itemToFocus);
                 break;
-            case HOME:
+            case "Home":
                 this.focusFirstItem();
                 break;
-            case END:
+            case "End":
                 this.focusLastItem();
                 break;
         }
     }
-    calciteDropdownMouseover(item) {
-        const itemToFocus = item.detail.target;
-        itemToFocus.focus();
-    }
-    registerCalciteDropdownGroup(e) {
-        const items = {
-            items: e.detail.items,
-            position: e.detail.position
-        };
-        this.items.push(items);
+    registerCalciteDropdownGroup({ detail: { items, position, titleEl }, }) {
+        this.items.push({
+            items: items,
+            position: position,
+            titleEl,
+        });
     }
     //--------------------------------------------------------------------------
     //
     //  Private Methods
     //
     //--------------------------------------------------------------------------
+    getMaxScrollerHeight(groups) {
+        const { maxItems } = this;
+        let itemsToProcess = 0;
+        let maxScrollerHeight = 0;
+        groups.forEach((group) => {
+            var _a;
+            if (maxItems > 0 && itemsToProcess < maxItems) {
+                maxScrollerHeight += ((_a = group === null || group === void 0 ? void 0 : group.titleEl) === null || _a === void 0 ? void 0 : _a.offsetHeight) || 0;
+                group.items.forEach((item) => {
+                    if (itemsToProcess < maxItems) {
+                        maxScrollerHeight += item.offsetHeight;
+                        itemsToProcess += 1;
+                    }
+                });
+            }
+        });
+        return maxScrollerHeight;
+    }
     closeCalciteDropdown() {
         this.active = false;
         this.trigger.focus();
+    }
+    focusOnFirstActiveOrFirstItem() {
+        this.getFocusableElement(this.items.find((item) => item.active) || this.items[0]);
     }
     focusFirstItem() {
         const firstItem = this.items[0];
@@ -189,16 +208,19 @@ export class CalciteDropdown {
         return this.items.indexOf(e);
     }
     getFocusableElement(item) {
-        const target = item && item.attributes.isLink
+        if (!item) {
+            return;
+        }
+        const target = item.attributes.isLink
             ? item.shadowRoot.querySelector("a")
             : item;
-        target.focus();
+        focusElement(target);
     }
-    openCalciteDropdown(e) {
+    openCalciteDropdown() {
         this.active = !this.active;
-        // if invoked by key, focus item, and accomodate animation time
-        if (!e.detail && e.type !== "mouseenter") {
-            setTimeout(() => this.focusFirstItem(), 50);
+        const animationDelayInMs = 50;
+        if (this.active) {
+            setTimeout(() => this.focusOnFirstActiveOrFirstItem(), animationDelayInMs);
         }
     }
     static get is() { return "calcite-dropdown"; }
@@ -232,19 +254,37 @@ export class CalciteDropdown {
             "type": "string",
             "mutable": true,
             "complexType": {
-                "original": "| \"left\"\n    | \"right\"\n    | \"center\"",
-                "resolved": "\"center\" | \"left\" | \"right\"",
+                "original": "| \"start\"\n    | \"center\"\n    | \"end\"",
+                "resolved": "\"center\" | \"end\" | \"start\"",
                 "references": {}
             },
             "required": false,
             "optional": false,
             "docs": {
                 "tags": [],
-                "text": "specify the alignment of dropdrown, defaults to left"
+                "text": "specify the alignment of dropdown, defaults to start"
             },
             "attribute": "alignment",
             "reflect": true,
-            "defaultValue": "\"left\""
+            "defaultValue": "\"start\""
+        },
+        "maxItems": {
+            "type": "number",
+            "mutable": false,
+            "complexType": {
+                "original": "number",
+                "resolved": "number",
+                "references": {}
+            },
+            "required": false,
+            "optional": false,
+            "docs": {
+                "tags": [],
+                "text": "specify the max items to display before showing the scroller, must be greater than 0 *"
+            },
+            "attribute": "max-items",
+            "reflect": false,
+            "defaultValue": "0"
         },
         "theme": {
             "type": "string",
@@ -261,8 +301,7 @@ export class CalciteDropdown {
                 "text": "specify the theme of the dropdown, defaults to light"
             },
             "attribute": "theme",
-            "reflect": true,
-            "defaultValue": "\"light\""
+            "reflect": true
         },
         "scale": {
             "type": "string",
@@ -276,7 +315,7 @@ export class CalciteDropdown {
             "optional": false,
             "docs": {
                 "tags": [],
-                "text": "specify the scale of dropdrown, defaults to m"
+                "text": "specify the scale of dropdown, defaults to m"
             },
             "attribute": "scale",
             "reflect": true,
@@ -294,7 +333,7 @@ export class CalciteDropdown {
             "optional": false,
             "docs": {
                 "tags": [],
-                "text": "specify the width of dropdrown, defaults to m"
+                "text": "specify the width of dropdown, defaults to m"
             },
             "attribute": "width",
             "reflect": true,
@@ -359,12 +398,6 @@ export class CalciteDropdown {
         }, {
             "name": "calciteDropdownItemKeyEvent",
             "method": "calciteDropdownItemKeyEvent",
-            "target": undefined,
-            "capture": false,
-            "passive": false
-        }, {
-            "name": "calciteDropdownItemMouseover",
-            "method": "calciteDropdownMouseover",
             "target": undefined,
             "capture": false,
             "passive": false

@@ -7,7 +7,8 @@ define({
     "popup": "Infos"
   },
   "popupPanel": {
-    "noResultsMessage": "Cliquez sur la carte pour afficher les informations sur l’entité"
+    "noResultsMessage": "Cliquez sur la carte pour afficher des informations sur l’entité",
+    "noResultsHoverMessage": "Survolez les localisations sur la carte avec la souris pour afficher des informations sur les entités"
   },
   "close": "fermer",
   "toggle": "changer la hauteur du volet"

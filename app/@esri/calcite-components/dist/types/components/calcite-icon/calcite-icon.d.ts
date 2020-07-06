@@ -3,10 +3,6 @@ import { Theme } from "../../interfaces/common";
 export declare class CalciteIcon {
     el: HTMLElement;
     /**
-     * When true, the icon will be filled.
-     */
-    filled: boolean;
-    /**
      * The name of the icon to display. The value of this property must match the icon name from https://esri.github.io/calcite-ui-icons/.
      */
     icon: string;

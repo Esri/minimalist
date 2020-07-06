@@ -1,5 +1,4 @@
-import { h, Host } from "@stencil/core";
-import { getElementDir } from "../../utils/dom";
+import { Component, Element, Event, h, Host, Prop, Method, } from "@stencil/core";
 import { CSS, TEXT } from "./resources";
 const maxPagesDisplayed = 5;
 export class CalcitePagination {
@@ -9,68 +8,73 @@ export class CalcitePagination {
         //  Public Properties
         //
         //--------------------------------------------------------------------------
-        /** Change between foreground colors or background colors for container background */
-        this.backgroundStyle = "foregroundColor";
-        /** starting selected index */
-        this.num = 1;
-        /** starting number of the pagination */
+        /** number of items per page */
+        this.num = 20;
+        /** index of item that should begin the page */
         this.start = 1;
+        /** total number of items */
+        this.total = 0;
         /** title of the next button */
         this.textLabelNext = TEXT.nextLabel;
         /** title of the previous button */
         this.textLabelPrevious = TEXT.previousLabel;
-        /** specify the theme of accordion, defaults to light */
-        this.theme = "light";
-        /** ending number of the pagination */
-        this.total = 2;
-        this.selectedIndex = this.num;
-        // --------------------------------------------------------------------------
-        //
-        //  Private Methods
-        //
-        // --------------------------------------------------------------------------
+        /** The scale of the pagination */
+        this.scale = "m";
         this.previousClicked = () => {
-            this.previousPage();
+            this.previousPage().then();
+            this.emitUpdate();
         };
         this.nextClicked = () => {
             this.nextPage();
+            this.emitUpdate();
         };
     }
-    numWatchHandler(newValue) {
-        this.selectedIndex = newValue;
-    }
-    selectedIndexWatchHandler() {
-        this.calcitePaginationUpdate.emit({
-            start: this.start,
-            total: this.total,
-            num: this.selectedIndex
-        });
+    //--------------------------------------------------------------------------
+    //
+    //  Lifecycle
+    //
+    //--------------------------------------------------------------------------
+    connectedCallback() {
+        // prop validations
+        let scale = ["s", "m", "l"];
+        if (!scale.includes(this.scale))
+            this.scale = "m";
     }
     // --------------------------------------------------------------------------
     //
     //  Public Methods
     //
     // --------------------------------------------------------------------------
-    /** When called, selected page will increment by 1.
-     */
+    /** Go to the next page of results */
     async nextPage() {
-        this.selectedIndex = Math.min(this.total, this.selectedIndex + 1);
+        this.start = Math.min(this.getLastStart(), this.start + this.num);
     }
-    /** When called, selected page will decrement by 1.
-     */
+    /** Go to the previous page of results */
     async previousPage() {
-        this.selectedIndex = Math.max(this.start, this.selectedIndex - 1);
+        this.start = Math.max(1, this.start - this.num);
     }
-    /** Set selected page to a specific page number. Will not go below start or above total.
-     */
-    async setPage(num) {
-        this.selectedIndex = Math.max(this.start, Math.min(this.total, num));
+    // --------------------------------------------------------------------------
+    //
+    //  Private Methods
+    //
+    // --------------------------------------------------------------------------
+    getLastStart() {
+        const { total, num } = this;
+        const lastStart = total % num === 0 ? total - num : Math.floor(total / num) * num;
+        return lastStart + 1;
     }
     showLeftEllipsis() {
-        return (this.selectedIndex - this.start) > 3;
+        return Math.floor(this.start / this.num) > 3;
     }
     showRightEllipsis() {
-        return (this.total - this.selectedIndex) > 3;
+        return (this.total - this.start) / this.num > 3;
+    }
+    emitUpdate() {
+        this.calcitePaginationUpdate.emit({
+            start: this.start,
+            total: this.total,
+            num: this.num,
+        });
     }
     //--------------------------------------------------------------------------
     //
@@ -78,64 +82,80 @@ export class CalcitePagination {
     //
     //--------------------------------------------------------------------------
     renderPages() {
-        let pages = [];
-        let currentNum;
+        let lastStart = this.getLastStart();
         let end;
-        if (this.total <= maxPagesDisplayed) {
-            currentNum = this.start + 1;
-            end = this.total - 1;
+        let nextStart;
+        // if we don't need ellipses render the whole set
+        if (this.total / this.num <= maxPagesDisplayed) {
+            nextStart = 1 + this.num;
+            end = lastStart - this.num;
         }
         else {
-            if (this.selectedIndex < maxPagesDisplayed) {
-                currentNum = this.start + 1;
-                end = this.start + 4;
+            // if we're within max pages of page 1
+            if (this.start / this.num < maxPagesDisplayed - 1) {
+                nextStart = 1 + this.num;
+                end = 1 + 4 * this.num;
             }
             else {
-                if (this.selectedIndex + 3 >= this.total) {
-                    currentNum = this.total - 4;
-                    end = this.total - 1;
+                // if we're within max pages of last page
+                if (this.start + 3 * this.num >= this.total) {
+                    nextStart = lastStart - 4 * this.num;
+                    end = lastStart - this.num;
                 }
                 else {
-                    currentNum = this.selectedIndex - 1;
-                    end = this.selectedIndex + 1;
+                    nextStart = this.start - this.num;
+                    end = this.start + this.num;
                 }
             }
         }
-        while (currentNum <= end) {
-            pages.push(currentNum);
-            currentNum++;
+        const pages = [];
+        while (nextStart <= end) {
+            pages.push(nextStart);
+            nextStart = nextStart + this.num;
         }
-        return pages.map(page => this.renderPage(page));
+        return pages.map((page) => this.renderPage(page));
     }
-    renderPage(num) {
-        return (h("a", { class: { [CSS.page]: true, [CSS.selected]: (num === this.selectedIndex) }, onClick: () => {
-                this.selectedIndex = num;
-            } }, num));
+    renderPage(start) {
+        const page = Math.floor(start / this.num) + 1;
+        return (h("button", { class: {
+                [CSS.page]: true,
+                [CSS.selected]: start === this.start,
+            }, onClick: () => {
+                this.start = start;
+                this.emitUpdate();
+            } }, page));
     }
-    renderLeftEllipsis() {
-        if (this.total > maxPagesDisplayed && this.showLeftEllipsis()) {
+    renderLeftEllipsis(iconScale) {
+        if (this.total / this.num > maxPagesDisplayed && this.showLeftEllipsis()) {
             return (h("span", { class: `${CSS.ellipsis} ${CSS.ellipsisStart}` },
-                h("calcite-icon", { scale: "s", icon: "ellipsis" })));
+                h("calcite-icon", { scale: iconScale, icon: "ellipsis" })));
         }
     }
-    renderRightEllipsis() {
-        if (this.total > maxPagesDisplayed && this.showRightEllipsis()) {
+    renderRightEllipsis(iconScale) {
+        if (this.total / this.num > maxPagesDisplayed && this.showRightEllipsis()) {
             return (h("span", { class: `${CSS.ellipsis} ${CSS.ellipsisEnd}` },
-                h("calcite-icon", { scale: "s", icon: "ellipsis" })));
+                h("calcite-icon", { scale: iconScale, icon: "ellipsis" })));
         }
     }
     render() {
-        const dir = getElementDir(this.el);
-        return (h(Host, { dir: dir, class: this.backgroundStyle },
-            h("a", { class: { [CSS.previous]: true, [CSS.disabled]: this.selectedIndex <= 1 }, title: this.textLabelPrevious, onClick: this.previousClicked },
-                h("calcite-icon", { scale: "s", icon: "chevronLeft" })),
-            this.renderPage(this.start),
-            this.renderLeftEllipsis(),
+        const { total, num, start } = this;
+        const iconScale = this.scale === "l" ? "m" : "s";
+        return (h(Host, null,
+            h("button", { class: {
+                    [CSS.previous]: true,
+                    [CSS.disabled]: start < num,
+                }, "aria-label": this.textLabelPrevious, onClick: this.previousClicked, disabled: start < num },
+                h("calcite-icon", { scale: iconScale, icon: "chevronLeft" })),
+            this.renderPage(1),
+            this.renderLeftEllipsis(iconScale),
             this.renderPages(),
-            this.renderRightEllipsis(),
-            this.renderPage(this.total),
-            h("a", { class: { [CSS.next]: true, [CSS.disabled]: this.selectedIndex >= this.total }, title: this.textLabelNext, onClick: this.nextClicked },
-                h("calcite-icon", { scale: "s", icon: "chevronRight" }))));
+            this.renderRightEllipsis(iconScale),
+            this.renderPage(this.getLastStart()),
+            h("button", { class: {
+                    [CSS.next]: true,
+                    [CSS.disabled]: start + num >= total,
+                }, "aria-label": this.textLabelNext, onClick: this.nextClicked, disabled: start + num >= total },
+                h("calcite-icon", { scale: iconScale, icon: "chevronRight" }))));
     }
     static get is() { return "calcite-pagination"; }
     static get encapsulation() { return "shadow"; }
@@ -146,24 +166,6 @@ export class CalcitePagination {
         "$": ["calcite-pagination.css"]
     }; }
     static get properties() { return {
-        "backgroundStyle": {
-            "type": "string",
-            "mutable": false,
-            "complexType": {
-                "original": "\"backgroundColor\" | \"foregroundColor\"",
-                "resolved": "\"backgroundColor\" | \"foregroundColor\"",
-                "references": {}
-            },
-            "required": false,
-            "optional": false,
-            "docs": {
-                "tags": [],
-                "text": "Change between foreground colors or background colors for container background"
-            },
-            "attribute": "background-style",
-            "reflect": true,
-            "defaultValue": "\"foregroundColor\""
-        },
         "num": {
             "type": "number",
             "mutable": false,
@@ -176,11 +178,11 @@ export class CalcitePagination {
             "optional": false,
             "docs": {
                 "tags": [],
-                "text": "starting selected index"
+                "text": "number of items per page"
             },
             "attribute": "num",
-            "reflect": true,
-            "defaultValue": "1"
+            "reflect": false,
+            "defaultValue": "20"
         },
         "start": {
             "type": "number",
@@ -194,11 +196,29 @@ export class CalcitePagination {
             "optional": false,
             "docs": {
                 "tags": [],
-                "text": "starting number of the pagination"
+                "text": "index of item that should begin the page"
             },
             "attribute": "start",
-            "reflect": true,
+            "reflect": false,
             "defaultValue": "1"
+        },
+        "total": {
+            "type": "number",
+            "mutable": false,
+            "complexType": {
+                "original": "number",
+                "resolved": "number",
+                "references": {}
+            },
+            "required": false,
+            "optional": false,
+            "docs": {
+                "tags": [],
+                "text": "total number of items"
+            },
+            "attribute": "total",
+            "reflect": false,
+            "defaultValue": "0"
         },
         "textLabelNext": {
             "type": "string",
@@ -215,7 +235,7 @@ export class CalcitePagination {
                 "text": "title of the next button"
             },
             "attribute": "text-label-next",
-            "reflect": true,
+            "reflect": false,
             "defaultValue": "TEXT.nextLabel"
         },
         "textLabelPrevious": {
@@ -233,7 +253,7 @@ export class CalcitePagination {
                 "text": "title of the previous button"
             },
             "attribute": "text-label-previous",
-            "reflect": true,
+            "reflect": false,
             "defaultValue": "TEXT.previousLabel"
         },
         "theme": {
@@ -251,30 +271,26 @@ export class CalcitePagination {
                 "text": "specify the theme of accordion, defaults to light"
             },
             "attribute": "theme",
-            "reflect": true,
-            "defaultValue": "\"light\""
+            "reflect": true
         },
-        "total": {
-            "type": "number",
+        "scale": {
+            "type": "string",
             "mutable": false,
             "complexType": {
-                "original": "number",
-                "resolved": "number",
+                "original": "\"s\" | \"m\" | \"l\"",
+                "resolved": "\"l\" | \"m\" | \"s\"",
                 "references": {}
             },
             "required": false,
             "optional": false,
             "docs": {
                 "tags": [],
-                "text": "ending number of the pagination"
+                "text": "The scale of the pagination"
             },
-            "attribute": "total",
+            "attribute": "scale",
             "reflect": true,
-            "defaultValue": "2"
+            "defaultValue": "\"m\""
         }
-    }; }
-    static get states() { return {
-        "selectedIndex": {}
     }; }
     static get events() { return [{
             "method": "calcitePaginationUpdate",
@@ -290,9 +306,13 @@ export class CalcitePagination {
                 "text": "Emitted whenever the selected page changes."
             },
             "complexType": {
-                "original": "any",
-                "resolved": "any",
-                "references": {}
+                "original": "CalcitePaginationDetail",
+                "resolved": "CalcitePaginationDetail",
+                "references": {
+                    "CalcitePaginationDetail": {
+                        "location": "local"
+                    }
+                }
             }
         }]; }
     static get methods() { return {
@@ -308,7 +328,7 @@ export class CalcitePagination {
                 "return": "Promise<void>"
             },
             "docs": {
-                "text": "When called, selected page will increment by 1.",
+                "text": "Go to the next page of results",
                 "tags": []
             }
         },
@@ -324,36 +344,10 @@ export class CalcitePagination {
                 "return": "Promise<void>"
             },
             "docs": {
-                "text": "When called, selected page will decrement by 1.",
-                "tags": []
-            }
-        },
-        "setPage": {
-            "complexType": {
-                "signature": "(num: number) => Promise<void>",
-                "parameters": [{
-                        "tags": [],
-                        "text": ""
-                    }],
-                "references": {
-                    "Promise": {
-                        "location": "global"
-                    }
-                },
-                "return": "Promise<void>"
-            },
-            "docs": {
-                "text": "Set selected page to a specific page number. Will not go below start or above total.",
+                "text": "Go to the previous page of results",
                 "tags": []
             }
         }
     }; }
     static get elementRef() { return "el"; }
-    static get watchers() { return [{
-            "propName": "num",
-            "methodName": "numWatchHandler"
-        }, {
-            "propName": "selectedIndex",
-            "methodName": "selectedIndexWatchHandler"
-        }]; }
 }

@@ -1,5 +1,13 @@
-/// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
-/// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
+// Copyright 2019 Esri
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//   http://www.apache.org/licenses/LICENSE-2.0
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.​
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -55,7 +63,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/core/tsSupport/decorateHelper", "esri/core/Accessor", "esri/core/Collection", "esri/core/Handles", "esri/core/watchUtils", "esri/core/accessorSupport/decorators", "esri/geometry/Point", "esri/geometry/projection", "esri/geometry/SpatialReference", "esri/request", "./ShareItem", "./ShareFeatures"], function (require, exports, __extends, __decorate, Accessor, Collection, Handles, watchUtils, decorators_1, Point, projection, SpatialReference, esriRequest, ShareItem, ShareFeatures) {
+define(["require", "exports", "esri/core/Accessor", "esri/core/Collection", "esri/core/Handles", "esri/core/watchUtils", "esri/core/accessorSupport/decorators", "esri/geometry/Point", "esri/geometry/projection", "esri/geometry/SpatialReference", "esri/request", "./ShareItem", "./ShareFeatures"], function (require, exports, Accessor, Collection, Handles, watchUtils, decorators_1, Point, projection, SpatialReference, esriRequest, ShareItem, ShareFeatures) {
     "use strict";
     //----------------------------------
     //
@@ -188,7 +196,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
                         ? "loading"
                         : "disabled";
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         Object.defineProperty(ShareViewModel.prototype, "embedCode", {
@@ -200,7 +208,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             get: function () {
                 return "<iframe src=\"" + this.shareUrl + "\" width=\"600\" height=\"450\" frameborder=\"0\" style=\"border:0\" allowfullscreen></iframe>";
             },
-            enumerable: true,
+            enumerable: false,
             configurable: true
         });
         ShareViewModel.prototype.initialize = function () {
@@ -461,7 +469,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             decorators_1.subclass("ShareViewModel")
         ], ShareViewModel);
         return ShareViewModel;
-    }(decorators_1.declared(Accessor)));
+    }((Accessor)));
     return ShareViewModel;
 });
 //# sourceMappingURL=ShareViewModel.js.map

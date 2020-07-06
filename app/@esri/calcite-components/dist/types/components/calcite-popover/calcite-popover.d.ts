@@ -1,17 +1,12 @@
-import { EventEmitter } from "../../stencil.core";
+import { EventEmitter } from "../../stencil-public-runtime";
 import { CalcitePlacement } from "../../utils/popper";
-import { Modifier, Placement, Instance as Popper } from "@popperjs/core";
+import { StrictModifiers, Placement, Instance as Popper } from "@popperjs/core";
 import { VNode } from "@stencil/core/internal/stencil-core";
 declare type FocusId = "close-button";
 /**
  * @slot image - A slot for adding an image. The image will appear above the other slot content.
  */
 export declare class CalcitePopover {
-    /**
-     * Adds a click handler to the referenceElement to toggle open the Popover.
-     */
-    addClickHandle: boolean;
-    interactionElementHandler(): void;
     /**
      * Display a close button within the Popover.
      */
@@ -62,6 +57,7 @@ export declare class CalcitePopover {
     popper: Popper;
     arrowEl: HTMLDivElement;
     closeButtonEl: HTMLButtonElement;
+    guid: string;
     componentDidLoad(): void;
     componentDidUnload(): void;
     /** Fired when the popover is closed */
@@ -72,12 +68,10 @@ export declare class CalcitePopover {
     setFocus(focusId?: FocusId): Promise<void>;
     toggle(): Promise<void>;
     getId: () => string;
-    addReferenceAria: () => void;
-    clickHandler: () => void;
-    addReferenceListener: () => void;
-    removeReferenceListener: () => void;
+    addReferences: () => void;
+    removeReferences: () => void;
     getReferenceElement(): HTMLElement;
-    getModifiers(): Partial<Modifier<any>>[];
+    getModifiers(): Partial<StrictModifiers>[];
     createPopper(): void;
     destroyPopper(): void;
     hide: () => void;

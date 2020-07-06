@@ -1,4 +1,4 @@
-import { h, Host } from "@stencil/core";
+import { Component, Prop, Element, Listen, Method, Event, h, State, Host } from "@stencil/core";
 import { guid } from "../../utils/guid";
 import { nodeListToArray } from "../../utils/dom";
 export class CalciteTab {

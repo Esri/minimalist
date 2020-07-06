@@ -1,7 +1,7 @@
-import { h, Host } from "@stencil/core";
-import { UP, DOWN, ENTER, HOME, END, SPACE } from "../../utils/keys";
+import { Component, Element, Event, h, Host, Listen, Prop, } from "@stencil/core";
 import { getElementDir, getElementProp } from "../../utils/dom";
 import { guid } from "../../utils/guid";
+import { getKey } from "../../utils/key";
 export class CalciteAccordionItem {
     constructor() {
         //--------------------------------------------------------------------------
@@ -21,8 +21,10 @@ export class CalciteAccordionItem {
         this.selectionMode = getElementProp(this.el, "selection-mode", "multi");
         /** what icon type does the parent accordion specify */
         this.iconType = getElementProp(this.el, "icon-type", "chevron");
+        /** the scale of the parent accordion */
+        this.scale = getElementProp(this.el, "scale", "m");
         /** handle clicks on item header */
-        this.itemHeaderClickHander = () => this.emitRequestedItem();
+        this.itemHeaderClickHandler = () => this.emitRequestedItem();
     }
     //--------------------------------------------------------------------------
     //
@@ -32,17 +34,20 @@ export class CalciteAccordionItem {
     componentDidLoad() {
         this.itemPosition = this.getItemPosition();
         this.registerCalciteAccordionItem.emit({
-            position: this.itemPosition
+            position: this.itemPosition,
         });
     }
     render() {
         const dir = getElementDir(this.el);
-        return (h(Host, { dir: dir, tabindex: "0", "aria-expanded": this.active.toString() },
-            h("div", { class: "accordion-item-header", onClick: this.itemHeaderClickHander },
+        const iconScale = this.scale !== "l" ? "s" : "m";
+        const iconEl = (h("calcite-icon", { class: "accordion-item-icon", icon: this.icon, scale: iconScale }));
+        return (h(Host, { tabindex: "0", "aria-expanded": this.active.toString(), dir: dir },
+            h("div", { class: "accordion-item-header", onClick: this.itemHeaderClickHandler },
+                this.icon ? iconEl : null,
                 h("div", { class: "accordion-item-header-text" },
                     h("span", { class: "accordion-item-title" }, this.itemTitle),
                     h("span", { class: "accordion-item-subtitle" }, this.itemSubtitle)),
-                h("calcite-icon", { class: "accordion-item-icon", icon: this.iconType === "chevron"
+                h("calcite-icon", { class: "accordion-item-expand-icon", icon: this.iconType === "chevron"
                         ? "chevronUp"
                         : this.iconType === "caret"
                             ? "caretUp"
@@ -59,16 +64,16 @@ export class CalciteAccordionItem {
     //--------------------------------------------------------------------------
     keyDownHandler(e) {
         if (e.target === this.el) {
-            switch (e.keyCode) {
-                case SPACE:
-                case ENTER:
+            switch (getKey(e.key)) {
+                case " ":
+                case "Enter":
                     this.emitRequestedItem();
                     e.preventDefault();
                     break;
-                case UP:
-                case DOWN:
-                case HOME:
-                case END:
+                case "ArrowUp":
+                case "ArrowDown":
+                case "Home":
+                case "End":
                     this.calciteAccordionItemKeyEvent.emit({ item: e });
                     e.preventDefault();
                     break;
@@ -103,7 +108,7 @@ export class CalciteAccordionItem {
     }
     emitRequestedItem() {
         this.calciteAccordionItemSelected.emit({
-            requestedAccordionItem: this.accordionItemId
+            requestedAccordionItem: this.accordionItemId,
         });
     }
     getItemPosition() {
@@ -170,6 +175,23 @@ export class CalciteAccordionItem {
             },
             "attribute": "item-subtitle",
             "reflect": false
+        },
+        "icon": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": true,
+            "docs": {
+                "tags": [],
+                "text": "optionally pass an icon to display - accepts Calcite UI icon names"
+            },
+            "attribute": "icon",
+            "reflect": true
         }
     }; }
     static get events() { return [{

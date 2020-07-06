@@ -18,9 +18,8 @@ const containerDivStyle = {
     zIndex: "1"
 };
 export const CalciteScrim = ({ loading, disabled }, children) => {
-    var _a;
     const renderScrim = disabled || loading;
-    const hasChildren = (_a = children) === null || _a === void 0 ? void 0 : _a.length;
+    const hasChildren = children === null || children === void 0 ? void 0 : children.length;
     const loaderNode = loading ? h("calcite-loader", { "is-active": true }) : null;
     const scrimContainerNode = h("div", { style: scrimDivStyle }, loaderNode);
     const childContainerNode = hasChildren ? h("div", { style: containerDivStyle }, children) : null;

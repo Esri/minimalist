@@ -1,6 +1,6 @@
-import { Host, h } from "@stencil/core";
+import { Component, Element, Event, Host, Method, Prop, Watch, h } from "@stencil/core";
 import { CSS, ICONS, SLOTS, TEXT } from "./resources";
-import { getElementDir } from "../utils/dom";
+import { getElementDir, getSlotted } from "../utils/dom";
 import classnames from "classnames";
 import { CSS_UTILITY } from "../utils/resources";
 import CalciteScrim from "../utils/CalciteScrim";
@@ -8,6 +8,7 @@ import CalciteScrim from "../utils/CalciteScrim";
  * @slot header-content - A slot for adding content in the center of the header.
  * @slot header-leading-content - A slot for adding a `calcite-action` on the leading side of the header.
  * @slot header-trailing-content - A slot for adding a `calcite-action` on the trailing side of the header.
+ * @slot fab - A slot for adding a `calcite-fab` (floating action button) to perform an action.
  * @slot footer - A slot for adding `calcite-button`s to the footer.
  * @slot - A slot for adding content to the panel.
  */
@@ -34,10 +35,6 @@ export class CalcitePanel {
          * When true, content is waiting to be loaded. This state shows a busy indicator.
          */
         this.loading = false;
-        /**
-         * 'Close' text string for the close button. The close button will only be shown when 'dismissible' is true.
-         */
-        this.textClose = TEXT.close;
         // --------------------------------------------------------------------------
         //
         //  Private Methods
@@ -50,6 +47,9 @@ export class CalcitePanel {
         };
         this.dismiss = () => {
             this.dismissed = true;
+        };
+        this.panelScrollHandler = () => {
+            this.calcitePanelScroll.emit();
         };
     }
     dismissedHandler() {
@@ -74,7 +74,7 @@ export class CalcitePanel {
     //
     // --------------------------------------------------------------------------
     renderHeaderLeadingContent() {
-        const hasLeadingContent = this.el.querySelector(`[slot=${SLOTS.headerLeadingContent}]`);
+        const hasLeadingContent = getSlotted(this.el, SLOTS.headerLeadingContent);
         return hasLeadingContent ? (h("div", { key: "header-leading-content", class: CSS.headerLeadingContent },
             h("slot", { name: SLOTS.headerLeadingContent }))) : null;
     }
@@ -83,9 +83,9 @@ export class CalcitePanel {
             h("slot", { name: SLOTS.headerContent })));
     }
     renderHeaderTrailingContent() {
-        const { dismiss, dismissible, textClose } = this;
-        const dismissibleNode = dismissible ? (h("calcite-action", { ref: (dismissButtonEl) => (this.dismissButtonEl = dismissButtonEl), "aria-label": textClose, text: textClose, onClick: dismiss },
-            h("calcite-icon", { scale: "s", icon: ICONS.close }))) : null;
+        const { dismiss, dismissible, intlClose, textClose } = this;
+        const text = intlClose || textClose || TEXT.close;
+        const dismissibleNode = dismissible ? (h("calcite-action", { ref: (dismissButtonEl) => (this.dismissButtonEl = dismissButtonEl), "aria-label": text, text: text, onClick: dismiss, icon: ICONS.close })) : null;
         const slotNode = h("slot", { name: SLOTS.headerTrailingContent });
         return (h("div", { key: "header-trailing-content", class: CSS.headerTrailingContent },
             slotNode,
@@ -103,13 +103,19 @@ export class CalcitePanel {
     }
     renderFooter() {
         const { el } = this;
-        const hasFooter = el.querySelector(`[slot=${SLOTS.footer}]`);
+        const hasFooter = getSlotted(el, SLOTS.footer);
         return hasFooter ? (h("footer", { class: CSS.footer },
             h("slot", { name: SLOTS.footer }))) : null;
     }
     renderContent() {
-        return (h("section", { class: CSS.contentContainer },
-            h("slot", null)));
+        return (h("section", { class: CSS.contentContainer, onScroll: this.panelScrollHandler },
+            h("slot", null),
+            this.renderFab()));
+    }
+    renderFab() {
+        const hasFab = getSlotted(this.el, SLOTS.fab);
+        return hasFab ? (h("div", { class: CSS.fabContainer },
+            h("slot", { name: SLOTS.fab }))) : null;
     }
     render() {
         const { dismissed, disabled, dismissible, el, loading, panelKeyUpHandler } = this;
@@ -226,6 +232,23 @@ export class CalcitePanel {
             "reflect": true,
             "defaultValue": "false"
         },
+        "intlClose": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": true,
+            "docs": {
+                "tags": [],
+                "text": "'Close' text string for the close button. The close button will only be shown when 'dismissible' is true."
+            },
+            "attribute": "intl-close",
+            "reflect": false
+        },
         "textClose": {
             "type": "string",
             "mutable": false,
@@ -235,14 +258,16 @@ export class CalcitePanel {
                 "references": {}
             },
             "required": false,
-            "optional": false,
+            "optional": true,
             "docs": {
-                "tags": [],
+                "tags": [{
+                        "text": "use \"intlClose\" instead.",
+                        "name": "deprecated"
+                    }],
                 "text": "'Close' text string for the close button. The close button will only be shown when 'dismissible' is true."
             },
             "attribute": "text-close",
-            "reflect": false,
-            "defaultValue": "TEXT.close"
+            "reflect": false
         },
         "theme": {
             "type": "string",
@@ -276,6 +301,21 @@ export class CalcitePanel {
             "docs": {
                 "tags": [],
                 "text": "Emitted when the close button has been clicked."
+            },
+            "complexType": {
+                "original": "any",
+                "resolved": "any",
+                "references": {}
+            }
+        }, {
+            "method": "calcitePanelScroll",
+            "name": "calcitePanelScroll",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "docs": {
+                "tags": [],
+                "text": "Emitted when the content has been scrolled."
             },
             "complexType": {
                 "original": "any",

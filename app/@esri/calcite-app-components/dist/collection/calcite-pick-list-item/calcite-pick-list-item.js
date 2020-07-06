@@ -1,6 +1,7 @@
-import { Host, h } from "@stencil/core";
-import { CSS, ICONS, SLOTS } from "./resources";
+import { Component, Element, Event, Host, Method, Prop, Watch, h } from "@stencil/core";
+import { CSS, ICONS, SLOTS, TEXT } from "./resources";
 import { ICON_TYPES } from "../calcite-pick-list/resources";
+import { getSlotted } from "../utils/dom";
 /**
  * @slot secondary-action - A slot intended for adding a `calcite-action` or `calcite-button` to the right side of the card.
  * This is placed at the end of the item.
@@ -15,6 +16,8 @@ export class CalcitePickListItem {
         /**
          * Compact removes the selection icon (radio or checkbox) and adds a compact attribute.
          * This allows for a more compact version of the `calcite-pick-list-item`.
+         *
+         * @deprecated This property will be removed in a future release.
          */
         this.compact = false;
         /**
@@ -30,9 +33,17 @@ export class CalcitePickListItem {
          */
         this.icon = null;
         /**
+         * Set this to true to display a remove action that removes the item from the list.
+         */
+        this.removable = false;
+        /**
          * Set this to true to pre-select an item. Toggles when an item is checked/unchecked.
          */
         this.selected = false;
+        /**
+         * The text for the remove item buttons. Only applicable if removable is true.
+         */
+        this.textRemove = TEXT.remove;
         // --------------------------------------------------------------------------
         //
         //  Private Methods
@@ -53,6 +64,9 @@ export class CalcitePickListItem {
                 }
                 this.selected = !this.selected;
             }
+        };
+        this.removeClickHandler = () => {
+            this.calciteListItemRemove.emit();
         };
     }
     metadataWatchHandler() {
@@ -91,6 +105,10 @@ export class CalcitePickListItem {
         }
         this.selected = typeof coerce === "boolean" ? coerce : !this.selected;
     }
+    async setFocus() {
+        var _a;
+        (_a = this.focusEl) === null || _a === void 0 ? void 0 : _a.focus();
+    }
     // --------------------------------------------------------------------------
     //
     //  Render Methods
@@ -101,25 +119,25 @@ export class CalcitePickListItem {
         if (!icon || compact) {
             return null;
         }
-        const iconName = icon === ICON_TYPES.square
-            ? selected
-                ? ICONS.checked
-                : ICONS.unchecked
-            : selected
-                ? ICONS.selected
-                : ICONS.unselected;
+        const iconName = icon === ICON_TYPES.circle ? ICONS.circle : selected ? ICONS.checked : ICONS.unchecked;
         return (h("span", { class: CSS.icon },
             h("calcite-icon", { scale: "s", icon: iconName })));
     }
+    renderRemoveAction() {
+        if (!this.removable) {
+            return null;
+        }
+        return (h("calcite-action", { scale: "s", class: CSS.remove, icon: ICONS.remove, text: this.textRemove, onClick: this.removeClickHandler }));
+    }
     renderSecondaryAction() {
-        const hasSecondaryAction = this.el.querySelector(`[slot=${SLOTS.secondaryAction}]`);
-        return hasSecondaryAction ? (h("div", { class: CSS.action },
-            h("slot", { name: SLOTS.secondaryAction }))) : null;
+        const hasSecondaryAction = getSlotted(this.el, SLOTS.secondaryAction);
+        return hasSecondaryAction || this.removable ? (h("div", { class: CSS.action },
+            h("slot", { name: SLOTS.secondaryAction }, this.renderRemoveAction()))) : null;
     }
     render() {
         const description = this.textDescription && !this.compact ? (h("span", { class: CSS.description }, this.textDescription)) : null;
         return (h(Host, { role: "menuitemcheckbox", "aria-checked": this.selected.toString() },
-            h("label", { class: CSS.label, onClick: this.pickListClickHandler, onKeyDown: this.pickListKeyDownHandler, tabIndex: 0, "aria-label": this.textLabel },
+            h("label", { class: CSS.label, onClick: this.pickListClickHandler, onKeyDown: this.pickListKeyDownHandler, tabIndex: 0, ref: (focusEl) => (this.focusEl = focusEl), "aria-label": this.textLabel },
                 this.renderIcon(),
                 h("div", { class: CSS.textContainer },
                     h("span", { class: CSS.title }, this.textLabel),
@@ -146,7 +164,10 @@ export class CalcitePickListItem {
             "required": false,
             "optional": true,
             "docs": {
-                "tags": [],
+                "tags": [{
+                        "text": "This property will be removed in a future release.",
+                        "name": "deprecated"
+                    }],
                 "text": "Compact removes the selection icon (radio or checkbox) and adds a compact attribute.\nThis allows for a more compact version of the `calcite-pick-list-item`."
             },
             "attribute": "compact",
@@ -227,6 +248,24 @@ export class CalcitePickListItem {
                 "text": "Used to provide additional metadata to an item, primarily used when the parent list has a filter."
             }
         },
+        "removable": {
+            "type": "boolean",
+            "mutable": false,
+            "complexType": {
+                "original": "boolean",
+                "resolved": "boolean",
+                "references": {}
+            },
+            "required": false,
+            "optional": true,
+            "docs": {
+                "tags": [],
+                "text": "Set this to true to display a remove action that removes the item from the list."
+            },
+            "attribute": "removable",
+            "reflect": true,
+            "defaultValue": "false"
+        },
         "selected": {
             "type": "boolean",
             "mutable": true,
@@ -279,6 +318,24 @@ export class CalcitePickListItem {
             "attribute": "text-label",
             "reflect": true
         },
+        "textRemove": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": false,
+            "docs": {
+                "tags": [],
+                "text": "The text for the remove item buttons. Only applicable if removable is true."
+            },
+            "attribute": "text-remove",
+            "reflect": true,
+            "defaultValue": "TEXT.remove"
+        },
         "value": {
             "type": "string",
             "mutable": false,
@@ -311,8 +368,30 @@ export class CalcitePickListItem {
                 "text": "Emitted whenever the item is selected or unselected."
             },
             "complexType": {
-                "original": "any",
-                "resolved": "any",
+                "original": "{\n    item: HTMLCalcitePickListItemElement;\n    value: string;\n    selected: boolean;\n    shiftPressed: boolean;\n  }",
+                "resolved": "{ item: HTMLCalcitePickListItemElement; value: string; selected: boolean; shiftPressed: boolean; }",
+                "references": {
+                    "HTMLCalcitePickListItemElement": {
+                        "location": "global"
+                    }
+                }
+            }
+        }, {
+            "method": "calciteListItemRemove",
+            "name": "calciteListItemRemove",
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "docs": {
+                "tags": [{
+                        "text": "calciteListItemRemove",
+                        "name": "event"
+                    }],
+                "text": "Emitted whenever the remove button is pressed."
+            },
+            "complexType": {
+                "original": "void",
+                "resolved": "void",
                 "references": {}
             }
         }, {
@@ -332,8 +411,8 @@ export class CalcitePickListItem {
                 "text": "Emitted whenever the the item's textLabel, textDescription, value or metadata properties are modified."
             },
             "complexType": {
-                "original": "any",
-                "resolved": "any",
+                "original": "void",
+                "resolved": "void",
                 "references": {}
             }
         }, {
@@ -353,8 +432,8 @@ export class CalcitePickListItem {
                 "text": "Emitted whenever the the item's value property is modified."
             },
             "complexType": {
-                "original": "any",
-                "resolved": "any",
+                "original": "{ oldValue: string; newValue: string }",
+                "resolved": "{ oldValue: string; newValue: string; }",
                 "references": {}
             }
         }]; }
@@ -375,6 +454,22 @@ export class CalcitePickListItem {
             },
             "docs": {
                 "text": "Used to toggle the selection state. By default this won't trigger an event.\nThe first argument allows the value to be coerced, rather than swapping values.",
+                "tags": []
+            }
+        },
+        "setFocus": {
+            "complexType": {
+                "signature": "() => Promise<void>",
+                "parameters": [],
+                "references": {
+                    "Promise": {
+                        "location": "global"
+                    }
+                },
+                "return": "Promise<void>"
+            },
+            "docs": {
+                "text": "",
                 "tags": []
             }
         }

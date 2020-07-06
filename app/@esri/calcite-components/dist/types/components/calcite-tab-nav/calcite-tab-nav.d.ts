@@ -1,4 +1,4 @@
-import { EventEmitter } from "../../stencil.core";
+import { EventEmitter } from "../../stencil-public-runtime";
 import { TabChangeEventDetail } from "../../interfaces/TabChange";
 export declare class CalciteTabNav {
     el: any;
@@ -10,12 +10,15 @@ export declare class CalciteTabNav {
      * Pass the same string to multiple tab navs to keep them all in sync if one changes
      */
     syncId: string;
+    /** @internal Parent tabs component layout value */
+    layout: "center" | "inline";
     /**
      * @internal
      */
     selectedTab: number | string;
     selectedTabChanged(): void;
     componentWillLoad(): void;
+    componentWillRender(): void;
     render(): any;
     componentDidRender(): void;
     /**

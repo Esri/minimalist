@@ -1,4 +1,4 @@
-import { EventEmitter } from "../stencil-public-runtime";
+import { EventEmitter, VNode } from "../stencil-public-runtime";
 export declare class CalciteHandle {
     /**
      * @internal - stores the activated state of the drag handle.
@@ -18,5 +18,5 @@ export declare class CalciteHandle {
     setFocus(): Promise<void>;
     handleKeyDown: (event: KeyboardEvent) => void;
     handleBlur: () => void;
-    render(): any;
+    render(): VNode;
 }

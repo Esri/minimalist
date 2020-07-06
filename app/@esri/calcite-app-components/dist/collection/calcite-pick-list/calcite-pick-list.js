@@ -1,8 +1,7 @@
-import { h } from "@stencil/core";
+import { Component, Element, Event, Listen, Method, Prop, State, h } from "@stencil/core";
 import { ICON_TYPES, TEXT } from "./resources";
-import { sharedListMethods } from "./shared-list-logic";
+import { calciteListItemChangeHandler, calciteListItemValueChangeHandler, cleanUpObserver, deselectSiblingItems, getItemData, handleFilter, initialize, initializeObserver, mutationObserverCallback, selectSiblings, setUpItems, keyDownHandler, setFocus } from "./shared-list-logic";
 import List from "./shared-list-render";
-const { mutationObserverCallback, initialize, initializeObserver, cleanUpObserver, calciteListItemChangeHandler, calciteListItemValueChangeHandler, setUpItems, deselectSiblingItems, selectSiblings, handleFilter, getItemData } = sharedListMethods;
 /**
  * @slot - A slot for adding `calcite-pick-list-item` elements or `calcite-pick-list-group` elements. Items are displayed as a vertical list.
  * @slot menu-actions - A slot for adding a button + menu combo for performing actions like sorting.
@@ -17,6 +16,8 @@ export class CalcitePickList {
         /**
          * Compact removes the selection icon (radio or checkbox) and adds a compact attribute.
          * This allows for a more compact version of the `calcite-pick-list-item`.
+         *
+         * @deprecated This property will be removed in a future release.
          */
         this.compact = false;
         /**
@@ -55,6 +56,7 @@ export class CalcitePickList {
         this.selectSiblings = selectSiblings.bind(this);
         this.handleFilter = handleFilter.bind(this);
         this.getItemData = getItemData.bind(this);
+        this.keyDownHandler = keyDownHandler.bind(this);
     }
     // --------------------------------------------------------------------------
     //
@@ -63,8 +65,6 @@ export class CalcitePickList {
     // --------------------------------------------------------------------------
     connectedCallback() {
         initialize.call(this);
-    }
-    componentDidLoad() {
         initializeObserver.call(this);
     }
     componentDidUnload() {
@@ -101,20 +101,19 @@ export class CalcitePickList {
     async getSelectedItems() {
         return this.selectedValues;
     }
+    async setFocus() {
+        return setFocus.call(this);
+    }
     // --------------------------------------------------------------------------
     //
     //  Render Methods
     //
     // --------------------------------------------------------------------------
     getIconType() {
-        let type = ICON_TYPES.circle;
-        if (this.multiple) {
-            type = ICON_TYPES.square;
-        }
-        return type;
+        return this.multiple ? ICON_TYPES.square : ICON_TYPES.circle;
     }
     render() {
-        return h(List, { props: this });
+        return h(List, { props: this, onKeyDown: this.keyDownHandler });
     }
     static get is() { return "calcite-pick-list"; }
     static get encapsulation() { return "shadow"; }
@@ -136,7 +135,10 @@ export class CalcitePickList {
             "required": false,
             "optional": false,
             "docs": {
-                "tags": [],
+                "tags": [{
+                        "text": "This property will be removed in a future release.",
+                        "name": "deprecated"
+                    }],
                 "text": "Compact removes the selection icon (radio or checkbox) and adds a compact attribute.\nThis allows for a more compact version of the `calcite-pick-list-item`."
             },
             "attribute": "compact",
@@ -224,7 +226,7 @@ export class CalcitePickList {
                 "references": {}
             },
             "required": false,
-            "optional": true,
+            "optional": false,
             "docs": {
                 "tags": [],
                 "text": "Placeholder text for the filter input field."
@@ -271,6 +273,22 @@ export class CalcitePickList {
                     }
                 },
                 "return": "Promise<Map<string, object>>"
+            },
+            "docs": {
+                "text": "",
+                "tags": []
+            }
+        },
+        "setFocus": {
+            "complexType": {
+                "signature": "() => Promise<void>",
+                "parameters": [],
+                "references": {
+                    "Promise": {
+                        "location": "global"
+                    }
+                },
+                "return": "Promise<void>"
             },
             "docs": {
                 "text": "",

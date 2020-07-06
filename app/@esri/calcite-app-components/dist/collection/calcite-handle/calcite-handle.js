@@ -1,4 +1,4 @@
-import { h } from "@stencil/core";
+import { Component, Element, Event, Method, Prop, h } from "@stencil/core";
 import { CSS, ICONS } from "./resources";
 export class CalciteHandle {
     constructor() {
@@ -55,7 +55,9 @@ export class CalciteHandle {
     render() {
         return (
         // Needs to be a span because of https://github.com/SortableJS/Sortable/issues/1486
-        h("span", { role: "button", tabindex: "0", "aria-pressed": this.activated.toString(), class: { [CSS.handle]: true, [CSS.handleActivated]: this.activated }, onKeyDown: this.handleKeyDown, onBlur: this.handleBlur, title: this.textTitle, ref: (el) => (this.handleButton = el) },
+        h("span", { role: "button", tabindex: "0", "aria-pressed": this.activated.toString(), class: { [CSS.handle]: true, [CSS.handleActivated]: this.activated }, onKeyDown: this.handleKeyDown, onBlur: this.handleBlur, title: this.textTitle, ref: (el) => {
+                this.handleButton = el;
+            } },
             h("calcite-icon", { scale: "s", icon: ICONS.drag })));
     }
     static get is() { return "calcite-handle"; }

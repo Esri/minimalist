@@ -1,3 +1,4 @@
+import { VNode } from "../stencil-public-runtime";
 /**
  * @slot - A slot for adding `calcite-pick-list-item` elements.
  */
@@ -7,5 +8,5 @@ export declare class CalcitePickListGroup {
      */
     textGroupTitle: string;
     el: HTMLElement;
-    render(): any;
+    render(): VNode;
 }

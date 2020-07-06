@@ -2,62 +2,33 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-const core = require('./core-67746296.js');
-const dom = require('./dom-801460f3.js');
-const guid = require('./guid-1986fc89.js');
+const index = require('./index-8fc102d1.js');
+const guid = require('./guid-0a2e4f7f.js');
+
+const calciteLoaderCss = "@charset \"UTF-8\";:host([hidden]){display:none}:host{position:relative;display:none;padding-bottom:4rem;padding-top:4rem;margin-left:auto;margin-right:auto;min-height:56px;stroke:var(--calcite-ui-blue-1);stroke-width:3;fill:none;opacity:1;-webkit-transform:scale(1, 1);transform:scale(1, 1);animation:loader-color-shift 6s alternate-reverse infinite linear}:host([no-padding]){padding-top:0;padding-bottom:0}:host([is-active]){display:block}.loader__text{display:block;margin-top:5rem;text-align:center;font-size:0.875rem;line-height:1.5}.loader__percentage{display:block;width:56px;position:absolute;top:4rem;left:50%;margin-left:-28px;margin-top:28px;text-align:center;font-size:0.875rem;color:var(--calcite-ui-text-1);line-height:0.25;-webkit-transform:scale(1, 1);transform:scale(1, 1)}.loader__svgs{width:56px;height:56px;position:absolute;top:4rem;left:50%;margin-left:-28px;overflow:visible;opacity:1;-webkit-transform:scale(1, 1);transform:scale(1, 1)}.loader__svg{width:56px;height:56px;position:absolute;top:0;left:0;overflow:visible;-webkit-transform-origin:center;transform-origin:center;-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite;-webkit-animation-timing-function:linear;animation-timing-function:linear;-webkit-animation-name:loader-clockwise;animation-name:loader-clockwise}@supports (display: grid){.loader__svg--1{-webkit-animation-name:loader-offset-1;animation-name:loader-offset-1}.loader__svg--2{-webkit-animation-name:loader-offset-2;animation-name:loader-offset-2}.loader__svg--3{-webkit-animation-name:loader-offset-3;animation-name:loader-offset-3}}:host([type=determinate]){stroke:var(--calcite-ui-border-3);-webkit-animation:none;animation:none}:host([type=determinate]) .loader__svg--3{stroke:var(--calcite-ui-blue-1);stroke-dasharray:157.0795;-webkit-transform:rotate(-90deg);transform:rotate(-90deg);-webkit-animation:none;animation:none;-webkit-transition:all 100ms linear;transition:all 100ms linear}:host([inline]){stroke:currentColor;stroke-width:2;-webkit-animation:none;animation:none;margin:0;padding-bottom:0;padding-top:0;position:relative;height:20px;min-height:20px;width:20px;margin-right:10px;vertical-align:-4px}:host([inline][dir=rtl]){margin-left:10px;margin-right:0}:host([is-active][inline]){display:inline-block}:host([inline]) .loader__svgs{top:0;left:0;margin:0;width:20px;height:20px}:host([inline]) .loader__svg{width:20px;height:20px}:host([complete]){opacity:0;-webkit-transform:scale(0.75, 0.75);transform:scale(0.75, 0.75);-webkit-transform-origin:center;transform-origin:center;-webkit-transition:opacity 200ms linear 1000ms, -webkit-transform 200ms linear 1000ms;transition:opacity 200ms linear 1000ms, -webkit-transform 200ms linear 1000ms;transition:opacity 200ms linear 1000ms, transform 200ms linear 1000ms;transition:opacity 200ms linear 1000ms, transform 200ms linear 1000ms, -webkit-transform 200ms linear 1000ms}:host([complete]) .loader__svgs{opacity:0;-webkit-transform:scale(0.75, 0.75);transform:scale(0.75, 0.75);-webkit-transform-origin:center;transform-origin:center;-webkit-transition:opacity 180ms linear 800ms, -webkit-transform 180ms linear 800ms;transition:opacity 180ms linear 800ms, -webkit-transform 180ms linear 800ms;transition:opacity 180ms linear 800ms, transform 180ms linear 800ms;transition:opacity 180ms linear 800ms, transform 180ms linear 800ms, -webkit-transform 180ms linear 800ms}:host([complete]) .loader__percentage{color:var(--calcite-ui-blue-1);-webkit-transform:scale(1.075, 1.075);transform:scale(1.075, 1.075);-webkit-transform-origin:center;transform-origin:center;-webkit-transition:color 200ms linear, -webkit-transform 200ms linear;transition:color 200ms linear, -webkit-transform 200ms linear;transition:color 200ms linear, transform 200ms linear;transition:color 200ms linear, transform 200ms linear, -webkit-transform 200ms linear}.loader__svg--1{stroke-dasharray:28.0499107143% 140.2495535714%;-webkit-animation-duration:0.72s;animation-duration:0.72s}@-webkit-keyframes loader-offset-1{0%{stroke-dasharray:28.0499107143% 252.4491964286%;stroke-dashoffset:0}50%{stroke-dasharray:140.2495535714% 140.2495535714%;stroke-dashoffset:-84.1497321429%}100%{stroke-dasharray:28.0499107143% 252.4491964286%;stroke-dashoffset:-280.4991071429%}}@keyframes loader-offset-1{0%{stroke-dasharray:28.0499107143% 252.4491964286%;stroke-dashoffset:0}50%{stroke-dasharray:140.2495535714% 140.2495535714%;stroke-dashoffset:-84.1497321429%}100%{stroke-dasharray:28.0499107143% 252.4491964286%;stroke-dashoffset:-280.4991071429%}}.loader__svg--2{stroke-dasharray:56.0998214286% 140.2495535714%;-webkit-animation-duration:0.96s;animation-duration:0.96s}@-webkit-keyframes loader-offset-2{0%{stroke-dasharray:56.0998214286% 224.3992857143%;stroke-dashoffset:0}50%{stroke-dasharray:140.2495535714% 140.2495535714%;stroke-dashoffset:-98.1746875%}100%{stroke-dasharray:56.0998214286% 224.3992857143%;stroke-dashoffset:-280.4991071429%}}@keyframes loader-offset-2{0%{stroke-dasharray:56.0998214286% 224.3992857143%;stroke-dashoffset:0}50%{stroke-dasharray:140.2495535714% 140.2495535714%;stroke-dashoffset:-98.1746875%}100%{stroke-dasharray:56.0998214286% 224.3992857143%;stroke-dashoffset:-280.4991071429%}}.loader__svg--3{stroke-dasharray:14.0249553571% 140.2495535714%;-webkit-animation-duration:1.16s;animation-duration:1.16s}@-webkit-keyframes loader-offset-3{0%{stroke-dasharray:14.0249553571% 266.4741517857%;stroke-dashoffset:0}50%{stroke-dasharray:140.2495535714% 140.2495535714%;stroke-dashoffset:-77.1372544643%}100%{stroke-dasharray:14.0249553571% 266.4741517857%;stroke-dashoffset:-280.4991071429%}}@keyframes loader-offset-3{0%{stroke-dasharray:14.0249553571% 266.4741517857%;stroke-dashoffset:0}50%{stroke-dasharray:140.2495535714% 140.2495535714%;stroke-dashoffset:-77.1372544643%}100%{stroke-dasharray:14.0249553571% 266.4741517857%;stroke-dashoffset:-280.4991071429%}}@-webkit-keyframes loader-color-shift{0%{stroke:var(--calcite-ui-blue-1)}33%{stroke:var(--calcite-ui-blue-3)}66%{stroke:var(--calcite-ui-blue-2)}100%{stroke:var(--calcite-ui-blue-1)}}@keyframes loader-color-shift{0%{stroke:var(--calcite-ui-blue-1)}33%{stroke:var(--calcite-ui-blue-3)}66%{stroke:var(--calcite-ui-blue-2)}100%{stroke:var(--calcite-ui-blue-1)}}@-webkit-keyframes loader-clockwise{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes loader-clockwise{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}";
 
 const CalciteLoader = class {
     constructor(hostRef) {
-        core.registerInstance(this, hostRef);
+        index.registerInstance(this, hostRef);
         //--------------------------------------------------------------------------
         //
         //  Properties
         //
         //--------------------------------------------------------------------------
-        /**
-         * Show the loader
-         */
+        /** Show the loader */
         this.isActive = false;
-        /**
-         * Inline loaders are smaller and will appear to the left of the text
-         */
+        /** Inline loaders are smaller and will appear to the left of the text */
         this.inline = false;
-        /**
-         * Use indeterminate if finding actual progress value is impossible
-         */
-        this.type = "indeterminate";
-        /**
-         * Percent complete of 100, only valid for determinate indicators
-         */
+        /** Percent complete of 100, only valid for determinate indicators */
         this.value = 0;
-        /**
-         * Text which should appear under the loading indicator (optional)
-         */
+        /** Text which should appear under the loading indicator (optional) */
         this.text = "";
         //--------------------------------------------------------------------------
         //
         //  Private State/Props
         //
         //--------------------------------------------------------------------------
-        /**
-         * @internal
-         */
-        this.loaderBarOffsets = [0, 0, 0];
-        /**
-         * @internal
-         */
-        this.loaderBarRates = [1, 2.25, 3.5];
-        /**
-         * @internal
-         */
-        this.isEdge = false;
-        /**
-         * @internal
-         */
-        this.animationID = null;
-        /**
-         * @internal
-         */
+        /** @internal */
         this.guid = `calcite-loader-${guid.guid()}`;
     }
     //--------------------------------------------------------------------------
@@ -65,66 +36,28 @@ const CalciteLoader = class {
     //  Lifecycle
     //
     //--------------------------------------------------------------------------
-    componentWillLoad() {
-        this.isEdge = /Edge/.test(navigator.userAgent);
-        if (this.isEdge) {
-            this.updateOffset();
-        }
-    }
-    componentDidUnload() {
-        if (this.animationID) {
-            window.cancelAnimationFrame(this.animationID);
-        }
-    }
     render() {
-        const dir = dom.getElementDir(this.el);
         const id = this.el.id || this.guid;
-        const ariaAttributes = {
-            "aria-valuenow": this.value,
-            "aria-valuemin": 0,
-            "aria-valuemax": 100
-        };
-        const size = this.inline ? 16 : 56;
-        const viewbox = this.inline ? "0 0 16 16" : "0 0 56 56";
+        const size = this.inline ? 20 : 56;
+        const radius = this.inline ? 9 : 25;
+        const viewbox = `0 0 ${size} ${size}`;
         const isDeterminate = this.type === "determinate";
-        const styleProperties = {};
-        if (this.isEdge) {
-            styleProperties["--calcite-loader-offset"] = `${this.loaderBarOffsets[0]}%`;
-            styleProperties["--calcite-loader-offset2"] = `${this.loaderBarOffsets[1]}%`;
-            styleProperties["--calcite-loader-offset3"] = `${this.loaderBarOffsets[2]}%`;
-        }
-        const progress = {
-            "--calcite-loader-progress": `${-400 - this.value * 4}%`
+        const circumference = 2 * radius * Math.PI;
+        const progress = (this.value / 100) * circumference;
+        const remaining = circumference - progress;
+        const value = Math.floor(this.value);
+        const hostAttributes = {
+            "aria-valuenow": value,
+            "aria-valuemin": 0,
+            "aria-valuemax": 100,
+            complete: value === 100
         };
-        return (core.h(core.Host, Object.assign({ id: id, dir: dir, role: "progressbar" }, (this.type === "determinate" ? ariaAttributes : {}), { style: styleProperties }), core.h("svg", { viewBox: viewbox, class: "loader__square" }, core.h("rect", { width: size, height: size })), core.h("svg", { viewBox: viewbox, class: "loader__square loader__square--2" }, core.h("rect", { width: size, height: size })), core.h("svg", { viewBox: viewbox, class: "loader__square loader__square--3", style: isDeterminate ? progress : {} }, core.h("rect", { width: size, height: size })), this.text ? core.h("div", { class: "loader__text" }, this.text) : "", this.value ? (core.h("div", { class: "loader__percentage" }, Math.floor(this.value))) : ("")));
+        const svgAttributes = { r: radius, cx: size / 2, cy: size / 2 };
+        const determinateStyle = { "stroke-dasharray": `${progress} ${remaining}` };
+        return (index.h(index.Host, Object.assign({ id: id, role: "progressbar" }, (isDeterminate ? hostAttributes : {})), index.h("div", { class: "loader__svgs" }, index.h("svg", { viewBox: viewbox, class: "loader__svg loader__svg--1" }, index.h("circle", Object.assign({}, svgAttributes))), index.h("svg", { viewBox: viewbox, class: "loader__svg loader__svg--2" }, index.h("circle", Object.assign({}, svgAttributes))), index.h("svg", Object.assign({ viewBox: viewbox, class: "loader__svg loader__svg--3" }, (isDeterminate ? { style: determinateStyle } : {})), index.h("circle", Object.assign({}, svgAttributes)))), this.text && index.h("div", { class: "loader__text" }, this.text), isDeterminate && index.h("div", { class: "loader__percentage" }, value)));
     }
-    //--------------------------------------------------------------------------
-    //
-    //  Private Methods
-    //
-    //--------------------------------------------------------------------------
-    /**
-     * @internal
-     */
-    updateOffset() {
-        this.loaderBarOffsets = this.rotateLoaderBars(this.loaderBarOffsets);
-        this.animationID = window.requestAnimationFrame(() => this.updateOffset());
-    }
-    /**
-     * @internal
-     */
-    rotateLoaderBars(barOffsets) {
-        return barOffsets.map((offset, i) => {
-            if (offset > -400) {
-                return offset - this.loaderBarRates[i];
-            }
-            else {
-                return 0;
-            }
-        });
-    }
-    get el() { return core.getElement(this); }
-    static get style() { return ":root{--calcite-ui-blue:#007ac2;--calcite-ui-blue-hover:#2890ce;--calcite-ui-blue-press:#00619b;--calcite-ui-green:#35ac46;--calcite-ui-green-hover:#50ba5f;--calcite-ui-green-press:#288835;--calcite-ui-yellow:#edd317;--calcite-ui-yellow-hover:#f9e54e;--calcite-ui-yellow-press:#d9bc00;--calcite-ui-red:#d83020;--calcite-ui-red-hover:#e65240;--calcite-ui-red-press:#a82b1e;--calcite-ui-background:#f8f8f8;--calcite-ui-foreground:#fff;--calcite-ui-foreground-hover:#f3f3f3;--calcite-ui-foreground-press:#eaeaea;--calcite-ui-text-1:#151515;--calcite-ui-text-2:#4a4a4a;--calcite-ui-text-3:#6a6a6a;--calcite-ui-border-1:#cacaca;--calcite-ui-border-2:#dfdfdf;--calcite-ui-border-3:#eaeaea;--calcite-ui-border-hover:#9f9f9f;--calcite-ui-border-press:#757575}:host([theme=dark]){--calcite-ui-blue:#00a0ff;--calcite-ui-blue-hover:#0087d7;--calcite-ui-blue-press:#47bbff;--calcite-ui-green:#36da43;--calcite-ui-green-hover:#11ad1d;--calcite-ui-green-press:#44ed51;--calcite-ui-yellow:#ffc900;--calcite-ui-yellow-hover:#f4b000;--calcite-ui-yellow-press:#ffe24d;--calcite-ui-red:#fe583e;--calcite-ui-red-hover:#f3381b;--calcite-ui-red-press:#ff7465;--calcite-ui-background:#202020;--calcite-ui-foreground:#2b2b2b;--calcite-ui-foreground-hover:#353535;--calcite-ui-foreground-press:#404040;--calcite-ui-text-1:#fff;--calcite-ui-text-2:#bfbfbf;--calcite-ui-text-3:#9f9f9f;--calcite-ui-border-1:#4a4a4a;--calcite-ui-border-2:#404040;--calcite-ui-border-3:#353535;--calcite-ui-border-hover:#757575;--calcite-ui-border-press:#9f9f9f}:root{--calcite-border-radius:3px}:host([hidden]){display:none}body{font-family:Avenir Next W01,Avenir Next W00,Avenir Next,Avenir,Helvetica Neue,sans-serif}.overflow-hidden{overflow:hidden}calcite-tab{display:none}calcite-tab[is-active]{display:block}a{color:#007ac2}.hydrated--invisible{visibility:hidden}:host{--calcite-loader-spot:var(--calcite-ui-blue);--calcite-loader-spot-light:var(--calcite-ui-blue);--calcite-loader-spot-dark:var(--calcite-ui-blue);--calcite-loader-neutral:#eaeaea;--calcite-loader-padding:4rem}:host([theme=dark]){--calcite-loader-neutral:#151515}:host([no-padding]){--calcite-loader-padding:0}:host{position:relative;display:none;padding-bottom:var(--calcite-loader-padding);padding-top:var(--calcite-loader-padding);margin-left:auto;margin-right:auto;min-height:54px;stroke:var(--calcite-loader-light);stroke-width:6px;stroke-dashoffset:0;fill:none;animation:loader-color-shift 2s linear infinite alternate-reverse}:host([is-active]){display:block}.loader__text{margin-top:var(--calcite-loader-padding);line-height:1.5}.loader__percentage,.loader__text{display:block;text-align:center;font-size:.875rem}.loader__percentage{left:50%;margin-top:27px;line-height:.25}.loader__percentage,.loader__square{width:54px;position:absolute;top:var(--calcite-loader-padding);margin-left:-27px}.loader__square{height:54px;left:0;left:50%;stroke-dasharray:50% 350%;-webkit-animation:loader-clockwise 2s linear infinite;animation:loader-clockwise 2s linear infinite}.loader__square--2{stroke-dasharray:100% 225% 50% 25%;-webkit-animation:loader-clockwise 1s linear infinite;animation:loader-clockwise 1s linear infinite}.loader__square--3{stroke-dasharray:50% 50% 75% 225%;-webkit-animation:loader-clockwise 1.85s linear infinite;animation:loader-clockwise 1.85s linear infinite}\@supports (-ms-ime-align:auto){.loader__square{stroke-dashoffset:var(--calcite-loader-offset);-webkit-animation:none;animation:none}.loader__square--2{stroke-dashoffset:var(--calcite-loader-offset2)}.loader__square--3{stroke-dashoffset:var(--calcite-loader-offset3)}}:host([type=determinate]){stroke:var(--calcite-loader-neutral);-webkit-animation:none;animation:none}:host([type=determinate]) .loader__square--3{stroke:var(--calcite-loader-spot);stroke-dasharray:400%;stroke-dashoffset:var(--calcite-loader-progress);-webkit-transition:all 50ms linear;transition:all 50ms linear;-webkit-transform:rotate(90deg);transform:rotate(90deg);-webkit-animation:none;animation:none}:host([inline]){stroke:currentColor;stroke-width:4px;-webkit-animation:none;animation:none;margin:0;padding-bottom:0;padding-top:0;position:relative;height:16px;min-height:16px;width:16px;margin-right:8px;vertical-align:-2px}:host([inline][dir=rtl]){margin-left:8px;margin-right:0}:host([is-active][inline]){display:inline-block}:host([inline]) .loader__square{margin:0;position:absolute;top:0;left:0;width:16px;height:16px}\@-webkit-keyframes loader-color-shift{0%{stroke:var(--calcite-loader-spot-light)}to{stroke:var(--calcite-loader-spot-dark)}}\@keyframes loader-color-shift{0%{stroke:var(--calcite-loader-spot-light)}to{stroke:var(--calcite-loader-spot-dark)}}\@-webkit-keyframes loader-clockwise{0%{stroke-dashoffset:0}to{stroke-dashoffset:-400%}}\@keyframes loader-clockwise{0%{stroke-dashoffset:0}to{stroke-dashoffset:-400%}}"; }
+    get el() { return index.getElement(this); }
 };
+CalciteLoader.style = calciteLoaderCss;
 
 exports.calcite_loader = CalciteLoader;

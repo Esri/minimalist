@@ -1,4 +1,4 @@
-import { Host, h } from "@stencil/core";
+import { Component, Element, Host, Listen, Method, Prop, State, h } from "@stencil/core";
 import { CSS } from "./resources";
 import classnames from "classnames";
 /**
@@ -55,7 +55,9 @@ export class CalciteFlow {
         if (!lastItem) {
             return;
         }
-        const beforeBack = lastItem.beforeBack ? lastItem.beforeBack : () => Promise.resolve();
+        const beforeBack = lastItem.beforeBack
+            ? lastItem.beforeBack
+            : () => Promise.resolve();
         return beforeBack.call(lastItem).then(() => {
             lastItem.remove();
             return lastItem;
@@ -66,11 +68,9 @@ export class CalciteFlow {
     //  Lifecycle
     //
     // --------------------------------------------------------------------------
-    componentWillLoad() {
-        this.updateFlowProps();
-    }
-    componentDidLoad() {
+    connectedCallback() {
         this.flowItemObserver.observe(this.el, { childList: true, subtree: true });
+        this.updateFlowProps();
     }
     componentDidUnload() {
         this.flowItemObserver.disconnect();
@@ -138,7 +138,7 @@ export class CalciteFlow {
     static get methods() { return {
         "back": {
             "complexType": {
-                "signature": "() => Promise<any>",
+                "signature": "() => Promise<HTMLCalciteFlowItemElement>",
                 "parameters": [],
                 "references": {
                     "Promise": {
@@ -148,7 +148,7 @@ export class CalciteFlow {
                         "location": "global"
                     }
                 },
-                "return": "Promise<any>"
+                "return": "Promise<HTMLCalciteFlowItemElement>"
             },
             "docs": {
                 "text": "Removes the currently active `calcite-flow-item`.",

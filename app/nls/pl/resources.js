@@ -7,7 +7,8 @@ define({
     "popup": "Informacje"
   },
   "popupPanel": {
-    "noResultsMessage": "Kliknij mapę, aby wyświetlić informacje o obiektach"
+    "noResultsMessage": "Kliknij na mapie, aby wyświetlić informacje o obiektach",
+    "noResultsHoverMessage": "Umieść wskaźnik myszy na lokalizacjach na mapie, aby wyświetlić informacje o obiektach"
   },
   "close": "zamknij",
   "toggle": "przełącz wysokość panelu"

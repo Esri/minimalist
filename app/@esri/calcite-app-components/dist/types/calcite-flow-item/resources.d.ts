@@ -11,18 +11,20 @@ export declare const CSS: {
     menuButton: string;
     menu: string;
     menuOpen: string;
-};
-export declare const TEXT: {
-    back: string;
-    open: string;
-    close: string;
+    fabContainer: string;
 };
 export declare const SLOTS: {
     menuActions: string;
+    fab: string;
     footerActions: string;
 };
 export declare const ICONS: {
     menu: string;
     backLeft: string;
     backRight: string;
+};
+export declare const TEXT: {
+    back: string;
+    open: string;
+    close: string;
 };

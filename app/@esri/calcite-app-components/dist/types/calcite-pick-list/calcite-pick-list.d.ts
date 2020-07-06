@@ -1,13 +1,15 @@
-import { EventEmitter } from "../stencil-public-runtime";
+import { EventEmitter, VNode } from "../stencil-public-runtime";
 import { ICON_TYPES } from "./resources";
 /**
  * @slot - A slot for adding `calcite-pick-list-item` elements or `calcite-pick-list-group` elements. Items are displayed as a vertical list.
  * @slot menu-actions - A slot for adding a button + menu combo for performing actions like sorting.
  */
-export declare class CalcitePickList {
+export declare class CalcitePickList<ItemElement extends HTMLCalcitePickListItemElement = HTMLCalcitePickListItemElement> {
     /**
      * Compact removes the selection icon (radio or checkbox) and adds a compact attribute.
      * This allows for a more compact version of the `calcite-pick-list-item`.
+     *
+     * @deprecated This property will be removed in a future release.
      */
     compact: boolean;
     /**
@@ -32,16 +34,15 @@ export declare class CalcitePickList {
     /**
      * Placeholder text for the filter input field.
      */
-    textFilterPlaceholder?: string;
-    selectedValues: Map<string, HTMLCalcitePickListItemElement>;
+    textFilterPlaceholder: string;
+    selectedValues: Map<string, ItemElement>;
     dataForFilter: object[];
-    items: HTMLCalcitePickListItemElement[];
-    lastSelectedItem: HTMLCalcitePickListItemElement;
+    items: ItemElement[];
+    lastSelectedItem: ItemElement;
     observer: MutationObserver;
     el: HTMLCalcitePickListElement;
     emitCalciteListChange: () => void;
     connectedCallback(): void;
-    componentDidLoad(): void;
     componentDidUnload(): void;
     /**
      * Emitted when any of the item selections have changed.
@@ -57,7 +58,9 @@ export declare class CalcitePickList {
     selectSiblings: any;
     handleFilter: any;
     getItemData: any;
+    keyDownHandler: any;
     getSelectedItems(): Promise<Map<string, object>>;
-    getIconType(): ICON_TYPES | null;
-    render(): any;
+    setFocus(): Promise<void>;
+    getIconType(): ICON_TYPES;
+    render(): VNode;
 }

@@ -1,3 +1,4 @@
+import { VNode } from "../stencil-public-runtime";
 import { ICON_TYPES } from "../calcite-pick-list/resources";
 /**
  * @slot secondary-action - A slot intended for adding a `calcite-action` or `calcite-button`. This is placed at the end of the item.
@@ -5,6 +6,8 @@ import { ICON_TYPES } from "../calcite-pick-list/resources";
 export declare class CalciteValueListItem {
     /**
      * Compact reduces the size of the item.
+     *
+     * @deprecated This property will be removed in a future release.
      */
     compact?: boolean;
     /**
@@ -28,6 +31,10 @@ export declare class CalciteValueListItem {
      */
     metadata?: object;
     /**
+     * Set this to true to display a remove action that removes the item from the list.
+     */
+    removable: boolean;
+    /**
      * Set this to true to pre-select an item. Toggles when an item is checked/unchecked.
      */
     selected: boolean;
@@ -47,10 +54,12 @@ export declare class CalciteValueListItem {
     pickListItem: HTMLCalcitePickListItemElement;
     guid: string;
     toggleSelected(coerce?: boolean): Promise<void>;
+    setFocus(): Promise<void>;
+    calciteListItemChangeHandler(event: CustomEvent): void;
     getPickListRef: (el: any) => HTMLCalcitePickListItemElement;
     handleKeyDown: (event: KeyboardEvent) => void;
     handleBlur: () => void;
     handleSelectChange: (event: CustomEvent<any>) => void;
-    renderHandle(): any;
-    render(): any;
+    renderHandle(): VNode;
+    render(): VNode;
 }

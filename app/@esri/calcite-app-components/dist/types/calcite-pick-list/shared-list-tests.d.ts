@@ -1,5 +1,6 @@
-export declare const tests: {
-    selectionAndDeselection(listType: "value" | "pick"): void;
-    filterBehavior(listType: "value" | "pick"): void;
-    disabledStates(listType: "value" | "pick"): void;
-};
+declare type ListType = "pick" | "value";
+export declare function keyboardNavigation(listType: ListType): void;
+export declare function selectionAndDeselection(listType: ListType): void;
+export declare function filterBehavior(listType: ListType): void;
+export declare function disabledStates(listType: ListType): void;
+export {};

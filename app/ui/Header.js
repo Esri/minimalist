@@ -182,7 +182,7 @@ define(["require", "exports", "esri/core/accessorSupport/decorators", "esri/core
             decorators_1.subclass("Header")
         ], Header);
         return Header;
-    }(decorators_1.declared(Widget_1.default)));
+    }((Widget_1.default)));
     exports.default = Header;
 });
 //# sourceMappingURL=Header.js.map

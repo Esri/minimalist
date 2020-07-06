@@ -5,6 +5,7 @@ export declare const CSS: {
     title: string;
     subtitle: string;
     thumbnailWrapper: string;
+    checkboxWrapper: string;
 };
 export declare const enum SLOTS {
     thumbnail = "thumbnail",

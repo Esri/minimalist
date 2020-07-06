@@ -7,7 +7,8 @@ define({
     "popup": "信息"
   },
   "popupPanel": {
-    "noResultsMessage": "单击地图以查看要素信息"
+    "noResultsMessage": "单击地图以查看要素信息",
+    "noResultsHoverMessage": "在地图上将鼠标悬停在位置上方以查看要素信息"
   },
   "close": "关闭",
   "toggle": "切换面板高度"

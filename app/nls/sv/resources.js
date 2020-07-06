@@ -7,7 +7,8 @@ define({
     "popup": "Info"
   },
   "popupPanel": {
-    "noResultsMessage": "Klicka på kartan för att visa geoobjektinformation"
+    "noResultsMessage": "Klicka på kartan för att visa information om geoobjekt",
+    "noResultsHoverMessage": "Hovra över platser på kartan för att visa information om geoobjekt"
   },
   "close": "stäng",
   "toggle": "växla panelhöjd"

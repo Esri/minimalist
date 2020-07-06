@@ -7,7 +7,8 @@ define({
     "popup": "Info"
   },
   "popupPanel": {
-    "noResultsMessage": "Auf die Karte klicken, um Feature-Informationen anzuzeigen"
+    "noResultsMessage": "Auf die Karte klicken, um Feature-Informationen anzuzeigen",
+    "noResultsHoverMessage": "Mit der Maus auf Positionen auf der Karte zeigen, um Feature-Informationen anzuzeigen"
   },
   "close": "schließen",
   "toggle": "Bereichshöhe umschalten"

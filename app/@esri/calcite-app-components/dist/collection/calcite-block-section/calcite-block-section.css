@@ -64,6 +64,7 @@
   cursor: pointer;
   display: flex;
   justify-content: space-between;
+  margin: var(--calcite-app-cap-spacing-quarter) 0;
   padding: var(--calcite-app-cap-spacing-half) 0;
   -webkit-user-select: none;
       -ms-user-select: none;

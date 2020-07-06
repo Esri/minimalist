@@ -1,4 +1,4 @@
-import { Host, h } from "@stencil/core";
+import { Component, Element, Event, Host, Prop, State, h } from "@stencil/core";
 import { debounce, forIn } from "lodash-es";
 import { CSS, ICONS, TEXT } from "./resources";
 const filterDebounceInMs = 250;
@@ -59,10 +59,12 @@ export class CalciteFilter {
     render() {
         return (h(Host, null,
             h("label", null,
-                h("input", { type: "text", value: "", placeholder: this.textPlaceholder, onInput: this.inputHandler, "aria-label": this.textLabel || TEXT.filterLabel, ref: (el) => (this.textInput = el) }),
+                h("input", { type: "text", value: "", placeholder: this.placeholder || this.textPlaceholder, onInput: this.inputHandler, "aria-label": this.intlLabel || this.textLabel || TEXT.filterLabel, ref: (el) => {
+                        this.textInput = el;
+                    } }),
                 h("div", { class: CSS.searchIcon },
                     h("calcite-icon", { scale: "s", icon: ICONS.search }))),
-            !this.empty ? (h("button", { onClick: this.clear, class: CSS.clearButton, "aria-label": TEXT.clear },
+            !this.empty ? (h("button", { onClick: this.clear, class: CSS.clearButton, "aria-label": this.intlClear || TEXT.clear },
                 h("calcite-icon", { icon: ICONS.close }))) : null));
     }
     static get is() { return "calcite-filter"; }
@@ -89,6 +91,57 @@ export class CalciteFilter {
                 "text": "The input data. The filter uses this as the starting point, and returns items\nthat contain the string entered in the input, using a partial match and recursive search."
             }
         },
+        "intlClear": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": true,
+            "docs": {
+                "tags": [],
+                "text": "A text label that will appear on the clear button."
+            },
+            "attribute": "intl-clear",
+            "reflect": false
+        },
+        "intlLabel": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": true,
+            "docs": {
+                "tags": [],
+                "text": "A text label that will appear next to the input field."
+            },
+            "attribute": "intl-label",
+            "reflect": false
+        },
+        "placeholder": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": true,
+            "docs": {
+                "tags": [],
+                "text": "Placeholder text for the input element's placeholder attribute"
+            },
+            "attribute": "placeholder",
+            "reflect": false
+        },
         "textLabel": {
             "type": "string",
             "mutable": false,
@@ -98,9 +151,12 @@ export class CalciteFilter {
                 "references": {}
             },
             "required": false,
-            "optional": false,
+            "optional": true,
             "docs": {
-                "tags": [],
+                "tags": [{
+                        "text": "use \"intlLabel\" instead.",
+                        "name": "deprecated"
+                    }],
                 "text": "A text label that will appear next to the input field."
             },
             "attribute": "text-label",
@@ -115,9 +171,12 @@ export class CalciteFilter {
                 "references": {}
             },
             "required": false,
-            "optional": false,
+            "optional": true,
             "docs": {
-                "tags": [],
+                "tags": [{
+                        "text": "use \"placeholder\" instead.",
+                        "name": "deprecated"
+                    }],
                 "text": "Placeholder text for the input element's placeholder attribute"
             },
             "attribute": "text-placeholder",

@@ -1,4 +1,4 @@
-import { EventEmitter } from "../stencil-public-runtime";
+import { EventEmitter, VNode } from "../stencil-public-runtime";
 import { CalciteLayout, CalcitePosition, CalciteTheme } from "../interfaces";
 /**
  * @slot bottom-actions - A slot for adding `calcite-action`s that will appear at the bottom of the action bar, above the collapse/expand button.
@@ -16,17 +16,32 @@ export declare class CalciteActionBar {
     expanded: boolean;
     expandedHandler(expanded: boolean): void;
     /**
+     * Used to set the tooltip for the expand toggle.
+     */
+    tooltipExpand?: HTMLCalciteTooltipElement;
+    /**
+     * Updates the label of the expand icon when the component is not expanded.
+     * @deprecated use "intlExpand" instead.
+     */
+    textExpand?: string;
+    /**
      * Updates the label of the expand icon when the component is not expanded.
      */
-    textExpand: string;
+    intlExpand?: string;
+    /**
+     * Updates the label of the collapse icon when the component is expanded.
+     * @deprecated use "intlCollapse" instead.
+     */
+    textCollapse?: string;
     /**
      * Updates the label of the collapse icon when the component is expanded.
      */
-    textCollapse: string;
+    intlCollapse?: string;
     /**
-     * @deprecated since 5.3 - use "position" instead.
      * Arrangement of the component. Leading and trailing are different depending on if the direction is LTR or RTL. For example, "leading"
      * in a LTR app will appear on the left.
+     *
+     * @deprecated use "position" instead.
      */
     layout: CalciteLayout;
     /**
@@ -44,6 +59,6 @@ export declare class CalciteActionBar {
     el: HTMLCalciteActionBarElement;
     componentWillLoad(): void;
     toggleExpand: () => void;
-    renderBottomActionGroup(): any;
-    render(): any;
+    renderBottomActionGroup(): VNode;
+    render(): VNode;
 }

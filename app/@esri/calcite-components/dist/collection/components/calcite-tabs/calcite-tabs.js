@@ -1,16 +1,6 @@
-import { h, Host } from "@stencil/core";
-import { getElementDir } from "../../utils/dom";
+import { Component, Prop, h, Host, Element, Listen, State } from "@stencil/core";
 export class CalciteTabs {
     constructor() {
-        //--------------------------------------------------------------------------
-        //
-        //  Public Properties
-        //
-        //--------------------------------------------------------------------------
-        /**
-         * Select theme (light or dark)
-         */
-        this.theme = "light";
         /**
          * Align tab titles to the edge or fully justify them across the tab nav ("center")
          */
@@ -45,12 +35,10 @@ export class CalciteTabs {
     //
     //--------------------------------------------------------------------------
     render() {
-        const dir = getElementDir(this.el);
-        return (h(Host, { dir: dir },
-            h("div", null,
-                h("slot", { name: "tab-nav" }),
-                h("section", null,
-                    h("slot", null)))));
+        return (h(Host, null,
+            h("slot", { name: "tab-nav" }),
+            h("section", null,
+                h("slot", null))));
     }
     //--------------------------------------------------------------------------
     //
@@ -164,8 +152,7 @@ export class CalciteTabs {
                 "text": "Select theme (light or dark)"
             },
             "attribute": "theme",
-            "reflect": true,
-            "defaultValue": "\"light\""
+            "reflect": true
         },
         "layout": {
             "type": "string",

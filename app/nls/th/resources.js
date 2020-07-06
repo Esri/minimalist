@@ -7,7 +7,8 @@ define({
     "popup": "ข้อมูล"
   },
   "popupPanel": {
-    "noResultsMessage": "คลิกแผนที่เพื่อดูข้อมูลฟีเจอร์"
+    "noResultsMessage": "คลิกแผนที่เพื่อดูข้อมูลฟีเจอร์",
+    "noResultsHoverMessage": "เลื่อนเมาส์ไปชี้ที่ตำแหน่งบนแผนที่ เพื่อดูข้อมูลฟีเจอร์"
   },
   "close": "ปิด",
   "toggle": "สลับความสูงพาเนล"

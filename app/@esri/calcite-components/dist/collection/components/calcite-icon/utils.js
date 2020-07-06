@@ -16,18 +16,26 @@ export const scaleToPx = {
     m: 24,
     l: 32
 };
-export async function fetchIcon({ icon, scale, filled }) {
+export async function fetchIcon({ icon, scale }) {
     const size = scaleToPx[scale];
-    const id = `${normalizeIconName(icon)}${size}${filled ? "F" : ""}`;
+    const name = normalizeIconName(icon);
+    const filled = name.charAt(name.length - 1) === "F";
+    const iconName = filled ? name.substring(0, name.length - 1) : name;
+    const id = `${iconName}${size}${filled ? "F" : ""}`;
     if (iconCache[id]) {
         return iconCache[id];
     }
-    const request = requestCache[id] ||
-        (requestCache[id] = import(getAssetPath(`./assets/${id}.js`)));
-    const module = await request;
-    const pathData = module[id];
-    iconCache[id] = pathData;
-    return pathData;
+    if (!requestCache[id]) {
+        requestCache[id] = fetch(getAssetPath(`./assets/${id}.json`))
+            .then(resp => resp.json())
+            .catch(() => {
+            console.error(`"${id}" is not a valid calcite-ui-icon name`);
+            return "";
+        });
+    }
+    const path = await requestCache[id];
+    iconCache[id] = path;
+    return path;
 }
 /**
  * Normalize the icon name to match the path data module exports.

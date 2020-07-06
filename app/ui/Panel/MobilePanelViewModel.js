@@ -1,17 +1,3 @@
-/// <amd-dependency path="esri/core/tsSupport/declareExtendsHelper" name="__extends" />
-/// <amd-dependency path="esri/core/tsSupport/decorateHelper" name="__decorate" />
-/*
-  Copyright 2020 Esri
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-    http://www.apache.org/licenses/LICENSE-2.0
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.​
-*/
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -25,11 +11,30 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
 };
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
@@ -70,14 +75,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
-define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/core/tsSupport/decorateHelper", "esri/core/Accessor", "dojo/i18n!../../nls/resources", "esri/core/accessorSupport/decorators", "../FeatureList"], function (require, exports, __extends, __decorate, Accessor, i18n, decorators_1, FeatureList_1) {
+define(["require", "exports", "esri/core/Accessor", "dojo/i18n!../../nls/resources", "esri/core/accessorSupport/decorators", "../FeatureList"], function (require, exports, Accessor, i18n, decorators_1, FeatureList_1) {
     "use strict";
     FeatureList_1 = __importDefault(FeatureList_1);
     var PanelViewModel = /** @class */ (function (_super) {
@@ -119,7 +117,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
         PanelViewModel.prototype.createActionClickFunction = function (action) {
             var clickFunction = null;
             switch (action.key) {
-                case "legend":
+                case "legendPanel":
                     clickFunction = this.createLegend;
                     break;
                 case "details":
@@ -155,16 +153,16 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             });
         };
         PanelViewModel.prototype.createActions = function () {
-            var _a = this.applicationConfig, legend = _a.legend, details = _a.details, activePanel = _a.activePanel;
+            var _a = this.applicationConfig, legendPanel = _a.legendPanel, details = _a.details, activePanel = _a.activePanel;
             var actions = [];
             var popupPanel = true;
-            if (legend) {
+            if (legendPanel) {
                 actions.push({
-                    key: "legend",
+                    key: "legendPanel",
                     icon: "legend",
                     name: i18n.tools.legend,
                     label: i18n.tools.legend,
-                    checked: activePanel === "legend" ? true : false
+                    checked: activePanel === "legendPanel" ? true : false
                 });
             }
             // if legend is already active don't make details active
@@ -178,13 +176,12 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
                 });
             }
             if (popupPanel) {
-                // make sure we have a layer with popups enabled
                 actions.push({
                     key: "popup",
                     icon: "popup",
                     name: i18n.tools.popup,
                     label: i18n.tools.popup,
-                    checked: activePanel === "popup" ? true : false
+                    checked: activePanel === "popupPanel" ? true : false
                 });
             }
             this.actions = actions;
@@ -260,7 +257,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             decorators_1.subclass("esri.demo.PanelViewModel")
         ], PanelViewModel);
         return PanelViewModel;
-    }(decorators_1.declared(Accessor)));
+    }((Accessor)));
     return PanelViewModel;
 });
 //# sourceMappingURL=MobilePanelViewModel.js.map

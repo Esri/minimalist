@@ -1,5 +1,5 @@
 /// <reference types="lodash" />
-import { EventEmitter } from "../stencil-public-runtime";
+import { EventEmitter, VNode } from "../stencil-public-runtime";
 export declare class CalciteFilter {
     /**
      * The input data. The filter uses this as the starting point, and returns items
@@ -7,13 +7,29 @@ export declare class CalciteFilter {
      */
     data: object[];
     /**
+     * A text label that will appear on the clear button.
+     */
+    intlClear?: string;
+    /**
      * A text label that will appear next to the input field.
      */
-    textLabel: string;
+    intlLabel?: string;
     /**
      * Placeholder text for the input element's placeholder attribute
      */
-    textPlaceholder: string;
+    placeholder?: string;
+    /**
+     * A text label that will appear next to the input field.
+     *
+     * @deprecated use "intlLabel" instead.
+     */
+    textLabel?: string;
+    /**
+     * Placeholder text for the input element's placeholder attribute
+     *
+     * @deprecated use "placeholder" instead.
+     */
+    textPlaceholder?: string;
     el: HTMLCalciteFilterElement;
     empty: boolean;
     textInput: HTMLInputElement;
@@ -21,5 +37,5 @@ export declare class CalciteFilter {
     filter: ((value: string) => void) & import("lodash").Cancelable;
     inputHandler: (event: Event) => void;
     clear: () => void;
-    render(): any;
+    render(): VNode;
 }

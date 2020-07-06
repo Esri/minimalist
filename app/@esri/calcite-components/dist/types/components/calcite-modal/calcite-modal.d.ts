@@ -1,4 +1,4 @@
-import { EventEmitter } from "../../stencil.core";
+import { EventEmitter } from "../../stencil-public-runtime";
 export declare class CalciteModal {
     el: HTMLElement;
     /** Optionally pass a function to run before close */

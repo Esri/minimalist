@@ -7,7 +7,8 @@ define({
     "popup": "Thông tin"
   },
   "popupPanel": {
-    "noResultsMessage": "Nhấp vào bản đồ để xem thông tin đối tượng"
+    "noResultsMessage": "Nhấp vào bản đồ để xem thông tin đối tượng",
+    "noResultsHoverMessage": "Di chuột qua các vị trí trên bản đồ để xem thông tin đối tượng"
   },
   "close": "đóng",
   "toggle": "chuyển đổi chiều cao bảng điều khiển"

@@ -37,11 +37,11 @@ const contentHTML = `
 <div style="padding:12px 16px">
   <b>I am a title!</b> <br>
   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-  <calcite-button appearance="inline">I am an inline button</calcite-button>
+  <calcite-link>I am an inline link</calcite-link>
 </div>
 `;
 
-const referenceElementHTML = `Ut enim ad minim veniam, quis <calcite-button title="Reference Element" id="reference-element">nostrud exercitation</calcite-button> ullamco laboris nisi ut aliquip ex ea commodo consequat.`;
+const referenceElementHTML = `<calcite-popover-manager>Ut enim ad minim veniam, quis <calcite-button title="Reference Element" id="reference-element">nostrud exercitation</calcite-button> ullamco laboris nisi ut aliquip ex ea commodo consequat.</calcite-popover-manager>`;
 
 storiesOf("Popover", module)
   .addDecorator(withKnobs)
@@ -53,7 +53,6 @@ storiesOf("Popover", module)
         ${referenceElementHTML}
         <calcite-popover
           theme="light"
-          add-click-handle="${boolean("add-click-handle", true)}"
           close-button="${boolean("close-button", false)}"
           disable-flip="${boolean("disable-flip", false)}"
           disable-pointer="${boolean("disable-pointer", false)}"
@@ -79,7 +78,6 @@ storiesOf("Popover", module)
         ${referenceElementHTML}
         <calcite-popover
           theme="dark"
-          add-click-handle="${boolean("add-click-handle", true)}"
           close-button="${boolean("close-button", false)}"
           disable-flip="${boolean("disable-flip", false)}"
           disable-pointer="${boolean("disable-pointer", false)}"

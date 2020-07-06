@@ -1,5 +1,5 @@
 import Sortable from "sortablejs";
-import { EventEmitter } from "../stencil-public-runtime";
+import { EventEmitter, VNode } from "../stencil-public-runtime";
 /**
  * @slot - A slot for adding sortable items
  */
@@ -21,7 +21,7 @@ export declare class CalciteSortableList {
     items: Element[];
     observer: MutationObserver;
     sortable: Sortable;
-    componentDidLoad(): void;
+    connectedCallback(): void;
     componentDidUnload(): void;
     /**
      * Emmitted when the order of the list has changed.
@@ -32,5 +32,5 @@ export declare class CalciteSortableList {
     setUpDragAndDrop(): void;
     cleanUpDragAndDrop(): void;
     beginObserving(): void;
-    render(): any;
+    render(): VNode;
 }

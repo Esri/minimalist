@@ -22,7 +22,7 @@
   "_resolved": "https://registry.npmjs.org/@esri/calcite-ui-icons/-/calcite-ui-icons-2.7.1.tgz",
   "_shasum": "7c062f1b762a723dee81f6c1826a77e51d1747f8",
   "_spec": "@esri/calcite-ui-icons@^2.7.1",
-  "_where": "/Users/kell3008/Sites/GitHub/arcgis-portal-app-templates/EmbedMinimal",
+  "_where": "/Users/kell3008/Sites/GitHub/arcgis-portal-app-templates/instant/minimalist",
   "bin": {
     "spriter": "bin/spriter.js"
   },

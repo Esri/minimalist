@@ -7,7 +7,8 @@ define({
     "popup": "Informacije"
   },
   "popupPanel": {
-    "noResultsMessage": "Kliknite na mapu za pregled informacija o komponenti"
+    "noResultsMessage": "Kliknite na mapu da biste videli informacije o komponenti",
+    "noResultsHoverMessage": "Prevucite preko lokacija na mapi da biste videli informacije o kompanenti"
   },
   "close": "zatvori",
   "toggle": "preklopi visinu panela"

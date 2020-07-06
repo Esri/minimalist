@@ -1,5 +1,5 @@
-import { Host, h } from "@stencil/core";
-import { nodeListToArray, getElementDir, getElementTheme } from "../../utils/dom";
+import { Component, Element, Prop, Host, Event, Listen, h } from "@stencil/core";
+import { nodeListToArray, getElementTheme } from "../../utils/dom";
 import { TreeSelectionMode } from "../../interfaces/TreeSelectionMode";
 export class CalciteTree {
     constructor() {
@@ -8,15 +8,24 @@ export class CalciteTree {
         //  Properties
         //
         //--------------------------------------------------------------------------
-        /**
-         * Be sure to add a jsdoc comment describing your propery for the generated readme file.
-         * If your property should be hidden from documentation, you can use the `@internal` tag
-         */
+        /** Display indentation guide lines */
         this.lines = false;
-        this.root = true;
-        this.theme = "light";
-        this.size = "m";
+        /** Specify the scale of the tree, defaults to m */
+        this.scale = "m";
+        /** Customize how tree selection works (single, multi, children, multi-children) */
         this.selectionMode = TreeSelectionMode.Single;
+        //--------------------------------------------------------------------------
+        //
+        //  Public Methods
+        //
+        //--------------------------------------------------------------------------
+        //--------------------------------------------------------------------------
+        //
+        //  Private State/Props
+        //
+        //--------------------------------------------------------------------------
+        /** @internal If this tree is nested within another tree, set to false */
+        this.root = true;
     }
     //--------------------------------------------------------------------------
     //
@@ -28,13 +37,12 @@ export class CalciteTree {
         const parent = this.el.parentElement.closest("calcite-tree");
         this.theme = getElementTheme(this.el);
         this.lines = parent ? parent.lines : this.lines;
-        this.size = parent ? parent.size : this.size;
+        this.scale = parent ? parent.scale : this.scale;
         this.selectionMode = parent ? parent.selectionMode : this.selectionMode;
         this.root = parent ? false : true;
     }
     render() {
-        const dir = getElementDir(this.el);
-        return (h(Host, { tabindex: this.root ? "1" : undefined, dir: dir, "aria-role": this.root ? "tree" : undefined, "aria-multiselectable": this.selectionMode === TreeSelectionMode.Multi ||
+        return (h(Host, { tabindex: this.root ? "1" : undefined, "aria-role": this.root ? "tree" : undefined, "aria-multiselectable": this.selectionMode === TreeSelectionMode.Multi ||
                 this.selectionMode === TreeSelectionMode.MultiChildren },
             h("slot", null)));
     }
@@ -136,29 +144,11 @@ export class CalciteTree {
             "optional": false,
             "docs": {
                 "tags": [],
-                "text": "Be sure to add a jsdoc comment describing your propery for the generated readme file.\nIf your property should be hidden from documentation, you can use the `@internal` tag"
+                "text": "Display indentation guide lines"
             },
             "attribute": "lines",
             "reflect": true,
             "defaultValue": "false"
-        },
-        "root": {
-            "type": "boolean",
-            "mutable": true,
-            "complexType": {
-                "original": "boolean",
-                "resolved": "boolean",
-                "references": {}
-            },
-            "required": false,
-            "optional": false,
-            "docs": {
-                "tags": [],
-                "text": ""
-            },
-            "attribute": "root",
-            "reflect": true,
-            "defaultValue": "true"
         },
         "theme": {
             "type": "string",
@@ -172,13 +162,12 @@ export class CalciteTree {
             "optional": false,
             "docs": {
                 "tags": [],
-                "text": ""
+                "text": "Select theme (light or dark)"
             },
             "attribute": "theme",
-            "reflect": true,
-            "defaultValue": "\"light\""
+            "reflect": true
         },
-        "size": {
+        "scale": {
             "type": "string",
             "mutable": true,
             "complexType": {
@@ -190,9 +179,9 @@ export class CalciteTree {
             "optional": false,
             "docs": {
                 "tags": [],
-                "text": ""
+                "text": "Specify the scale of the tree, defaults to m"
             },
-            "attribute": "size",
+            "attribute": "scale",
             "reflect": true,
             "defaultValue": "\"m\""
         },
@@ -213,11 +202,32 @@ export class CalciteTree {
             "optional": false,
             "docs": {
                 "tags": [],
-                "text": ""
+                "text": "Customize how tree selection works (single, multi, children, multi-children)"
             },
             "attribute": "selection-mode",
             "reflect": true,
             "defaultValue": "TreeSelectionMode.Single"
+        },
+        "root": {
+            "type": "boolean",
+            "mutable": true,
+            "complexType": {
+                "original": "boolean",
+                "resolved": "boolean",
+                "references": {}
+            },
+            "required": false,
+            "optional": false,
+            "docs": {
+                "tags": [{
+                        "text": "If this tree is nested within another tree, set to false",
+                        "name": "internal"
+                    }],
+                "text": ""
+            },
+            "attribute": "root",
+            "reflect": true,
+            "defaultValue": "true"
         }
     }; }
     static get events() { return [{

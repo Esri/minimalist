@@ -1,54 +1,43 @@
-import { EventEmitter } from "../../stencil.core";
+import { EventEmitter } from "../../stencil-public-runtime";
 export declare class CalciteDateMonthHeader {
     el: HTMLElement;
-    /**
-     * Month number starting 0 as January for which the calendar is shown.
-     */
-    month: number;
-    /**
-     * Year for which the calendar is shown.
-     */
-    year: number;
-    /**
-     * Already selected date.
-     */
+    /** Already selected date. */
     selectedDate: Date;
-    /**
-     * Minimum date of the calendar below which is disabled.
-     */
+    /** Focused date with indicator (will become selected date if user proceeds) */
+    activeDate: Date;
+    /** Minimum date of the calendar below which is disabled. */
     min: Date;
-    /**
-     * Maximum date of the calendar above which is disabled.
-     */
+    /** Maximum date of the calendar above which is disabled. */
     max: Date;
-    /**
-     * pass the locale in which user wants to show the date.
-     */
+    /** User's language and region as BCP 47 formatted string. */
     locale: string;
-    /**
-     * Localized string for previous month.
-     */
+    /** Localized string for previous month. */
     prevMonthLabel: string;
-    /**
-     * Localized string for next month.
-     */
+    /** Localized string for next month. */
     nextMonthLabel: string;
+    /** specify the scale of the date picker */
+    scale: "s" | "m" | "l";
     /**
-     *  Event triggered when user change month.
+     *  Changes to active date
      */
-    calciteMonthChange: EventEmitter;
-    /**
-     *  Event triggered when user change year.
-     */
-    calciteYearChange: EventEmitter;
-    monthChange(): void;
-    yearChange(): void;
-    componentWillUpdate(): void;
+    calciteActiveDateChange: EventEmitter<Date>;
     render(): any;
+    private yearInput;
+    /**
+     * Set active date to previous month (or min if out of range)
+     */
     private selectPrevMonth;
+    /**
+     * Set active date to next month (or max if out of range)
+     */
     private selectNextMonth;
-    private validateYear;
-    private validateMonth;
-    private onYearChange;
-    private getLocalizedMonths;
+    /**
+     * Increment year on UP/DOWN keys
+     */
+    private onYearKey;
+    /**
+     * Parse localized year string from input,
+     * set to active if in range
+     */
+    private setYear;
 }

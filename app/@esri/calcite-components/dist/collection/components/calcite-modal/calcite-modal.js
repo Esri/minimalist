@@ -1,6 +1,7 @@
-import { Host, h } from "@stencil/core";
+import { Component, Element, Prop, Host, Event, Listen, h, Method, State, } from "@stencil/core";
 import { queryShadowRoot, isHidden, isFocusable } from "@a11y/focus-trap";
-import { getElementDir, getElementTheme } from "../../utils/dom";
+import { getElementDir } from "../../utils/dom";
+import { getKey } from "../../utils/key";
 export class CalciteModal {
     constructor() {
         //--------------------------------------------------------------------------
@@ -14,8 +15,6 @@ export class CalciteModal {
         this.closeLabel = "Close";
         /** Set the overall size of the modal */
         this.size = "small";
-        /** Select theme (light or dark) */
-        this.theme = "light";
     }
     //--------------------------------------------------------------------------
     //
@@ -24,19 +23,18 @@ export class CalciteModal {
     //--------------------------------------------------------------------------
     render() {
         const dir = getElementDir(this.el);
-        const theme = getElementTheme(this.el);
-        return (h(Host, { role: "dialog", "aria-modal": "true", class: { "is-active": this.isActive }, dir: dir, theme: theme },
+        return (h(Host, { dir: dir, role: "dialog", "aria-modal": "true", class: { "is-active": this.isActive } },
             h("div", { class: "modal" },
                 h("div", { "data-focus-fence": "true", tabindex: "0", onFocus: this.focusLastElement.bind(this) }),
                 h("div", { class: "modal__header" },
-                    h("button", { class: "modal__close", "aria-label": this.closeLabel, ref: el => (this.closeButton = el), onClick: () => this.close() },
-                        h("calcite-icon", { icon: "x", scale: "m" })),
+                    h("button", { class: "modal__close", "aria-label": this.closeLabel, ref: (el) => (this.closeButton = el), onClick: () => this.close() },
+                        h("calcite-icon", { icon: "x", scale: "l" })),
                     h("header", { class: "modal__title" },
                         h("slot", { name: "header" }))),
                 h("div", { class: {
                         modal__content: true,
-                        "modal__content--spaced": !this.noPadding
-                    }, ref: el => (this.modalContent = el) },
+                        "modal__content--spaced": !this.noPadding,
+                    }, ref: (el) => (this.modalContent = el) },
                     h("slot", { name: "content" })),
                 h("div", { class: "modal__footer" },
                     h("span", { class: "modal__back" },
@@ -53,7 +51,7 @@ export class CalciteModal {
     //
     //--------------------------------------------------------------------------
     handleEscape(e) {
-        if (this.isActive && !this.disableEscape && e.key === "Escape") {
+        if (this.isActive && !this.disableEscape && getKey(e.key) === "Escape") {
             this.close();
         }
     }
@@ -67,7 +65,7 @@ export class CalciteModal {
         this.previousActiveElement = document.activeElement;
         this.isActive = true;
         // wait for the modal to open, then handle focus.
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             setTimeout(() => {
                 this.focusElement(this.firstFocus);
                 resolve(this.el);
@@ -83,7 +81,7 @@ export class CalciteModal {
             this.previousActiveElement.focus();
             document.documentElement.classList.remove("overflow-hidden");
             this.calciteModalClose.emit();
-            return new Promise(resolve => {
+            return new Promise((resolve) => {
                 setTimeout(() => resolve(this.el), 300);
             });
         });
@@ -118,7 +116,7 @@ export class CalciteModal {
         this.closeButton && this.closeButton.focus();
     }
     focusLastElement() {
-        const focusableElements = queryShadowRoot(this.el, isHidden, isFocusable).filter(el => !el.getAttribute("data-focus-fence"));
+        const focusableElements = queryShadowRoot(this.el, isHidden, isFocusable).filter((el) => !el.getAttribute("data-focus-fence"));
         if (focusableElements.length > 0) {
             focusableElements[focusableElements.length - 1].focus();
         }
@@ -279,8 +277,7 @@ export class CalciteModal {
                 "text": "Select theme (light or dark)"
             },
             "attribute": "theme",
-            "reflect": true,
-            "defaultValue": "\"light\""
+            "reflect": true
         },
         "noPadding": {
             "type": "boolean",

@@ -1,4 +1,5 @@
-import { EventEmitter } from "../../stencil.core";
+import { EventEmitter } from "../../stencil-public-runtime";
+import { GroupRegistration, ItemRegistration } from "../../interfaces/Dropdown";
 export declare class CalciteDropdownGroup {
     el: HTMLElement;
     /** optionally set a group title for display */
@@ -7,11 +8,11 @@ export declare class CalciteDropdownGroup {
      none (no active items), defaults to single */
     selectionMode: "multi" | "single" | "none";
     calciteDropdownItemHasChanged: EventEmitter;
-    registerCalciteDropdownGroup: EventEmitter;
+    registerCalciteDropdownGroup: EventEmitter<GroupRegistration>;
     connectedCallback(): void;
     componentDidLoad(): void;
     render(): any;
-    registerCalciteDropdownItem(event: CustomEvent): void;
+    registerCalciteDropdownItem(event: CustomEvent<ItemRegistration>): void;
     updateActiveItemOnChange(event: CustomEvent): void;
     /** created list of dropdown items */
     private items;
@@ -23,6 +24,7 @@ export declare class CalciteDropdownGroup {
     private requestedDropdownGroup;
     /** the requested item */
     private requestedDropdownItem;
+    private titleEl;
     private getGroupPosition;
     private sortItems;
 }

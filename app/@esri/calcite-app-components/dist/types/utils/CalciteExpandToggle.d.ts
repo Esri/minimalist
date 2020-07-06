@@ -2,10 +2,11 @@ import { FunctionalComponent } from "../stencil-public-runtime";
 import { CalcitePosition } from "../interfaces";
 interface CalciteExpandToggleProps {
     expanded: boolean;
-    textExpand: string;
-    textCollapse: string;
+    intlExpand: string;
+    intlCollapse: string;
     el: HTMLElement;
     position: CalcitePosition;
+    tooltipExpand?: HTMLCalciteTooltipElement;
     toggleExpand: () => void;
 }
 export declare function toggleChildActionText({ parent, expanded }: {

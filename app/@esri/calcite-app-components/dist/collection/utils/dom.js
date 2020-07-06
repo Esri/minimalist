@@ -18,9 +18,12 @@ export function getCalcitePosition(position, layout) {
     if (layout) {
         return layout === "trailing" ? "end" : "start";
     }
-    return "start";
 }
-export function getSlotted(element, slotName) {
+export function getSlotted(element, slotName, options) {
     const slottedSelector = `[slot="${slotName}"]`;
-    return Array.from(element.querySelectorAll(slottedSelector));
+    const selector = (options === null || options === void 0 ? void 0 : options.selector) ? `${slottedSelector} ${options.selector}` : slottedSelector;
+    if (options === null || options === void 0 ? void 0 : options.all) {
+        return Array.from(element.querySelectorAll(selector));
+    }
+    return element.querySelector(selector);
 }

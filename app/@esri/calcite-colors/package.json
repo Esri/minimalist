@@ -1,28 +1,28 @@
 {
-  "_from": "@esri/calcite-colors@1.7.1",
-  "_id": "@esri/calcite-colors@1.7.1",
+  "_from": "@esri/calcite-colors@2.1.0",
+  "_id": "@esri/calcite-colors@2.1.0",
   "_inBundle": false,
-  "_integrity": "sha512-oZgYHKPLLfgo4teqDsnS9utYySL5ECYtqkGzXUMOu5J1vSS0Z/MlBEq6RMDm9+aHsDUnMZw6NuXDkaQzwfkzzQ==",
+  "_integrity": "sha512-LT6nA6HrVB9j53Du1O+WuKK1stoGVVxHCeO9RKKUgYDHDcvnzSNBwNyn95hzQzEgSoeoD8MOu7jxSn6TplAQuw==",
   "_location": "/@esri/calcite-colors",
   "_phantomChildren": {},
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "@esri/calcite-colors@1.7.1",
+    "raw": "@esri/calcite-colors@2.1.0",
     "name": "@esri/calcite-colors",
     "escapedName": "@esri%2fcalcite-colors",
     "scope": "@esri",
-    "rawSpec": "1.7.1",
+    "rawSpec": "2.1.0",
     "saveSpec": null,
-    "fetchSpec": "1.7.1"
+    "fetchSpec": "2.1.0"
   },
   "_requiredBy": [
     "/@esri/calcite-app-components"
   ],
-  "_resolved": "https://registry.npmjs.org/@esri/calcite-colors/-/calcite-colors-1.7.1.tgz",
-  "_shasum": "3631afb91fd9138de24f5804f112dd120914f926",
-  "_spec": "@esri/calcite-colors@1.7.1",
-  "_where": "/Users/kell3008/Sites/GitHub/arcgis-portal-app-templates/EmbedMinimal/node_modules/@esri/calcite-app-components",
+  "_resolved": "https://registry.npmjs.org/@esri/calcite-colors/-/calcite-colors-2.1.0.tgz",
+  "_shasum": "2c49b80ac4dd5c8ef08b0adb0e56bbd7b97d190c",
+  "_spec": "@esri/calcite-colors@2.1.0",
+  "_where": "/Users/kell3008/Sites/GitHub/arcgis-portal-app-templates/instant/minimalist/node_modules/@esri/calcite-app-components",
   "author": {
     "name": "Esri"
   },
@@ -58,5 +58,5 @@
     "release": "gh-release"
   },
   "types": "colors.d.ts",
-  "version": "1.7.1"
+  "version": "2.1.0"
 }

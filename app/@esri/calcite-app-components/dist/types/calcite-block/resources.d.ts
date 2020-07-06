@@ -15,10 +15,6 @@ export declare const TEXT: {
     collapse: string;
     expand: string;
 };
-export declare const ICONS: {
-    close: string;
-    open: string;
-};
 export declare const enum SLOTS {
     icon = "icon",
     control = "control"

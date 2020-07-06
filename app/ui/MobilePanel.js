@@ -31,7 +31,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/core/tsSupport/decorateHelper", "esri/core/accessorSupport/decorators", "esri/core/watchUtils", "esri/widgets/support/widget", "./Panel/MobilePanelViewModel", "esri/widgets/Widget", "./icons/icons", "dojo/i18n!../nls/resources"], function (require, exports, __extends, __decorate, decorators_1, watchUtils_1, widget_1, MobilePanelViewModel_1, Widget_1, icons_1, i18n) {
+define(["require", "exports", "esri/core/accessorSupport/decorators", "esri/core/watchUtils", "esri/widgets/support/widget", "./Panel/MobilePanelViewModel", "esri/widgets/Widget", "./icons/icons", "dojo/i18n!../nls/resources"], function (require, exports, decorators_1, watchUtils_1, widget_1, MobilePanelViewModel_1, Widget_1, icons_1, i18n) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     MobilePanelViewModel_1 = __importDefault(MobilePanelViewModel_1);
@@ -59,11 +59,11 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
         };
         MobilePanel.prototype.render = function () {
             // always true on mobile
-            var _a = this.applicationConfig, legend = _a.legend, details = _a.details, theme = _a.theme;
+            var _a = this.applicationConfig, legendPanel = _a.legendPanel, details = _a.details, theme = _a.theme;
             var popupPanel = true;
             var blocks = this.renderBlocks();
             var actionBar = this.renderActionBar();
-            var hide = legend || details || popupPanel ? null : "hide";
+            var hide = legendPanel || details || popupPanel ? null : "hide";
             return (widget_1.tsx("div", { class: this.classes(["mobile-panel", hide, theme]) },
                 widget_1.tsx("div", { class: "mobile-block-container" }, blocks),
                 actionBar));
@@ -72,7 +72,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             var _this = this;
             return widget_1.tsx("calcite-radio-group", { bind: this, onclick: this.viewModel.openPanel, theme: this.applicationConfig.theme }, this.actions.map(function (action) {
                 var checked = action.checked, name = action.name, label = action.label, key = action.key, icon = action.icon;
-                return widget_1.tsx("calcite-radio-group-item", { bind: _this, checked: checked, class: "mobile", value: name, "data-action-item": key, text: name, label: label },
+                return widget_1.tsx("calcite-radio-group-item", { bind: _this, checked: checked, class: "mobile", value: name, title: label, "data-action-item": key, text: name, label: label },
                     widget_1.tsx("calcite-icon", { scale: "m", icon: icons_1.default[icon] }));
             }));
         };
@@ -107,7 +107,7 @@ define(["require", "exports", "esri/core/tsSupport/declareExtendsHelper", "esri/
             decorators_1.subclass("MobilePanel")
         ], MobilePanel);
         return MobilePanel;
-    }(decorators_1.declared(Widget_1.default)));
+    }((Widget_1.default)));
     exports.default = MobilePanel;
 });
 //# sourceMappingURL=MobilePanel.js.map

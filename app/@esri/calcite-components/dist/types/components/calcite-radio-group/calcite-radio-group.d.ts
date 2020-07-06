@@ -1,4 +1,4 @@
-import { EventEmitter } from "../../stencil.core";
+import { EventEmitter } from "../../stencil-public-runtime";
 export declare class CalciteRadioGroup {
     el: HTMLElement;
     /**
@@ -13,8 +13,12 @@ export declare class CalciteRadioGroup {
     protected handleSelectedItemChange<T extends HTMLCalciteRadioGroupItemElement>(newItem: T, oldItem: T): void;
     /** The component's theme. */
     theme: "light" | "dark";
-    /** The scale of the button */
+    /** The scale of the radio group */
     scale: "s" | "m" | "l";
+    /** specify the appearance style of the radio group, defaults to solid. */
+    appearance: "solid" | "outline";
+    /** specify the layout of the radio group, defaults to horizontal */
+    layout: "horizontal" | "vertical";
     connectedCallback(): void;
     componentDidLoad(): void;
     render(): any;
@@ -22,6 +26,8 @@ export declare class CalciteRadioGroup {
     protected handleSelected(event: Event): void;
     protected handleKeyDown(event: KeyboardEvent): void;
     calciteRadioGroupChange: EventEmitter;
+    /** Focuses the selected item. If there is no selection, it focuses the first item. */
+    setFocus(): Promise<void>;
     private hiddenInput;
     private hasLoaded;
     private getItems;

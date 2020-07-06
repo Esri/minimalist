@@ -1,10 +1,3 @@
-export const TEXT = {
-    defaultGroupTitle: "Tips",
-    defaultPaginationLabel: "Tip",
-    close: "Close",
-    previous: "Previous",
-    next: "Next"
-};
 export const CSS = {
     header: "header",
     heading: "heading",
@@ -22,4 +15,11 @@ export const ICONS = {
     chevronLeft: "chevron-left",
     chevronRight: "chevron-right",
     close: "x"
+};
+export const TEXT = {
+    defaultGroupTitle: "Tips",
+    defaultPaginationLabel: "Tip",
+    close: "Close",
+    previous: "Previous",
+    next: "Next"
 };

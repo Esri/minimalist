@@ -1,87 +1,93 @@
-:root {
-  --calcite-ui-blue: #007ac2;
-  --calcite-ui-blue-hover: #2890ce;
-  --calcite-ui-blue-press: #00619b;
-  --calcite-ui-green: #35ac46;
-  --calcite-ui-green-hover: #50ba5f;
-  --calcite-ui-green-press: #288835;
-  --calcite-ui-yellow: #edd317;
-  --calcite-ui-yellow-hover: #f9e54e;
-  --calcite-ui-yellow-press: #d9bc00;
-  --calcite-ui-red: #d83020;
-  --calcite-ui-red-hover: #e65240;
-  --calcite-ui-red-press: #a82b1e;
-  --calcite-ui-background: #f8f8f8;
-  --calcite-ui-foreground: #ffffff;
-  --calcite-ui-foreground-hover: #f3f3f3;
-  --calcite-ui-foreground-press: #eaeaea;
-  --calcite-ui-text-1: #151515;
-  --calcite-ui-text-2: #4a4a4a;
-  --calcite-ui-text-3: #6a6a6a;
-  --calcite-ui-border-1: #cacaca;
-  --calcite-ui-border-2: #dfdfdf;
-  --calcite-ui-border-3: #eaeaea;
-  --calcite-ui-border-hover: #9f9f9f;
-  --calcite-ui-border-press: #757575;
+:host([hidden]) {
+  display: none;
 }
 
-:host([theme=dark]) {
-  --calcite-ui-blue: #00A0FF;
-  --calcite-ui-blue-hover: #0087D7;
-  --calcite-ui-blue-press: #47BBFF;
-  --calcite-ui-green: #36DA43;
-  --calcite-ui-green-hover: #11AD1D;
-  --calcite-ui-green-press: #44ED51;
-  --calcite-ui-yellow: #FFC900;
-  --calcite-ui-yellow-hover: #F4B000;
-  --calcite-ui-yellow-press: #FFE24D;
-  --calcite-ui-red: #FE583E;
-  --calcite-ui-red-hover: #F3381B;
-  --calcite-ui-red-press: #FF7465;
+:host-context([theme=dark]) {
+  --calcite-ui-blue-1: #00A0FF;
+  --calcite-ui-blue-2: #0087D7;
+  --calcite-ui-blue-3: #47BBFF;
+  --calcite-ui-green-1: #36DA43;
+  --calcite-ui-green-2: #11AD1D;
+  --calcite-ui-green-3: #44ED51;
+  --calcite-ui-yellow-1: #FFC900;
+  --calcite-ui-yellow-2: #F4B000;
+  --calcite-ui-yellow-3: #FFE24D;
+  --calcite-ui-red-1: #FE583E;
+  --calcite-ui-red-2: #F3381B;
+  --calcite-ui-red-3: #FF7465;
   --calcite-ui-background: #202020;
-  --calcite-ui-foreground: #2b2b2b;
-  --calcite-ui-foreground-hover: #353535;
-  --calcite-ui-foreground-press: #404040;
+  --calcite-ui-foreground-1: #2b2b2b;
+  --calcite-ui-foreground-2: #353535;
+  --calcite-ui-foreground-3: #404040;
   --calcite-ui-text-1: #ffffff;
   --calcite-ui-text-2: #bfbfbf;
   --calcite-ui-text-3: #9f9f9f;
   --calcite-ui-border-1: #4a4a4a;
   --calcite-ui-border-2: #404040;
   --calcite-ui-border-3: #353535;
-  --calcite-ui-border-hover: #757575;
-  --calcite-ui-border-press: #9f9f9f;
+  --calcite-ui-border-4: #757575;
+  --calcite-ui-border-5: #9f9f9f;
 }
 
-:root {
-  --calcite-border-radius: 3px;
+:host-context([scale=s]) {
+  --calcite-accordion-item-spacing-unit: 0.5rem;
+  --calcite-accordion-item-padding: var(--calcite-accordion-item-spacing-unit)
+    var(--calcite-accordion-item-spacing-unit);
+  font-size: 0.8125rem;
+  line-height: 1.5;
 }
 
-:host([hidden]) {
-  display: none;
+:host-context([scale=m]) {
+  --calcite-accordion-item-spacing-unit: 0.75rem;
+  --calcite-accordion-item-padding: var(--calcite-accordion-item-spacing-unit)
+    var(--calcite-accordion-item-spacing-unit);
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 
-body {
-  font-family: "Avenir Next W01", "Avenir Next W00", "Avenir Next", "Avenir", "Helvetica Neue", sans-serif;
+:host-context([scale=l]) {
+  --calcite-accordion-item-spacing-unit: 1.5rem;
+  --calcite-accordion-item-padding: var(--calcite-accordion-item-spacing-unit)
+    var(--calcite-accordion-item-spacing-unit);
+  font-size: 0.9375rem;
+  line-height: 1.5;
 }
 
-.overflow-hidden {
-  overflow: hidden;
+:host-context([icon-position=start]) {
+  --calcite-accordion-item-flex-direction: row-reverse;
+  --calcite-accordion-item-icon-rotation: 90deg;
+  --calcite-accordion-item-active-icon-rotation: 180deg;
+  --calcite-accordion-item-icon-rotation-rtl: -90deg;
+  --calcite-accordion-item-active-icon-rotation-rtl: -180deg;
+  --calcite-accordion-item-icon-spacing-start: 0;
+  --calcite-accordion-item-icon-spacing-end: var(
+    --calcite-accordion-item-spacing-unit
+  );
 }
 
-calcite-tab {
-  display: none;
+:host-context([icon-position=end]) {
+  --calcite-accordion-item-flex-direction: row;
+  --calcite-accordion-item-icon-rotation: -90deg;
+  --calcite-accordion-item-active-icon-rotation: -180deg;
+  --calcite-accordion-item-icon-rotation-rtl: 90deg;
+  --calcite-accordion-item-active-icon-rotation-rtl: 180deg;
+  --calcite-accordion-item-icon-spacing-start: var(
+    --calcite-accordion-item-spacing-unit
+  );
+  --calcite-accordion-item-icon-spacing-end: 0;
 }
 
-calcite-tab[is-active] {
-  display: block;
+:host {
+  --calcite-accordion-item-background: var(--calcite-ui-foreground-1);
 }
 
-a {
-  color: #007ac2;
+:host-context([appearance=minimal]) {
+  --calcite-accordion-item-padding: var(--calcite-accordion-item-spacing-unit) 0;
 }
 
-.hydrated--invisible {
-  visibility: hidden;
+:host-context([appearance=transparent]) {
+  --calcite-accordion-item-border: transparent;
+  --calcite-accordion-item-background: transparent;
 }
 
 :host {
@@ -91,8 +97,21 @@ a {
   color: var(--calcite-ui-text-3);
   transition: 150ms ease-in-out;
   text-decoration: none;
+  position: relative;
   outline: none;
   position: relative;
+  --calcite-accordion-item-border: var(--calcite-ui-border-2);
+}
+
+:host .accordion-item-header {
+  outline-offset: 0;
+  outline-color: transparent;
+  transition: outline-offset 100ms ease-in-out, outline-color 100ms ease-in-out;
+}
+
+:host(:focus) .accordion-item-header {
+  outline: 2px solid var(--calcite-ui-blue-1);
+  outline-offset: -2px;
 }
 
 :host([active]) {
@@ -113,6 +132,21 @@ a {
   cursor: pointer;
 }
 
+:host .accordion-item-icon {
+  display: inline-flex;
+  position: relative;
+  margin: 0;
+  margin-right: var(--calcite-accordion-item-icon-spacing-start);
+  margin-left: var(--calcite-accordion-item-icon-spacing-end);
+  color: var(--calcite-ui-text-3);
+  transition: 150ms ease-in-out;
+}
+
+:host([dir=rtl]) .accordion-item-icon {
+  margin-left: var(--calcite-accordion-item-icon-spacing-start);
+  margin-right: var(--calcite-accordion-item-icon-spacing-end);
+}
+
 :host .accordion-item-content,
 :host .accordion-item-header {
   padding: var(--calcite-accordion-item-padding);
@@ -131,31 +165,32 @@ a {
   padding-top: 0;
 }
 
-:host .accordion-item-icon {
+:host .accordion-item-expand-icon {
   margin-left: var(--calcite-accordion-item-icon-spacing-start);
   margin-right: var(--calcite-accordion-item-icon-spacing-end);
   color: var(--calcite-ui-text-3);
   transform: rotate(var(--calcite-accordion-item-icon-rotation));
 }
 
-:host([dir=rtl]) .accordion-item-icon {
+:host([dir=rtl]) .accordion-item-expand-icon {
   margin-left: var(--calcite-accordion-item-icon-spacing-end);
   margin-right: var(--calcite-accordion-item-icon-spacing-start);
   transform: rotate(var(--calcite-accordion-item-icon-rotation-rtl));
 }
 
-:host([active]) .accordion-item-icon {
+:host([active]) .accordion-item-expand-icon {
   color: var(--calcite-ui-text-1);
   transform: rotate(var(--calcite-accordion-item-active-icon-rotation));
 }
 
-:host([active][dir=rtl]) .accordion-item-icon {
+:host([active][dir=rtl]) .accordion-item-expand-icon {
   transform: rotate(var(--calcite-accordion-item-active-icon-rotation-rtl));
 }
 
 :host .accordion-item-header-text {
   margin-right: auto;
   flex-direction: column;
+  flex: 1;
   text-align: initial;
 }
 
@@ -172,6 +207,7 @@ a {
 
 :host .accordion-item-title {
   color: var(--calcite-ui-text-2);
+  font-weight: 500;
 }
 
 :host .accordion-item-subtitle {
@@ -187,6 +223,14 @@ a {
 :host(:hover) .accordion-item-title {
   color: var(--calcite-ui-text-1);
 }
+:host(:focus) .accordion-item-icon,
+:host(:hover) .accordion-item-icon {
+  color: var(--calcite-ui-text-1);
+}
+:host(:focus) .accordion-item-expand,
+:host(:hover) .accordion-item-expand {
+  color: var(--calcite-ui-text-1);
+}
 :host(:focus) .accordion-item-subtitle,
 :host(:hover) .accordion-item-subtitle {
   color: var(--calcite-ui-text-2);
@@ -196,7 +240,16 @@ a {
 :host(:active) .accordion-item-title,
 :host([active]) .accordion-item-title {
   color: var(--calcite-ui-text-1);
-  font-weight: 500;
+}
+:host(:focus) .accordion-item-icon,
+:host(:active) .accordion-item-icon,
+:host([active]) .accordion-item-icon {
+  color: var(--calcite-ui-text-1);
+}
+:host(:focus) .accordion-item-expand,
+:host(:active) .accordion-item-expand,
+:host([active]) .accordion-item-expand {
+  color: var(--calcite-ui-text-1);
 }
 :host(:focus) .accordion-item-subtitle,
 :host(:active) .accordion-item-subtitle,

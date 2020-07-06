@@ -1,4 +1,4 @@
-import { EventEmitter } from "../stencil-public-runtime";
+import { EventEmitter, VNode } from "../stencil-public-runtime";
 import { CalciteTheme } from "../interfaces";
 /**
  * @slot - A slot for adding `calcite-tip`s.
@@ -10,25 +10,50 @@ export declare class CalciteTipManager {
     closed: boolean;
     closedChangeHandler(): void;
     /**
-     * Alternate text for closing the `calcite-tip-manager`.
+     * Alternate text for closing the tip.
      */
-    textClose: string;
+    intlClose?: string;
+    /**
+     * Alternate text for closing the tip.
+     * @deprecated use "intlClose" instead.
+     */
+    textClose?: string;
     /**
      * The default group title for the `calcite-tip-manager`.
      */
-    textDefaultTitle: string;
+    intlDefaultTitle?: string;
+    /**
+     * The default group title for the `calcite-tip-manager`.
+     * @deprecated use "intlDefaultTitle" instead.
+     */
+    textDefaultTitle?: string;
     /**
      * Alternate text for navigating to the next tip.
      */
-    textNext: string;
+    intlNext?: string;
+    /**
+     * Alternate text for navigating to the next tip.
+     * @deprecated use "intlNext" instead.
+     */
+    textNext?: string;
     /**
      * Label that appears on hover of pagination icon.
      */
-    textPaginationLabel: string;
+    intlPaginationLabel?: string;
+    /**
+     * Label that appears on hover of pagination icon.
+     * @deprecated use "intlPaginationLabel" instead.
+     */
+    textPaginationLabel?: string;
     /**
      * Alternate text for navigating to the previous tip.
      */
-    textPrevious: string;
+    intlPrevious?: string;
+    /**
+     * Alternate text for navigating to the previous tip.
+     * @deprecated use "intlPrevious" instead.
+     */
+    textPrevious?: string;
     /**
      * Used to set the component's color scheme.
      */
@@ -43,7 +68,6 @@ export declare class CalciteTipManager {
     observer: MutationObserver;
     container: HTMLDivElement;
     connectedCallback(): void;
-    componentDidLoad(): void;
     componentDidUnload(): void;
     nextTip(): Promise<void>;
     previousTip(): Promise<void>;
@@ -59,6 +83,6 @@ export declare class CalciteTipManager {
     nextClicked: () => void;
     tipManagerKeyUpHandler: (event: KeyboardEvent) => void;
     storeContainerRef: (el: HTMLDivElement) => void;
-    renderPagination(): any;
-    render(): any;
+    renderPagination(): VNode;
+    render(): VNode;
 }

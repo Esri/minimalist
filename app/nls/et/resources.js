@@ -7,7 +7,8 @@ define({
     "popup": "Teave"
   },
   "popupPanel": {
-    "noResultsMessage": "Objektiteabe kuvamiseks klõpsake kaarti"
+    "noResultsMessage": "Objektiteabe kuvamiseks klõpsake kaarti",
+    "noResultsHoverMessage": "Objektiteabe kuvamiseks liigutage kursorit kaardil asukohtade kohal"
   },
   "close": "sule",
   "toggle": "vaheta paneeli kõrgust"

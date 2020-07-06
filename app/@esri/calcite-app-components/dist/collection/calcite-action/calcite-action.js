@@ -1,4 +1,4 @@
-import { Host, h } from "@stencil/core";
+import { Component, Element, Host, Method, Prop, h, forceUpdate } from "@stencil/core";
 import classnames from "classnames";
 import { CSS } from "./resources";
 import { CSS_UTILITY } from "../utils/resources";
@@ -43,6 +43,18 @@ export class CalciteAction {
          * Indicates whether the text is displayed.
          */
         this.textEnabled = false;
+        this.observer = new MutationObserver(() => forceUpdate(this));
+    }
+    // --------------------------------------------------------------------------
+    //
+    //  Lifecycle
+    //
+    // --------------------------------------------------------------------------
+    connectedCallback() {
+        this.observer.observe(this.el, { childList: true, subtree: true });
+    }
+    componentDidUnload() {
+        this.observer.disconnect();
     }
     // --------------------------------------------------------------------------
     //
@@ -65,23 +77,24 @@ export class CalciteAction {
         return text ? (h("div", { key: "text-container", class: classnames(CSS.textContainer, textContainerClasses) }, text)) : null;
     }
     renderIconContainer() {
-        const { loading } = this;
-        const calciteLoaderNode = h("calcite-loader", { "is-active": true, inline: true });
+        var _a;
+        const { loading, icon, scale, el } = this;
+        const iconScale = scale === "l" ? "m" : "s";
+        const calciteLoaderNode = loading ? h("calcite-loader", { "is-active": true, inline: true }) : null;
+        const calciteIconNode = icon ? h("calcite-icon", { icon: icon, scale: iconScale }) : null;
+        const iconNode = calciteLoaderNode || calciteIconNode;
+        const hasIconToDisplay = iconNode || ((_a = el.children) === null || _a === void 0 ? void 0 : _a.length);
         const slotContainerNode = (h("div", { class: classnames(CSS.slotContainer, {
                 [CSS.slotContainerHidden]: loading
             }) },
             h("slot", null)));
-        const iconNode = loading
-            ? calciteLoaderNode
-            : this.el.querySelector("calcite-icon, svg")
-                ? slotContainerNode
-                : null;
-        return iconNode ? (h("div", { key: "icon-container", "aria-hidden": "true", class: CSS.iconContainer }, iconNode)) : null;
+        return hasIconToDisplay ? (h("div", { key: "icon-container", "aria-hidden": "true", class: CSS.iconContainer },
+            iconNode,
+            slotContainerNode)) : null;
     }
     render() {
         const { compact, disabled, loading, el, textEnabled, label, text } = this;
-        const titleText = !textEnabled && text;
-        const title = label || titleText;
+        const ariaLabel = label || text;
         const rtl = getElementDir(el) === "rtl";
         const buttonClasses = {
             [CSS.buttonTextVisible]: textEnabled,
@@ -89,7 +102,7 @@ export class CalciteAction {
             [CSS_UTILITY.rtl]: rtl
         };
         return (h(Host, null,
-            h("button", { class: classnames(CSS.button, buttonClasses), title: title, "aria-label": title, disabled: disabled, "aria-disabled": disabled.toString(), "aria-busy": loading.toString(), ref: (buttonEl) => (this.buttonEl = buttonEl) },
+            h("button", { class: classnames(CSS.button, buttonClasses), "aria-label": ariaLabel, disabled: disabled, "aria-disabled": disabled.toString(), "aria-busy": loading.toString(), ref: (buttonEl) => (this.buttonEl = buttonEl) },
                 this.renderIconContainer(),
                 this.renderTextContainer())));
     }
@@ -107,7 +120,7 @@ export class CalciteAction {
             "mutable": false,
             "complexType": {
                 "original": "CalciteAppearance",
-                "resolved": "\"clear\" | \"solid\"",
+                "resolved": "\"clear\" | \"outline\" | \"solid\"",
                 "references": {
                     "CalciteAppearance": {
                         "location": "import",
@@ -178,6 +191,23 @@ export class CalciteAction {
             "attribute": "disabled",
             "reflect": true,
             "defaultValue": "false"
+        },
+        "icon": {
+            "type": "string",
+            "mutable": false,
+            "complexType": {
+                "original": "string",
+                "resolved": "string",
+                "references": {}
+            },
+            "required": false,
+            "optional": true,
+            "docs": {
+                "tags": [],
+                "text": "The name of the icon to display. The value of this property must match the icon name from https://esri.github.io/calcite-ui-icons/."
+            },
+            "attribute": "icon",
+            "reflect": false
         },
         "indicator": {
             "type": "boolean",

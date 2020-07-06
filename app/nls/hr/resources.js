@@ -7,7 +7,8 @@ define({
     "popup": "Informacije"
   },
   "popupPanel": {
-    "noResultsMessage": "Kliknite na kartu za pregled informacija o geoobjektu"
+    "noResultsMessage": "Kliknite na kartu za pregled informacija o geoprojektu",
+    "noResultsHoverMessage": "Lebdite preko lokacija na karti za pregled informacija o geoprojektu"
   },
   "close": "zatvori",
   "toggle": "Visina preklopne ploče."
