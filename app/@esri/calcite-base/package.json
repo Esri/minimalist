@@ -48,7 +48,7 @@
   "description": "Tokens, mixins, and other Sass utilities for Esri's Calcite Design System",
   "devDependencies": {
     "camelcase": "^5.3.1",
-    "extend": "1.*",
+    "extend": "3.*",
     "gh-release": "3.5.0",
     "npm-watch": "^0.6.0",
     "sassdoc": "^2.7.0",
