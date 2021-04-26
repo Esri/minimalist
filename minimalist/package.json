@@ -1,0 +1,45 @@
+{
+  "name": "embed-minimal-app",
+  "version": "0.0.1",
+  "description": "Minimal Embed App built using ArcGIS API for JavaScript version 4.x",
+  "author": "Esri",
+  "homepage": "https://github.com/Esri/configurable-app-examples-4x-js",
+  "license": "SEE LICENSE IN license.txt",
+  "main": "index.html",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Esri/configurable-app-examples-4x-js.git"
+  },
+  "keywords": [
+    "Esri",
+    "esrijs",
+    "ArcGIS",
+    "gis",
+    "JavaScript",
+    "TypeScript"
+  ],
+  "devDependencies": {
+    "@esri/telemetry": "^1.5.1",
+    "@types/arcgis-js-api": "^4.14.0",
+    "autoprefixer": "^6.3.6",
+    "cpx": "^1.5.0",
+    "dojo-typings": "^1.11.9",
+    "node": "^13.6.0",
+    "node-sass": "^4.13.1",
+    "npm-run-all": "^4.1.3",
+    "tslint": "^5.20.1",
+    "typescript": "^3.9.6",
+    "@esri/calcite-ui-icons": "^2.7.1",
+    "resize-observer-polyfill": "^1.5.1",
+    "tslib": "^2.0.3"
+  },
+  "scripts": {
+    "start": "npm-run-all --parallel watch:sass watch:ts",
+    "watch:ts": "tsc --watch",
+    "deploy": "npm-run-all --parallel build:sass build:ts",
+    "build:ts": "tsc",
+    "build:sass": "node-sass css/index.scss css/index.css",
+    "watch:sass": "node-sass --watch css/index.scss css/index.css"
+  },
+  "dependencies": {}
+}

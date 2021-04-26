@@ -1,0 +1,102 @@
+{
+  "appid": "",
+  "group": "",
+  "title": "",
+  "customCSS": null,
+  "extentSelectorConfig": null,
+  "extentSelector": false,
+  "header": true,
+  "logo": null,
+  "logoLink": null,
+  "applySharedTheme": true,
+  "theme": "light",
+  "webmap": "default",
+  "minScale": null,
+  "maxScale": null,
+  "activePanel": null,
+  "details": true,
+  "detailsTitle": null,
+  "detailsContent": null,
+  "editPanel": false,
+  "editLayers": null,
+  "allowedWorkflows": ["create", "update"],
+  "legendPanel": true,
+  "layerListPanel": false,
+  "bookmarks": false,
+  "bookmarksPosition": "top-right",
+  "bookmarkThumbnail": true,
+  "popupPanel": false,
+  "popupHover": false,
+  "layoutType": "default",
+  "mapZoom": true,
+  "mapZoomPosition": "top-left",
+  "basemapToggle": false,
+  "basemapTogglePosition": "bottom-left",
+  "basemapSelector": "streets",
+  "scalebar": true,
+  "scalebarPosition": "bottom-right",
+  "search": true,
+  "searchOpenAtStart": true,
+  "searchConfiguration": null,
+  "searchPosition": "top-right",
+  "share": true,
+  "shareIncludeSocial": true,
+  "screenshot": false,
+  "screenshotPosition": "top-left",
+  "home": true,
+  "homePosition": "top-left",
+  "disableScroll": false,
+  "portalUrl": "https://www.arcgis.com",
+  "oauthappid": null,
+  "googleAnalytics": false,
+  "googleAnalyticsKey": null,
+  "googleAnalyticsConsent": false,
+  "googleAnalyticsConsentMsg": null,
+  "mapA11yDesc": null,
+  "proxyUrl": "",
+  "units": "",
+  "customURLParamName": null,
+  "customUrlParam": null,
+  "helperServices": {
+    "geometry": {
+      "url": null
+    },
+    "printTask": {
+      "url": null
+    },
+    "elevationSync": {
+      "url": null
+    },
+    "geocode": [{
+      "url": null
+    }]
+  },
+  "telemetry": {
+    "name": "minimalist",
+    "version": "1.0",
+    "prod": {
+      "amazon": {
+        "userPoolID": "us-east-1:8c41b2dc-7563-403d-ba64-673b103debce",
+        "app": {
+          "id": "977e9b0602bb446d8f2fa5a50489d053"
+        }
+      }
+    },
+    "dev": {
+      "amazon": {
+        "userPoolID": "us-east-1:7345bcf2-bffa-4849-a379-a83178f63eef",
+        "app": {
+          "id": "eadf587070d04c86b747a938cc655e76"
+        }
+      }
+    },
+    "qa": {
+      "amazon": {
+        "userPoolID": "us-east-1:7345bcf2-bffa-4849-a379-a83178f63eef",
+        "app": {
+          "id": "74ec952cdae444389057fbae08043476"
+        }
+      }
+    }
+  }
+}

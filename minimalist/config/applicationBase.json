@@ -1,0 +1,40 @@
+{
+
+  "localStorage": {
+    "fetch": true
+  },
+  "portal": {
+    "fetch": true
+  },
+  "urlParams": [
+    "mode",
+    "appid",
+    "extentSelector",
+    "basemapUrl",
+    "basemapReferenceUrl",
+    "center",
+    "components",
+    "embed",
+    "extent",
+    "editPanel",
+    "editLayers",
+    "allowedWorkflows",
+    "find",
+    "group",
+    "level",
+    "legend",
+    "locale",
+    "marker",
+    "oauthappid",
+    "portalUrl",
+    "viewpoint",
+    "webmap",
+    "webscene",
+    "theme",
+    "hiddenLayers"
+  ],
+  "webMap": {
+    "default": "5c70c5a841044a55b83cb2a3db9a5bff",
+    "fetch": true
+  }
+}
