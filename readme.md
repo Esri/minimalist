@@ -1,4 +1,7 @@
-# Minimalist 
+
+ArcGIS Configurable Apps will be retired in 2025. The ArcGIS Configurable Apps source code repro is deprecated and will not receive further updates. In addition, this repository will be removed in October 2025, along with the October 2025 ArcGIS Online update.
+
+# Deprecated: Minimalist 
 The Minimalist configurable app template is a simple map viewer with a minimal user interface.
 
 View the [release blog](https://www.esri.com/arcgis-blog/products/arcgis-online/announcements/whats-new-in-configurable-apps-march-2020/) and the [app](https://www.arcgis.com/home/item.html?id=50aaf4ec408f4675bc9f30e68441e8f8)  for more details.
