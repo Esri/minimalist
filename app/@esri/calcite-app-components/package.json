@@ -32,7 +32,7 @@
   "dependencies": {
     "@esri/calcite-base": "1.2.0",
     "@esri/calcite-colors": "2.1.0",
-    "lodash-es": "4.17.15",
+    "lodash-es": "4.17.21",
     "sortablejs": "1.10.2"
   },
   "deprecated": false,
